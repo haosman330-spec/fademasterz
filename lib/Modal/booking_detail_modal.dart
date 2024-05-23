@@ -49,6 +49,8 @@ class BookingDetailData {
   String? total;
   String? bookingStatus;
   String? serviceIds;
+  String? desired_look;
+  String? note;
   String? shopImage;
   String? shopName;
   String? shopAddress;
@@ -67,6 +69,8 @@ class BookingDetailData {
     this.total,
     this.bookingStatus,
     this.serviceIds,
+    this.desired_look,
+    this.note,
     this.shopImage,
     this.shopName,
     this.shopAddress,
@@ -87,6 +91,8 @@ class BookingDetailData {
         total: json["total"].toString(),
         bookingStatus: json["booking_status"],
         serviceIds: json["service_ids"],
+        desired_look: json["desired_look"],
+        note: json["note"],
         shopImage: json["shop_image"],
         shopName: json["shop_name"],
         shopAddress: json["shop_address"],
@@ -110,6 +116,8 @@ class BookingDetailData {
         "total": total,
         "booking_status": bookingStatus,
         "service_ids": serviceIds,
+        "desired_look": desired_look,
+        "note": note,
         "shop_image": shopImage,
         "shop_name": shopName,
         "shop_address": shopAddress,

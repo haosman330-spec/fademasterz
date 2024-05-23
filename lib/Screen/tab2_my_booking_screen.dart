@@ -63,6 +63,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
+                      myBookingApi(context);
                       isVisible = true;
                       setState(() {});
                     },
@@ -99,6 +100,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                   child: InkWell(
                     onTap: () {
                       isVisible = false;
+                      myBookingApi(context);
+
                       setState(() {});
                     },
                     child: Container(
@@ -283,7 +286,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                             height: 5,
                                           ),
                                           Text(
-                                            '\$ ${myCompleteBooking?.total ?? ''}',
+                                            '£  ${myCompleteBooking?.total ?? ''}',
                                             style: AppFonts.yellowFont,
                                           )
                                         ],
@@ -297,8 +300,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                               ),
                               InkWell(
                                 onTap: () async {
+                                  final SharedPreferences shared =
+                                      await SharedPreferences.getInstance();
                                   bookingId = myBookingResponse
                                       ?.data?.completed?[index].id;
+                                  shared.setInt('cbookingId', bookingId!);
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -475,7 +481,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                             height: 5,
                                           ),
                                           Text(
-                                            '\$ ${myUpcomingBooking?.total ?? ''}',
+                                            '£  ${myUpcomingBooking?.total ?? ''}',
                                             style: AppFonts.yellowFont,
                                           )
                                         ],
@@ -489,9 +495,12 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                               ),
                               InkWell(
                                 onTap: () async {
+                                  SharedPreferences sharedPreferences =
+                                      await SharedPreferences.getInstance();
                                   bookingId = myBookingResponse
                                       ?.data?.upcoming?[index].id;
-
+                                  sharedPreferences.setInt(
+                                      'ubookingId', bookingId!);
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(

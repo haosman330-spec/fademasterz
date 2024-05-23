@@ -13,7 +13,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  // await FirebaseAppCheck.instance.activate(
+  //   webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+  // );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then(

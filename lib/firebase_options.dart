@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'fade-masterz.appspot.com',
     iosBundleId: 'com.cw.fademasterz',
   );
+
 }

@@ -179,7 +179,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               height: 5,
                             ),
                             Text(
-                              '\$${(bookingDetailResponse?.data?.total ?? '')}',
+                              '£ ${(bookingDetailResponse?.data?.total ?? '')}',
                               style: AppFonts.yellowFont.copyWith(
                                   fontSize: 16, fontWeight: FontWeight.w600),
                             ),
@@ -337,7 +337,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               ),
                               const Spacer(),
                               Text(
-                                '\$${(bookingDetailResponse?.data?.services?[index].price ?? ' ')}',
+                                '£ ${(bookingDetailResponse?.data?.services?[index].price ?? ' ')}',
                                 style: AppFonts.regular.copyWith(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -393,7 +393,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '\$${bookingDetailResponse?.data?.subTotal ?? ''}',
+                                '£ ${bookingDetailResponse?.data?.subTotal ?? ''}',
                                 style: AppFonts.regular.copyWith(
                                     fontSize: 16, fontWeight: FontWeight.w500),
                               ),
@@ -401,7 +401,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                                 height: 9,
                               ),
                               Text(
-                                '\$${bookingDetailResponse?.data?.tax ?? ''}',
+                                '£ ${bookingDetailResponse?.data?.tax ?? ''}',
                                 style: AppFonts.regular.copyWith(
                                     fontSize: 16, fontWeight: FontWeight.w500),
                               ),
@@ -425,7 +425,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           ),
                           const Spacer(),
                           Text(
-                            '\$${bookingDetailResponse?.data?.total ?? ''}',
+                            '£ ${bookingDetailResponse?.data?.total ?? ''}',
                             style: AppFonts.regular.copyWith(
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),

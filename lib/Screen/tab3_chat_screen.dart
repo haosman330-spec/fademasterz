@@ -1,4 +1,4 @@
-import 'package:fademasterz/Screen/chat_inbox_screen.dart';
+import 'package:fademasterz/Screen/chat_screen_inbox.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';

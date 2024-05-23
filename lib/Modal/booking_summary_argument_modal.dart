@@ -15,20 +15,22 @@ class BookingSummaryArgument {
   String? shopId;
   String? specialistId;
   String? serviceId;
-  String? notetext;
+  String? noteText;
   String? image;
   String? date;
   String? time;
+  String? bookingStatus;
 
   BookingSummaryArgument({
     this.price,
     this.shopId,
     this.specialistId,
     this.serviceId,
-    this.notetext,
+    this.noteText,
     this.image,
     this.date,
     this.time,
+    this.bookingStatus,
   });
 
   factory BookingSummaryArgument.fromJson(Map<String, dynamic> json) =>
@@ -37,10 +39,11 @@ class BookingSummaryArgument {
         shopId: json["shopId"],
         specialistId: json["specialistId"],
         serviceId: json["serviceId"],
-        notetext: json["notetext"],
+        noteText: json["notetext"],
         image: json["image"],
         date: json["date"],
         time: json["time"],
+        bookingStatus: json["bookingId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,14 +51,53 @@ class BookingSummaryArgument {
         "shopId": shopId,
         "specialistId": specialistId,
         "serviceId": serviceId,
-        "notetext": notetext,
+        "notetext": noteText,
         "image": image,
         "date": date,
         "time": time,
+        "bookingId": bookingStatus,
       };
 
   @override
   String toString() {
-    return 'BookingSummaryArgument{price: $price, shopId: $shopId, specialistId: $specialistId, serviceId: $serviceId, notetext: $notetext, image: $image, date: $date, time: $time}';
+    return 'BookingSummaryArgument{price: $price, shopId: $shopId, specialistId: $specialistId, serviceId: $serviceId, notetext: $noteText, image: $image, date: $date, time: $time}';
+  }
+}
+
+FilterData filterDataFromJson(String str) =>
+    FilterData.fromJson(json.decode(str));
+
+String filterDataToJson(FilterData data) => json.encode(data.toJson());
+
+class FilterData {
+  List<String>? serviceId;
+  String? startYear;
+  String? endYear;
+  String? availability;
+
+  FilterData({
+    this.startYear,
+    this.endYear,
+    this.availability,
+    this.serviceId,
+  });
+
+  factory FilterData.fromJson(Map<String, dynamic> json) => FilterData(
+        serviceId: json["serviceId"],
+        availability: json["availability"],
+        startYear: json["startYear"],
+        endYear: json["endYear"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "serviceId": serviceId,
+        "availability": availability,
+        "startYear": startYear,
+        "endYear": endYear,
+      };
+
+  @override
+  String toString() {
+    return 'FilterData{serviceId: $serviceId, startYear: $startYear, endYear: $endYear, availability: $availability}';
   }
 }

@@ -1,17 +1,15 @@
-import 'package:fademasterz/Modal/category_modal.dart';
-
 import '../Modal/category_service_modal.dart';
 
-List<Category> category = [
-  Category('All', false),
-  Category('HairCut', false),
-  Category('Hair Wash', false),
-  Category('Hair Color', false),
-  Category('Nails', false),
-  Category('Shampoo', false),
-  Category('Facials', false),
-  Category('Manicure', false),
-];
+// List<Category> category = [
+//   Category('All', false),
+//   Category('HairCut', false),
+//   Category('Hair Wash', false),
+//   Category('Hair Color', false),
+//   Category('Nails', false),
+//   Category('Shampoo', false),
+//   Category('Facials', false),
+//   Category('Manicure', false),
+// ];
 
 List<String> categoryServices = [
   'HairCut',

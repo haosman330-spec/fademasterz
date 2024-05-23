@@ -219,7 +219,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                       height: 5,
                                     ),
                                     Text(
-                                      '\$ ${cancelledBooking?.total ?? ''}',
+                                      '£  ${cancelledBooking?.total ?? ''}',
                                       style: AppFonts.yellowFont,
                                     )
                                   ],

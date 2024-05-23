@@ -29,4 +29,6 @@ class ApiService {
   static const String rateNow = '${baseUrl}rate-now';
   static const String cancelBooking = '${baseUrl}cancel-booking';
   static const String cancelBookingList = '${baseUrl}cancel-booking-list';
+  static const String rescheduleBooking = '${baseUrl}reschedule-booking';
+  static const String getCategories = '${baseUrl}get-categories';
 }

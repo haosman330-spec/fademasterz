@@ -851,7 +851,7 @@ class _ShopDetailState extends State<ShopDetail> {
       openTime = shopDetailModal.data?.shopStartTime;
       closeTime = shopDetailModal.data?.shopEndTime;
       var id = shopDetailModal.data?.id;
-      debugPrint('>>>>>>>>>id>>>>>${id}<<<<<<<<<<<<<<');
+
       _updateShopStatus(openTime!, closeTime!);
       setState(() {});
     }

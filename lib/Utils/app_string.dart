@@ -54,6 +54,8 @@ class AppStrings {
   static const String yesCancelBooking = 'Yes, Cancel Booking';
   static const String gotIt = 'Got it!';
   static const String rescheduleBooking = 'Reschedule Booking';
+  static const String rescheduleBookingSuccessfully =
+      'Reschedule Booking Successfully';
   static const String cancelBooking = 'Cancel Booking';
   static const String cancelledSuccessfully = 'Cancelled Successfully';
   static const String viewDetails = 'View Details';
@@ -83,6 +85,7 @@ class AppStrings {
   static const String services = 'Services';
   static const String gallery = 'Gallery';
   static const String proceedTOPay = 'Proceed to pay';
+  static const String proceedToReschedule = 'Proceed to Reschedule';
   static const String bookingSummary = 'Booking Summary';
   static const String salonAddress = 'Salon Address';
   static const String bookingDate = 'Booking Date';
@@ -99,9 +102,12 @@ class AppStrings {
   static String enableLocation = 'Enable Location';
   static String paymentDirection = 'Payment Direction';
   static String paymentSuccessful = 'Payment Successful!';
+  static String rescheduleSuccessful = 'Reschedule Successful!';
   static String backToHome = 'Back To Home';
   static String viewBookingSummary = 'View Booking Summary';
   static String successfulDone = 'Your booking has been successfully done';
+  static String successfulReschedule =
+      'Your booking has been  reschedule successfully done';
 
   static String rateNow = 'Rate Now';
   static String locationNearest =

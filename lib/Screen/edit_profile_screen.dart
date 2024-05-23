@@ -396,9 +396,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       emailCn.text = (profileModal?.data?.email ?? '');
       nameCn.text = (profileModal?.data?.name ?? '');
       phoneCn.text = (profileModal?.data?.phone ?? '');
+      print(">>>>>>>>>>${profileModal?.data?.image}");
       sharedPreferences.setString('image', profileModal?.data?.image ?? '');
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');
-
+      sharedPreferences.setString(
+          'User_Id', profileModal?.data?.id.toString() ?? '');
+      sharedPreferences
+          .setInt(
+              'senderId', int.parse(profileModal?.data!.id?.toString() ?? ''))
+          .toString();
+      print(">>>User_Id>>>>>>>${sharedPreferences.getString('User_Id')}");
       setState(() {});
     }
   }

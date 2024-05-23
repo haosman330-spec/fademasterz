@@ -120,7 +120,7 @@ class UserDetail {
         lat: json["lat"],
         lng: json["lng"],
         serviceCategoryIds: json["service_category_ids"],
-        workExperience: json["work_experience"],
+        workExperience: json["work_experience"].toString(),
         instagramLink: json["instagram_link"],
         shopStartTime: json["shop_start_time"],
         shopEndTime: json["shop_end_time"],

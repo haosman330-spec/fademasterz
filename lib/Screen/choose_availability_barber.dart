@@ -20,6 +20,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../Utils/app_fonts.dart';
 import '../../Utils/app_string.dart';
 import '../ApiService/api_service.dart';
+import '../Modal/booking_detail_modal.dart';
 import '../Modal/select_specialist_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/helper.dart';
@@ -28,10 +29,10 @@ import 'booking_summary_screen.dart';
 
 class ChooseAvailabilityBarber extends StatefulWidget {
   final String? price;
-  final List<Service?>? selectedServiceList;
-
+  final List<Service1?>? selectedServiceList;
+  final BookingDetailData? data;
   const ChooseAvailabilityBarber(
-      {super.key, this.price, required this.selectedServiceList});
+      {super.key, this.price, this.selectedServiceList, this.data});
 
   @override
   State<ChooseAvailabilityBarber> createState() =>
@@ -43,9 +44,10 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
   int timeSelectIndex = 0;
 
   TextEditingController noteCn = TextEditingController();
-  String _selectedDate = '';
+  String? _selectedDate = '';
   int? specialistId;
   var speciaList;
+  String? time;
 
   /// The method for [DateRangePickerSelectionChanged] callback, which will be
   /// called whenever a selection changed on the date picker widget.
@@ -116,9 +118,18 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     );
   }
 
+  void initData() {
+    // _selectedDate = widget.data?.date?.toIso8601String();
+    if (widget.data?.specialistId?.isNotEmpty ?? false) {
+      // specialistId = int.parse(widget.data?.specialistId ?? '0');
+    }
+  }
+
   @override
   void initState() {
+    initData();
     _chooseAvailabilityApi(context);
+
     super.initState();
   }
 
@@ -360,6 +371,8 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                                 selectSpecialistTimeResponse.data?[index];
                             return InkWell(
                               onTap: () {
+                                debugPrint(
+                                    '>>>>>>>>>>>>>>${selectSpecialistTimeResponse.data?[index].time}<<<<<<<<<<<<<<');
                                 timeSelectIndex = index;
 
                                 setState(
@@ -533,16 +546,16 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               int specialistId = (chooseAvailabilityResponse
                       .data?.availableSpecialist?[selectIndex].id ??
                   speciaList?.id);
-              String? time =
-                  selectSpecialistTimeResponse.data?[timeSelectIndex].time;
+              time = selectSpecialistTimeResponse.data?[timeSelectIndex].time;
+
               String? date = '2024-04-20';
-              date = DateFormat('yyyy-MM-dd')
+              date = (DateFormat('yyyy-MM-dd')
                   .format(
-                    DateTime.parse(_selectedDate.isNotEmpty
-                        ? _selectedDate
+                    DateTime.parse((_selectedDate?.isNotEmpty ?? false)
+                        ? _selectedDate.toString()
                         : DateTime.now().toString()),
                   )
-                  .toLowerCase();
+                  .toLowerCase());
 
               String? image = _imageFile?.path.toString();
               String? price = widget.selectedServiceList
@@ -563,11 +576,12 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                 time: time,
                 date: date,
                 shopId: shopId.toString(),
-                price: price,
-                notetext: noteCn.text,
+                price: widget.data?.subTotal ?? price,
+                noteText: widget.data?.note ?? noteCn.text,
                 specialistId: specialistId.toString(),
-                serviceId: serviceId.join(','),
-                image: image,
+                serviceId: widget.data?.serviceIds ?? serviceId.join(','),
+                image: widget.data?.desired_look ?? image,
+                bookingStatus: widget.data?.bookingStatus,
               );
 
               Navigator.push(
@@ -594,7 +608,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
           child: Row(
             children: [
               Text(
-                '\$${widget.price}',
+                '£${widget.price ?? widget.data?.subTotal}',
                 style: AppFonts.blackFont,
               ),
               const Spacer(),
@@ -630,7 +644,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       request["selected_date"] = DateFormat('yyyy-MM-dd')
           .format(
             DateTime.parse(
-              _selectedDate.isNotEmpty
+              _selectedDate!.isNotEmpty
                   ? _selectedDate.toString()
                   : DateTime.now().toString(),
             ),
@@ -639,7 +653,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       request["selected_day"] = DateFormat('EEEE')
           .format(
             DateTime.parse(
-              _selectedDate.isNotEmpty
+              _selectedDate!.isNotEmpty
                   ? _selectedDate.toString()
                   : DateTime.now().toString(),
             ),
@@ -701,7 +715,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     request["selected_date"] = DateFormat('yyyy-MM-dd')
         .format(
           DateTime.parse(
-            _selectedDate.isNotEmpty
+            (_selectedDate?.isNotEmpty ?? false)
                 ? _selectedDate.toString()
                 : DateTime.now().toString(),
           ),

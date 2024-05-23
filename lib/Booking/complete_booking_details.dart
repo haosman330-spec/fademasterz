@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/api_service.dart';
 import '../Dashboard/dashboard.dart';
 import '../Modal/booking_detail_modal.dart';
-import '../Screen/chat_inbox_screen.dart';
+import '../Screen/chat_screen_inbox.dart';
 import '../Screen/choose_availability_barber.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
@@ -25,6 +25,7 @@ import '../Utils/helper.dart';
 
 class CompleteBookingDetail extends StatefulWidget {
   final int? bookingId;
+
   const CompleteBookingDetail({super.key, this.bookingId});
 
   @override
@@ -43,6 +44,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
 
   @override
   void initState() {
+    debugPrint('>>>>>>>>>>>>>>${widget.bookingId}<<<<<<<<<<<<<<');
     SchedulerBinding.instance.addPostFrameCallback((_) {
       bookingDetailApi(
         context,
@@ -52,433 +54,645 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
   }
 
   willPopScop() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const DashBoardScreen(
-            selectIndex: 1,
-          ),
-        ),
-        (route) => false);
+    bookingDetailResponse?.data?.bookingStatus == "Completed"
+        ? Navigator.pop(context)
+        : '';
+    bookingDetailResponse?.data?.bookingStatus == "Pending"
+        ? Navigator.pop(context)
+        : '';
+    // Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const DashBoardScreen(
+    //         selectIndex: 1,
+    //       ),
+    //     ),
+    //     (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColor.bg,
-        appBar: MyAppBar.myAppbar(
-          leading: IconButton(
-            icon: SvgPicture.asset(
-              AppIcon.backIcon,
-              height: 12,
-              width: 15,
-            ),
-            onPressed: () {
-              willPopScop();
-            },
+      backgroundColor: AppColor.bg,
+      appBar: MyAppBar.myAppbar(
+        leading: IconButton(
+          icon: SvgPicture.asset(
+            AppIcon.backIcon,
+            height: 12,
+            width: 15,
           ),
-          title: const Text(
-            AppStrings.bookingSummary,
-            style: AppFonts.appText,
+          onPressed: () {
+            willPopScop();
+          },
+        ),
+        title: const Text(
+          AppStrings.bookingSummary,
+          style: AppFonts.appText,
+        ),
+      ),
+      body: Visibility(
+        visible: !showLoader,
+        replacement: const Center(
+          child: CircularProgressIndicator(
+            color: AppColor.yellow,
           ),
         ),
-        body: Visibility(
-          visible: !showLoader,
-          replacement: const Center(
-            child: CircularProgressIndicator(
-              color: AppColor.yellow,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 8,
             ),
-          ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 8,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 10,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 76,
+                        width: 77,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            11,
+                          ),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Visibility(
+                          visible: (bookingDetailResponse
+                                  ?.data?.shopImage?.isNotEmpty ??
+                              false),
+                          child: Image.network(
+                            ApiService.imageUrl +
+                                (bookingDetailResponse?.data?.shopImage ?? ''),
+                            // (bookingDetailResponse.data?.shopImage ?? ''),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 76,
-                          width: 77,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              11,
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              (bookingDetailResponse?.data?.shopName ?? ''),
+                              style: AppFonts.regular.copyWith(fontSize: 16),
                             ),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Visibility(
-                            visible: (bookingDetailResponse
-                                    ?.data?.shopImage?.isNotEmpty ??
-                                false),
-                            child: Image.network(
-                              ApiService.imageUrl +
-                                  (bookingDetailResponse?.data?.shopImage ??
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppIcon.timerIcon,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  (bookingDetailResponse?.data?.startTime ??
                                       ''),
-                              // (bookingDetailResponse.data?.shopImage ?? ''),
-                              fit: BoxFit.fill,
+                                  style: AppFonts.regular.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                SvgPicture.asset(
+                                  AppIcon.calenderIcon,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  DateFormat('dd MMM yyyy').format(
+                                    bookingDetailResponse?.data?.date ??
+                                        DateTime.now(),
+                                  ),
+                                  style: AppFonts.regular.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '£ ${(bookingDetailResponse?.data?.total ?? '')}',
+                              style: AppFonts.yellowFont.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        AppStrings.salonAddress,
+                        style: AppFonts.yellowFont,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        (bookingDetailResponse?.data?.shopAddress ?? ''),
+                        style: AppFonts.regular.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppStrings.bookingDate,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            AppStrings.bookingTime,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            AppStrings.specialist,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            DateFormat('dd MMM yyyy').format(
+                              bookingDetailResponse?.data?.date ??
+                                  DateTime.now(),
+                            ),
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            (bookingDetailResponse?.data?.startTime ?? ''),
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            (bookingDetailResponse?.data?.specialistName ?? ''),
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount:
+                        bookingDetailResponse?.data?.services?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      // var service =
+                      //     bookingDetailResponse?.data?.services?[index];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (index == 0)
+                            const Text(
+                              AppStrings.services,
+                              style: AppFonts.yellowFont,
+                            ),
+                          Row(
                             children: [
                               Text(
-                                (bookingDetailResponse?.data?.shopName ?? ''),
-                                style: AppFonts.regular.copyWith(fontSize: 16),
+                                (bookingDetailResponse
+                                        ?.data?.services?[index].name ??
+                                    ' '),
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
                               ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    AppIcon.timerIcon,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    (bookingDetailResponse?.data?.startTime ??
-                                        ''),
-                                    style: AppFonts.regular.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  SvgPicture.asset(
-                                    AppIcon.calenderIcon,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    DateFormat('dd MMM yyyy').format(
-                                      bookingDetailResponse?.data?.date ??
-                                          DateTime.now(),
-                                    ),
-                                    style: AppFonts.regular.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
+                              const Spacer(),
                               Text(
-                                '\$${(bookingDetailResponse?.data?.total ?? '')}',
-                                style: AppFonts.yellowFont.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
+                                '£ ${(bookingDetailResponse?.data?.services?[index].price ?? ' ')}',
+                                style: AppFonts.regular.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
-                        )
-                      ],
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          AppStrings.salonAddress,
-                          style: AppFonts.yellowFont,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          (bookingDetailResponse?.data?.shopAddress ?? ''),
-                          style: AppFonts.regular.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppStrings.bookingDate,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 9,
-                            ),
-                            Text(
-                              AppStrings.bookingTime,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 9,
-                            ),
-                            Text(
-                              AppStrings.specialist,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              DateFormat('dd MMM yyyy').format(
-                                bookingDetailResponse?.data?.date ??
-                                    DateTime.now(),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppStrings.subTotal,
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
                               ),
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                              const SizedBox(
+                                height: 9,
+                              ),
+                              Text(
+                                AppStrings.tax,
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 9,
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '£ ${bookingDetailResponse?.data?.subTotal ?? ''}',
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 9,
+                              ),
+                              Text(
+                                '£ ${bookingDetailResponse?.data?.tax ?? ''}',
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 9,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        color: Color(0xff434343),
+                        height: 1,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            AppStrings.total,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '£ ${bookingDetailResponse?.data?.total ?? ''}',
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: Visibility(
+        visible: bookingDetailResponse?.data?.bookingStatus == "Pending",
+        replacement: Visibility(
+          visible: bookingDetailResponse?.data?.bookingStatus == "Completed",
+          child: MyAppButton(
+            title: AppStrings.rateNow,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            onPress: () {
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        17,
+                      ),
+                    ),
+                    insetPadding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 16),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: SizedBox(
+                                height: 21,
+                                width: 21,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: SvgPicture.asset(AppIcon.cancelIcon),
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                AppStrings.rating,
+                                style: AppFonts.blackFont.copyWith(
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
                             ),
-                            Text(
-                              (bookingDetailResponse?.data?.startTime ?? ''),
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            SvgPicture.asset(
+                              AppIcon.ratingDialogIcon,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                'You have done using Barber/Salon Service ',
+                                style: AppFonts.blackFont.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                'Please leave your review so others people can know your opinion.',
+                                style: AppFonts.text.copyWith(
+                                  color:
+                                      const Color(0xff5F5F5F).withOpacity(.90),
+                                ),
+                              ),
                             ),
                             const SizedBox(
-                              height: 9,
+                              height: 17,
                             ),
-                            Text(
-                              (bookingDetailResponse?.data?.specialistName ??
-                                  ''),
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            RatingBar.builder(
+                              initialRating: 0,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => const Icon(
+                                  Icons.star,
+                                  color: AppColor.yellow),
+                              onRatingUpdate: (rating) {
+                                rating1 = rating.toString();
+                                setState(() {});
+                                //  print(rating);
+                              },
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 15, top: 15, bottom: 15),
+                              child: CustomTextField(
+                                controller: reviewCn,
+                                textInputAction: TextInputAction.done,
+                                radius: 6,
+                                hintText: AppStrings.reviews,
+                                maxLines: 4,
+                                style: AppFonts.blackFont.copyWith(
+                                    fontSize: 15, fontWeight: FontWeight.w500),
+                                borderSide: BorderSide.none,
+                                isFilled: true,
+                                fillColor: const Color(0xffEDEDED),
+                              ),
+                            ),
+                            MyAppButton(
+                              onPress: () async {
+                                await rateNowApi(context);
+                              },
+                              height: 48,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              title: AppStrings.submit,
+                              style: AppFonts.blackFont
+                                  .copyWith(fontWeight: FontWeight.w500),
+                              radius: 6,
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
                       ),
                     ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount:
-                          bookingDetailResponse?.data?.services?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        // var service =
-                        //     bookingDetailResponse?.data?.services?[index];
+                  );
+                },
+              );
+            },
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: MyAppButton(
+                      onPress: () async {
+                        SharedPreferences shared =
+                            await SharedPreferences.getInstance();
+                        shared.setString(
+                            'receiverId',
+                            (bookingDetailResponse?.data!.shopId.toString() ??
+                                ''));
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (index == 0)
-                              const Text(
-                                AppStrings.services,
-                                style: AppFonts.yellowFont,
-                              ),
-                            Row(
-                              children: [
-                                Text(
-                                  (bookingDetailResponse
-                                          ?.data?.services?[index].name ??
-                                      ' '),
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '\$${(bookingDetailResponse?.data?.services?[index].price ?? ' ')}',
-                                  style: AppFonts.regular.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatScreenInBox(
+                              receiverId: bookingDetailResponse?.data?.shopId
+                                  .toString(),
+                              receiverImage:
+                                  bookingDetailResponse?.data?.shopImage,
+                              receiverName:
+                                  bookingDetailResponse?.data?.shopName,
                             ),
-                          ],
+                          ),
                         );
                       },
+                      title: AppStrings.chatNow,
+                      style: AppFonts.blackFont.copyWith(
+                          color: AppColor.bg, fontWeight: FontWeight.w500),
+                      height: 50,
+                      radius: 6,
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    width: 21,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppStrings.subTotal,
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                                Text(
-                                  AppStrings.tax,
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '\$${bookingDetailResponse?.data?.subTotal ?? ''}',
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                                Text(
-                                  '\$${bookingDetailResponse?.data?.tax ?? ''}',
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const Divider(
-                          color: Color(0xff434343),
-                          height: 1,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              AppStrings.total,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '\$${bookingDetailResponse?.data?.total ?? ''}',
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ],
+                  Expanded(
+                    child: MyAppButton(
+                      onPress: () {
+                        var currentTime =
+                            DateTime.now().subtract(const Duration(hours: 2));
+                        var scheduleTime = DateTime.parse('$date $time');
+                        if (bookingDetailResponse?.data?.bookingStatus ==
+                            "Cancelled") {
+                          Helper().showToast(
+                              'Your Booking  has been Already Cancelled');
+                        } else {
+                          if (currentTime.isBefore(scheduleTime)) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChooseAvailabilityBarber(
+                                    data: bookingDetailResponse?.data,
+                                  ),
+                                ));
+                          } else {
+                            showBottomSheet();
+                          }
+                        }
+                        //Navigator.of(context).pop();
+                      },
+                      radius: 6,
+                      height: 50,
+                      title: AppStrings.reschedule,
+                      style: AppFonts.blackFont.copyWith(
+                          color: AppColor.bg, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
-        bottomNavigationBar: bookingDetailResponse?.data?.bookingStatus ==
-                "Completed"
-            ? MyAppButton(
-                title: AppStrings.rateNow,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                onPress: () {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            17,
+              TextButton(
+                onPressed: () {
+                  if (bookingDetailResponse?.data?.bookingStatus ==
+                      "Cancelled") {
+                    Helper().showToast('Your Booking is Already Cancelled');
+                  } else {
+                    showModalBottomSheet(
+                      isDismissible: false,
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (ctx) {
+                        return Container(
+                          height: 230,
+                          decoration: const BoxDecoration(
+                            color: AppColor.bg,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                20,
+                              ),
+                              topRight: Radius.circular(
+                                20,
+                              ),
+                            ),
                           ),
-                        ),
-                        insetPadding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 16),
-                          child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Align(
                                   alignment: Alignment.topRight,
@@ -487,282 +701,109 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                     width: 21,
                                     child: InkWell(
                                       onTap: () {
-                                        Navigator.pop(context);
+                                        Navigator.pop(ctx);
                                       },
-                                      child:
-                                          SvgPicture.asset(AppIcon.cancelIcon),
+                                      child: const Icon(
+                                        Icons.cancel,
+                                        color: AppColor.yellow,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                Center(
+                                const Text(
+                                  AppStrings.cancelBooking,
+                                  style: AppFonts.appText,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 35),
                                   child: Text(
-                                    AppStrings.rating,
-                                    style: AppFonts.blackFont.copyWith(
-                                      fontSize: 20,
-                                    ),
+                                    textAlign: TextAlign.center,
+                                    AppStrings.conformCancel,
+                                    style: AppFonts.normalText
+                                        .copyWith(fontSize: 14),
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 9,
+                                  height: 14,
                                 ),
-                                SvgPicture.asset(
-                                  AppIcon.ratingDialogIcon,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 10),
-                                  child: Text(
-                                    textAlign: TextAlign.center,
-                                    'You have done using Barber/Salon Service ',
-                                    style: AppFonts.blackFont.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Text(
-                                    textAlign: TextAlign.center,
-                                    'Please leave your review so others people can know your opinion.',
-                                    style: AppFonts.text.copyWith(
-                                      color: const Color(0xff5F5F5F)
-                                          .withOpacity(.90),
-                                    ),
-                                  ),
+                                const Divider(
+                                  color: AppColor.dividerColor,
                                 ),
                                 const SizedBox(
-                                  height: 17,
+                                  height: 14,
                                 ),
-                                RatingBar.builder(
-                                  initialRating: 0,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemPadding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  itemBuilder: (context, _) => const Icon(
-                                      Icons.star,
-                                      color: AppColor.yellow),
-                                  onRatingUpdate: (rating) {
-                                    rating1 = rating.toString();
-                                    setState(() {});
-                                    //  print(rating);
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, right: 15, top: 15, bottom: 15),
-                                  child: CustomTextField(
-                                    controller: reviewCn,
-                                    textInputAction: TextInputAction.done,
-                                    radius: 6,
-                                    hintText: AppStrings.reviews,
-                                    maxLines: 4,
-                                    style: AppFonts.blackFont.copyWith(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
-                                    borderSide: BorderSide.none,
-                                    isFilled: true,
-                                    fillColor: const Color(0xffEDEDED),
-                                  ),
-                                ),
-                                MyAppButton(
-                                  onPress: () async {
-                                    await rateNowApi(context);
-                                  },
-                                  height: 48,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  title: AppStrings.submit,
-                                  style: AppFonts.blackFont
-                                      .copyWith(fontWeight: FontWeight.w500),
-                                  radius: 6,
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: MyAppButton(
+                                        onPress: () {
+                                          Navigator.pop(ctx);
+                                        },
+                                        border:
+                                            Border.all(color: AppColor.yellow),
+                                        title: AppStrings.no,
+                                        style: AppFonts.yellowFont.copyWith(
+                                            fontWeight: FontWeight.w500),
+                                        height: 50,
+                                        color: Colors.transparent,
+                                        radius: 6,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 21,
+                                    ),
+                                    Expanded(
+                                      child: MyAppButton(
+                                        onPress: () {
+                                          Navigator.pop(ctx);
+                                          cancelBookingApi(context);
+                                          // Navigator.popUntil(
+                                          //     context, (route) => false);
+                                        },
+                                        radius: 6,
+                                        height: 50,
+                                        title: AppStrings.yesCancelBooking,
+                                        style: AppFonts.blackFont.copyWith(
+                                            color: AppColor.bg,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    );
+                  }
                 },
-              )
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: MyAppButton(
-                            onPress: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ChatScreenInBox()),
-                              );
-                            },
-                            title: AppStrings.chatNow,
-                            style: AppFonts.blackFont.copyWith(
-                                color: AppColor.bg,
-                                fontWeight: FontWeight.w500),
-                            height: 50,
-                            radius: 6,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 21,
-                        ),
-                        Expanded(
-                          child: MyAppButton(
-                            onPress: () {
-                              showBottomSheet();
-                              //Navigator.of(context).pop();
-                            },
-                            radius: 6,
-                            height: 50,
-                            title: AppStrings.reschedule,
-                            style: AppFonts.blackFont.copyWith(
-                                color: AppColor.bg,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            isDismissible: false,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (ctx) {
-                              return Container(
-                                height: 230,
-                                decoration: const BoxDecoration(
-                                  color: AppColor.bg,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(
-                                      20,
-                                    ),
-                                    topRight: Radius.circular(
-                                      20,
-                                    ),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                  child: Column(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topRight,
-                                        child: SizedBox(
-                                          height: 21,
-                                          width: 21,
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.pop(ctx);
-                                            },
-                                            child: const Icon(
-                                              Icons.cancel,
-                                              color: AppColor.yellow,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const Text(
-                                        AppStrings.cancelBooking,
-                                        style: AppFonts.appText,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 35),
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          AppStrings.conformCancel,
-                                          style: AppFonts.normalText
-                                              .copyWith(fontSize: 14),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 14,
-                                      ),
-                                      const Divider(
-                                        color: AppColor.dividerColor,
-                                      ),
-                                      const SizedBox(
-                                        height: 14,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: MyAppButton(
-                                              onPress: () {
-                                                Navigator.pop(ctx);
-                                              },
-                                              border: Border.all(
-                                                  color: AppColor.yellow),
-                                              title: AppStrings.no,
-                                              style: AppFonts.yellowFont
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                              height: 50,
-                                              color: Colors.transparent,
-                                              radius: 6,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 21,
-                                          ),
-                                          Expanded(
-                                            child: MyAppButton(
-                                              onPress: () {
-                                                Navigator.pop(ctx);
-                                                cancelBookingApi(context);
-                                                // Navigator.popUntil(
-                                                //     context, (route) => false);
-                                              },
-                                              radius: 6,
-                                              height: 50,
-                                              title:
-                                                  AppStrings.yesCancelBooking,
-                                              style: AppFonts.blackFont
-                                                  .copyWith(
-                                                      color: AppColor.bg,
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Text(
-                          AppStrings.cancelBooking,
-                          style: AppFonts.yellowFont.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ))
-                  ],
+                child: Text(
+                  AppStrings.cancelBooking,
+                  style: AppFonts.yellowFont
+                      .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-              ));
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
+  var bookingId;
+  String? time;
+  String? note;
+  String? image;
+  String? date;
+  String? specialistId;
   BookingDetailResponse? bookingDetailResponse;
+
   Future<void> bookingDetailApi(BuildContext context) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -796,9 +837,13 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
     if (jsonResponse['status']) {
       bookingDetailResponse = BookingDetailResponse.fromJson(jsonResponse);
       var shopId = bookingDetailResponse?.data?.shopId;
-      var bookingId = bookingDetailResponse?.data?.bookingId;
-      sharedPreferences.setInt('receiverId', shopId!);
-      debugPrint('>>>>>>id>>>>>>>>${shopId}<<<<<<<<<<<<<<');
+      bookingId = bookingDetailResponse?.data?.bookingId;
+      time = bookingDetailResponse?.data?.startTime;
+      date = bookingDetailResponse?.data?.date?.toString().split(" ").first;
+
+      image = bookingDetailResponse?.data?.desired_look;
+      note = bookingDetailResponse?.data?.note;
+      specialistId = bookingDetailResponse?.data?.specialistId;
 
       setState(() {});
     }
@@ -881,113 +926,156 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
     );
   }
 
+  // Future<void> rescheduleBookingApi(BuildContext context) async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //
+  //   if (context.mounted) {
+  //     Utility.progressLoadingDialog(context, true);
+  //   }
+  //
+  //   var headers = {
+  //     'Accept': 'application/json',
+  //     'Content-Type': 'application/json',
+  //     'Authorization': 'Bearer ${sharedPreferences.getString("access_Token")}'
+  //   };
+  //   var request =
+  //       http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
+  //
+  //   request.fields.addAll({
+  //     'booking_id': widget.bookingId.toString(),
+  //     'date': date.toString(),
+  //     'time': time.toString(),
+  //     'specialist_id': specialistId.toString(),
+  //     'note': note.toString(),
+  //   });
+  //   if (image?.isNotEmpty ?? false) {
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath('desired_look', (image ?? ' ')),
+  //     );
+  //   }
+  //   request.headers.addAll(headers);
+  //
+  //   http.StreamedResponse response = await request.send();
+  //
+  //   setState(
+  //     () {},
+  //   );
+  //   var result = await response.stream.bytesToString();
+  //
+  //   var jsonResponse = jsonDecode(result);
+  //
+  //   // Helper().showToast(
+  //   //   jsonResponse["message"],
+  //   // );
+  //
+  //   if (context.mounted) {
+  //     Utility.progressLoadingDialog(
+  //       context,
+  //       false,
+  //     );
+  //   }
+  //   if (jsonResponse["status"] == true) {
+  //     setState(() {});
+  //   }
+  // }
+
   Future showBottomSheet() async {
     return await showModalBottomSheet(
       backgroundColor: Colors.transparent,
       isDismissible: false,
       context: context,
       builder: (context) {
-        return Container(
-          height: 220,
-          decoration: const BoxDecoration(
-            color: AppColor.bg,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(
-                20,
-              ),
-              topRight: Radius.circular(
-                20,
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Container(
+            height: 220,
+            decoration: const BoxDecoration(
+              color: AppColor.bg,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(
+                  20,
+                ),
+                topRight: Radius.circular(
+                  20,
+                ),
               ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox.shrink(),
-                    Text(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox.shrink(),
+                      Text(
+                        textAlign: TextAlign.center,
+                        AppStrings.alert,
+                        style: AppFonts.redFont,
+                      ),
+                      SizedBox(
+                        height: 21,
+                        width: 21,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.cancel,
+                            color: AppColor.yellow,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const Text(
+                    AppStrings.rescheduleBooking,
+                    style: AppFonts.appText,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Text(
                       textAlign: TextAlign.center,
-                      AppStrings.alert,
-                      style: AppFonts.redFont,
+                      'You can only Reschedule before 2 hrs of booking time',
+                      style: AppFonts.normalText.copyWith(fontSize: 14),
                     ),
-                    SizedBox(
-                      height: 21,
-                      width: 21,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(
-                          Icons.cancel,
-                          color: AppColor.yellow,
-                        ),
-                      ),
+                  ),
+                  const SizedBox(
+                    height: 14,
+                  ),
+                  const Divider(
+                    color: AppColor.dividerColor,
+                  ),
+                  MyAppButton(
+                    onPress: () {
+                      Navigator.of(context).pop();
+                      // Navigator.push(
+                      //   context,
+                      // MaterialPageRoute(
+                      //   builder: (context) => ChooseAvailabilityBarber(
+                      //     selectedServiceList: [],
+                      //     price: (bookingDetailResponse?.data?.subTotal ?? ''),
+                      //   ),
+                      // ),
+                      //  );
+                    },
+                    title: AppStrings.gotIt,
+                    style: AppFonts.blackFont.copyWith(
+                      color: AppColor.bg,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                const Text(
-                  AppStrings.rescheduleBooking,
-                  style: AppFonts.appText,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    'You can only Reschedule before 2 hrs of booking time',
-                    style: AppFonts.normalText.copyWith(fontSize: 14),
-                  ),
-                ),
-                const SizedBox(
-                  height: 14,
-                ),
-                const Divider(
-                  color: AppColor.dividerColor,
-                ),
-                MyAppButton(
-                  onPress: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChooseAvailabilityBarber(
-                          selectedServiceList: [],
-                          price: (bookingDetailResponse?.data?.subTotal ?? ''),
-                        ),
-                      ),
-                    );
-                    // Navigator.pushAndRemoveUntil(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => ChooseAvailabilityBarber(
-                    //         selectedServiceList: [],
-                    //         price:
-                    //             (bookingDetailResponse?.data?.subTotal ?? ''),
-                    //         // (bookingDetailResponse
-                    //         //     ?.data?.services
-                    //         //     ) ,
-                    //       ),
-                    //     ),
-                    //     (route) => false);
-                  },
-                  title: AppStrings.gotIt,
-                  style: AppFonts.blackFont.copyWith(
-                    color: AppColor.bg,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  radius: 7,
-                  height: 50,
-                  width: 128,
-                )
-              ],
+                    radius: 7,
+                    height: 50,
+                    width: 128,
+                  )
+                ],
+              ),
             ),
           ),
         );

@@ -40,7 +40,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     super.initState();
   }
 
-  List<Service?>? selectedServiceList = [];
+  List<Service1?>? selectedServiceList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +160,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
                               height: 4,
                             ),
                             Text(
-                              '\$${shopService?.price //.toStringAsFixed(0),
+                              '£ ${shopService?.price //.toStringAsFixed(0),
                               }',
                               style: AppFonts.appText.copyWith(
                                   fontWeight: FontWeight.w600, fontSize: 14),
@@ -233,7 +233,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
           child: Row(
             children: [
               Text(
-                '\$${selectedServiceList?.fold(0, (previousValue, element) => previousValue + double.parse(element?.price ?? '0').toInt()).toStringAsFixed(0)}',
+                '£ ${selectedServiceList?.fold(0, (previousValue, element) => previousValue + double.parse(element?.price ?? '0').toInt()).toStringAsFixed(0)}',
                 style: AppFonts.blackFont,
               ),
               const Spacer(),
@@ -252,7 +252,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     );
   }
 
-  void onItemAddRemove(Service? data) {
+  void onItemAddRemove(Service1? data) {
     bool isAlreadySelected = false;
     selectedServiceList?.forEach((element) {
       if (element?.id == data?.id) {

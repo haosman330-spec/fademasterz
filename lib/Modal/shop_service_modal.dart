@@ -41,7 +41,7 @@ class ShopServiceResponse {
 }
 
 class ServiceData {
-  List<Service>? services;
+  List<Service1>? services;
   int? totalPages;
 
   ServiceData({
@@ -52,8 +52,8 @@ class ServiceData {
   factory ServiceData.fromJson(Map<String, dynamic> json) => ServiceData(
         services: json["services"] == null
             ? []
-            : List<Service>.from(
-                json["services"]!.map((x) => Service.fromJson(x))),
+            : List<Service1>.from(
+                json["services"]!.map((x) => Service1.fromJson(x))),
         totalPages: json["total_pages"],
       );
 
@@ -65,16 +65,16 @@ class ServiceData {
       };
 }
 
-class Service {
+class Service1 {
   int? id;
   String? name;
-  String? duration;
   String? price;
+  String? duration;
   bool? selected;
 
-  Service({this.id, this.name, this.duration, this.price, this.selected});
+  Service1({this.id, this.name, this.duration, this.price, this.selected});
 
-  factory Service.fromJson(Map<String, dynamic> json) => Service(
+  factory Service1.fromJson(Map<String, dynamic> json) => Service1(
         id: json["id"],
         name: json["name"],
         duration: json["duration"],
@@ -92,6 +92,6 @@ class Service {
 
   @override
   String toString() {
-    return 'Service{id: $id, name: $name, duration: $duration, price: $price, selected: $selected}';
+    return 'Service1{id: $id, name: $name, duration: $duration, price: $price, selected: $selected}';
   }
 }

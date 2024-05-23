@@ -5,18 +5,26 @@ import '../Modal/chat_user_modal.dart';
 
 class ChatService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  Future<void> sendMessage(String receiverId, message) async {
+  dynamic time;
+  Future<void> sendMessage({
+    required String receiverId,
+    required String message,
+    required String? receiverImage,
+    required String? receiverName,
+  }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     String? currentUserId = sharedPreferences.getInt('senderId').toString();
     String? currentUserEmail = sharedPreferences.getString('email');
-    final Timestamp timestamp = Timestamp.now();
+    // final Timestamp timestamp = Timestamp.now();
+    time = DateTime.now().millisecondsSinceEpoch.toString();
     Messages messages = Messages(
       senderId: currentUserId.toString(),
       senderEmail: currentUserEmail.toString(),
+      image: sharedPreferences.getString('image'),
       receiverId: receiverId,
       message: message,
-      timestamp: timestamp,
+      timestamp: int.parse(time),
     );
     List<String> ids = [currentUserId.toString(), receiverId];
     ids.sort();
@@ -26,6 +34,25 @@ class ChatService {
         .doc(chatRoomId)
         .collection('messages')
         .add(messages.toMap());
+    await firestore.collection('chat_rooms').doc(chatRoomId).set({
+      "last_message_time": time,
+      "last_message": message,
+      "sender_id": currentUserId,
+      "image": sharedPreferences.getString('image'),
+      "members": [currentUserId, receiverId],
+      "members_list": [
+        {
+          "image": sharedPreferences.getString('image'),
+          "name": sharedPreferences.getString('name'),
+          "id": currentUserId,
+        },
+        {
+          "image": receiverImage,
+          "name": receiverName,
+          "id": receiverId,
+        },
+      ]
+    });
   }
 
   Stream<QuerySnapshot> getMessage(String userId, otherUserId) {
@@ -37,7 +64,7 @@ class ChatService {
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
-        .orderBy('timestamp', descending: false)
+        .orderBy('timestamp', descending: true)
         .snapshots();
   }
 }

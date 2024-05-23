@@ -3,15 +3,16 @@ import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../Screen/chat_list.dart';
 import '../Screen/tab1_home_screen.dart';
 import '../Screen/tab2_my_booking_screen.dart';
-import '../Screen/tab3_chat_screen.dart';
 import '../Screen/tab4_profile_screen.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 
 class DashBoardScreen extends StatefulWidget {
   final int selectIndex;
+
   const DashBoardScreen({
     super.key,
     required this.selectIndex,
@@ -32,7 +33,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     pages = [
       const HomeScreen(),
       const MyBookingScreen(),
-      const ChatScreen(),
+      // const ChatScreen(),
+      const ChatListScreen(),
       ProfileScreen(
         onTap: (value) {
           onBottomTap(value);

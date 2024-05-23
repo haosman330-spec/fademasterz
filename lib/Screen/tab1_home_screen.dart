@@ -17,12 +17,17 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
+import '../Modal/booking_summary_argument_modal.dart';
 import '../Utils/bottam_sheet.dart';
 import '../Utils/custom_app_button.dart';
 import '../Utils/utility.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  // final String? startYr;
+  // final String? availability;
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -31,11 +36,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchCn = TextEditingController();
   bool isDataLoading = false;
-
+  String? startYr;
+  String? endYr;
+  String? availability;
+  List<String>? serviceId;
   void setLoader(bool value) {
     isDataLoading = value;
     setState(() {});
   }
+
+  FilterData? filterData;
 
   Future<void> _showDialog(BuildContext context) async {
     var permission = await Geolocator.checkPermission();
@@ -357,9 +367,26 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (context) {
-                          return const AppBottomSheet();
+                          return AppBottomSheet(
+                            filterData: filterData,
+                          );
                         },
-                      );
+                      ).then((value) async {
+                        if (value != null) {
+                          filterData = value;
+                          startYr = filterData?.startYear;
+                          availability = filterData?.availability;
+                          serviceId = filterData?.serviceId;
+
+                          startYr = value?.startYear;
+                          endYr = value?.endYear;
+                          availability = value?.availability;
+                          serviceId = value?.serviceId;
+                          debugPrint(
+                              '>>>>>>>>>>>>>>${serviceId}<<<<<<<<<<<<<<');
+                          await homeDetailApi(context: context);
+                        }
+                      });
                       // return const AppBottomSheet();
                     },
 
@@ -613,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Container(
-                                  height: 77,
+                                  height: 75,
                                   width: 76,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: const BoxDecoration(
@@ -752,10 +779,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     var request = {};
+
     request["latitude"] = latitude.toString();
     request['longitude'] = longitude.toString();
     request["search"] = searchValue ?? '';
-
+    request["availibility"] =
+        (availability?.isNotEmpty ?? false) ? availability : 'All';
+    request["category_ids"] = serviceId?.join(',') ?? '';
+    request["experience_level"] =
+        ((startYr?.isNotEmpty ?? false) && (endYr?.isNotEmpty ?? false))
+            ? "${startYr}" "-" "${endYr}"
+            : ' ';
+    // (startYr?.isNotEmpty ?? false) ?
     var response = await http.post(
         Uri.parse(
           ApiService.home,

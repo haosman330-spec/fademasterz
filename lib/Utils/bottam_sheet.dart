@@ -1,65 +1,168 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:fademasterz/Dashboard/dashboard.dart';
+import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
+import 'package:fademasterz/Modal/get_category_modal.dart';
+import 'package:fademasterz/Utils/utility.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../ApiService/api_service.dart';
 import 'app_color.dart';
 import 'app_fonts.dart';
 import 'app_list.dart';
 import 'app_string.dart';
 
 class AppBottomSheet extends StatefulWidget {
-  const AppBottomSheet({super.key});
+  final FilterData? filterData;
+
+  const AppBottomSheet({
+    super.key,
+    this.filterData,
+  });
 
   @override
   State<AppBottomSheet> createState() => _AppBottomSheetState();
 }
 
 class _AppBottomSheetState extends State<AppBottomSheet> {
-  int selectIndex = 0;
-  int selectIndex1 = 0;
-  double startYr = 0;
-  double endYr = 15;
+  int? selectAvailabilityIndex = 0;
+  double? startYr;
+  double? endYr;
+  List<CategoryDataModel> categoryService = [];
 
   void onTap(int index) {
     if (index == 0) {
-      for (var element in category) {
+      for (var element in categoryService) {
         element.isSelected = true;
       }
     } else {
-      if (category.first.isSelected ?? false) {
-        for (var element in category) {
+      if (categoryService.first.isSelected ?? false) {
+        for (var element in categoryService) {
           element.isSelected = false;
         }
       }
-
-      category[index].isSelected = !(category[index].isSelected ?? false);
+      categoryService[index].isSelected =
+          !(categoryService[index].isSelected ?? false);
 
       int count = 0;
-      for (var element in category) {
+      for (var element in categoryService) {
         if (element.isSelected ?? false) {
           count++;
         }
       }
       if (count == 0) {
-        category[index].isSelected = !(category[index].isSelected ?? false);
-      } else if (count == (category.length - 1)) {
-        for (var element in category) {
+        categoryService[index].isSelected =
+            !(categoryService[index].isSelected ?? false);
+      } else if (count == (categoryService.length - 1)) {
+        for (var element in categoryService) {
           element.isSelected = true;
         }
       }
     }
-    setState(() {
-      debugPrint('>>>>>>>>>>>>>>${category[index].category}<<<<<<<<<<<<<<');
-    });
+
+    setState(() {});
+  }
+
+  void initData() {
+    debugPrint('>>>>>>>>>>>>>>${widget.filterData?.serviceId}<<<<<<<<<<<<<<');
+
+    startYr = double.parse(widget.filterData?.startYear ?? '0.0');
+    endYr = double.parse(widget.filterData?.endYear ?? '20.0');
+
+    if (widget.filterData?.availability?.isNotEmpty ?? false) {
+      selectAvailabilityIndex =
+          available.indexOf(widget.filterData?.availability ?? '');
+    }
+
+    List<String>? selectedServiceIds = widget.filterData?.serviceId;
+    if (selectedServiceIds?.isNotEmpty ?? false) {
+      for (var id in selectedServiceIds ?? []) {
+        for (var element in categoryService) {
+          if (element.id.toString() == id) {
+            categoryService.first.isSelected = false;
+            element.isSelected = true;
+          }
+        }
+      }
+    } else {
+      for (var element in categoryService) {
+        element.isSelected = true;
+      }
+    }
+    setState(() {});
   }
 
   @override
   void initState() {
-    for (var element in category) {
-      element.isSelected = true;
-    }
-    setState(() {});
+    getCategory(context).then(
+      (value) => initData(),
+    );
+
+    // if (widget.filterData?.serviceId?.isNotEmpty ?? false) {
+    //   for (var element in categoryService) {
+    //     element.isSelected = true;
+    //   }
+    // }
+
     super.initState();
   }
 
+  GetCategory? getCategoryResponse;
+  List<String>? serviceId;
+
+  Future<void> getCategory(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, true);
+    }
+
+    var response = await http.post(
+        Uri.parse(
+          ApiService.getCategories,
+        ),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        });
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, false);
+    }
+
+    Map<String, dynamic> jsonResponse = jsonDecode(
+      response.body,
+    );
+    // Helper().showToast(
+    //   jsonResponse['message'],
+    // );
+    if (jsonResponse['status'] == true) {
+      getCategoryResponse = GetCategory.fromJson(jsonResponse);
+
+      categoryService.add(CategoryDataModel(
+        id: 0,
+        name: "All",
+      ));
+      categoryService.addAll(getCategoryResponse?.data ?? []);
+
+      setState(() {});
+    }
+  }
+
+  // List<String>? selectedServiceIds = widget.filterData?.serviceId;
+  // debugPrint(
+  // '>>>>>>>selectedServiceIds>>>>>>>${selectedServiceIds}<<<<<<<<<<<<<<');
+  // for (var id in selectedServiceIds ?? []) {
+  // debugPrint('>>>>>>>id>>>>>>>${id}<<<<<<<<<<<<<<');
+  // int index =
+  // categoryService.indexWhere((serviceId) => serviceId.id == id);
+  // debugPrint('>>>>>>>>>index>>>>>${index}<<<<<<<<<<<<<<');
+  // if (index != -1) {
+  // categoryService[index].isSelected = true;
+  // serviceId?.add(categoryService[index].id.toString());
+  // }
+  // }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -126,43 +229,47 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
             child: ListView.separated(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: category.length,
-              padding: EdgeInsets.only(left: 15, right: 15),
+              itemCount: categoryService.length,
+              padding: const EdgeInsets.only(left: 15, right: 15),
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () => onTap(index),
-                  //     {
-                  //   // if (isSelectedIndex) {
-                  //   //   selectedIndex.remove(index);
-                  //   // } else {
-                  //   //   selectedIndex.add(index);
-                  //   //
-                  //   // }
-                  //   selectIndex = index;
+
+                  // {
+                  //   var categoryId = categoryService[index].id!.toInt();
+                  //   debugPrint('>>>>>>>>>>>>>>${categoryId}<<<<<<<<<<<<<<');
                   //
-                  //   setState(
-                  //     () {},
-                  //   );
+                  //   // if (categoryService[index].isSelected == true) {
+                  //   //   categoryService[index].isSelected = false;
+                  //   //   setState(() {});
+                  //   //   debugPrint(
+                  //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
+                  //   // } else {
+                  //   //   categoryService[index].isSelected = true;
+                  //   //   setState(() {});
+                  //   //   debugPrint(
+                  //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
+                  //   // }
+                  //   onTap(index););
                   // },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: (category[index].isSelected ?? true)
-                          // selectIndex == index
+                      color: (categoryService[index].isSelected ?? true)
                           ? AppColor.yellow
                           : Colors.transparent,
                       border: Border.all(color: AppColor.yellow),
                       borderRadius: BorderRadius.circular(19),
                     ),
                     //  margin: const EdgeInsets.all(5),
-                    child: Text(category[index].category ?? '',
-                        style: (category[index].isSelected ?? true)
-
-                            // selectIndex == index
-                            ? AppFonts.text
-                                .copyWith(color: AppColor.black1, fontSize: 14)
-                            : AppFonts.yellowFont),
+                    child: Text(
+                      categoryService[index].name ?? '',
+                      style: (categoryService[index].isSelected ?? true)
+                          ? AppFonts.text
+                              .copyWith(color: AppColor.black1, fontSize: 14)
+                          : AppFonts.yellowFont,
+                    ),
                   ),
                 );
               },
@@ -196,8 +303,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    selectIndex1 = index;
-
+                    selectAvailabilityIndex = index;
                     setState(
                       () {},
                     );
@@ -206,7 +312,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: selectIndex1 == index
+                      color: selectAvailabilityIndex == index
                           ? AppColor.yellow
                           : Colors.transparent,
                       border: Border.all(color: AppColor.yellow),
@@ -214,7 +320,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                     ),
                     //  margin: const EdgeInsets.all(5),
                     child: Text(available[index],
-                        style: selectIndex1 == index
+                        style: selectAvailabilityIndex == index
                             ? AppFonts.text.copyWith(
                                 color: AppColor.black1,
                               )
@@ -245,16 +351,21 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
             child: RangeSlider(
               activeColor: AppColor.yellow,
               inactiveColor: AppColor.black,
-              values: RangeValues(startYr, endYr),
-              labels: RangeLabels(startYr.toString(), endYr.toString()),
+              values: RangeValues(startYr ?? 0, endYr ?? 20),
+              labels: RangeLabels(
+                  startYr?.toString() ?? '0', endYr?.toString() ?? '15'),
               onChanged: (value) {
                 setState(() {
                   startYr = value.start;
                   endYr = value.end;
+                  debugPrint(
+                      '>>>>>>startYr>>>>>>>>${startYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
+                  debugPrint(
+                      '>>>>>>>>>>>>>>${endYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
                 });
               },
               min: 0.0,
-              max: startYr.toInt() < 15 ? 15 : endYr,
+              max: 20.0,
             ),
           ),
           Padding(
@@ -263,13 +374,17 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${endYr.toStringAsFixed(0)} yr',
+                  '${startYr?.toStringAsFixed(0) ?? 0} yr',
                   style: AppFonts.yellowFont.copyWith(fontSize: 13),
                 ),
                 Text(
-                  AppStrings.all,
+                  '${endYr?.toStringAsFixed(0) ?? 20} yr',
                   style: AppFonts.yellowFont.copyWith(fontSize: 13),
                 ),
+                // Text(
+                //   AppStrings.all,
+                //   style: AppFonts.yellowFont.copyWith(fontSize: 13),
+                // ),
               ],
             ),
           ),
@@ -287,7 +402,14 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      // Navigator.pop(context)
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DashBoardScreen(selectIndex: 0),
+                          ),
+                          (route) => false);
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -309,7 +431,25 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      List<String>? serviceId;
+                      if (!(categoryService.first.isSelected ?? false)) {
+                        serviceId = [];
+                        for (var element in categoryService) {
+                          if (element.isSelected ?? false) {
+                            serviceId.add(element.id.toString() ?? '0');
+                          }
+                        }
+                      }
+                      var data = FilterData(
+                        availability: available[selectAvailabilityIndex ?? 0],
+                        startYear: startYr?.toStringAsFixed(0),
+                        endYear: endYr?.toStringAsFixed(0),
+                        serviceId: serviceId,
+                      );
+
+                      debugPrint(
+                          '>>>>>>>>>>>>>>${data.toString()}<<<<<<<<<<<<<<');
+                      Navigator.pop(context, data);
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
