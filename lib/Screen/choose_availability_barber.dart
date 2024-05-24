@@ -120,9 +120,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
 
   void initData() {
     // _selectedDate = widget.data?.date?.toIso8601String();
-    if (widget.data?.specialistId?.isNotEmpty ?? false) {
-      // specialistId = int.parse(widget.data?.specialistId ?? '0');
-    }
+    // if (widget.data?.specialistId?.isNotEmpty ?? false) {
+    //   // specialistId = int.parse(widget.data?.specialistId ?? '0');
+    // }
   }
 
   @override
@@ -576,11 +576,11 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                 time: time,
                 date: date,
                 shopId: shopId.toString(),
-                price: widget.data?.subTotal ?? price,
+                price: widget.data?.subTotal.toString() ?? price,
                 noteText: widget.data?.note ?? noteCn.text,
                 specialistId: specialistId.toString(),
                 serviceId: widget.data?.serviceIds ?? serviceId.join(','),
-                image: widget.data?.desired_look ?? image,
+                image: widget.data?.desiredLook ?? image,
                 bookingStatus: widget.data?.bookingStatus,
               );
 

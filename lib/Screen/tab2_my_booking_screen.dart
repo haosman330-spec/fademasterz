@@ -39,7 +39,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   void initState() {
     // TODO: implement initState
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      myBookingApi(context);
+      getBookingListApi(context);
     });
     super.initState();
   }
@@ -63,7 +63,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      myBookingApi(context);
+                      getBookingListApi(context);
                       isVisible = true;
                       setState(() {});
                     },
@@ -100,7 +100,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                   child: InkWell(
                     onTap: () {
                       isVisible = false;
-                      myBookingApi(context);
+                      getBookingListApi(context);
 
                       setState(() {});
                     },
@@ -305,14 +305,16 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                   bookingId = myBookingResponse
                                       ?.data?.completed?[index].id;
                                   shared.setInt('cbookingId', bookingId!);
-                                  await Navigator.push(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           CompleteBookingDetail(
                                               bookingId: bookingId),
                                     ),
-                                  );
+                                  ).then((value) {
+                                    getBookingListApi(context);
+                                  });
                                 },
                                 child: Align(
                                   alignment: Alignment.bottomCenter,
@@ -508,7 +510,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                           CompleteBookingDetail(
                                               bookingId: bookingId),
                                     ),
-                                  );
+                                  ).then((value) {
+                                    getBookingListApi(context);
+                                  });
                                 },
                                 child: Align(
                                   alignment: Alignment.bottomCenter,
@@ -552,7 +556,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
 
   MyBookingResponse? myBookingResponse;
 
-  Future<void> myBookingApi(BuildContext context) async {
+  Future<void> getBookingListApi(BuildContext context) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

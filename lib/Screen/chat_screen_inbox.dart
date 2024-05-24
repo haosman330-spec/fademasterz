@@ -92,39 +92,49 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             SizedBox(
               height: 50,
               width: 50,
-              child: Stack(alignment: Alignment.center, children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        ApiService.imageUrl + (widget.receiverImage ?? ''),
-                    height: 40,
-                    width: 40,
-                    fit: BoxFit.fill,
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          ApiService.imageUrl + (widget.receiverImage ?? ''),
+                      height: 40,
+                      width: 40,
+                      fit: BoxFit.fill,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
-                ),
-                Positioned(
+                  Positioned(
                     right: 0,
                     top: 3,
                     // left: 15,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(
+                        4,
+                      ),
                       decoration: const BoxDecoration(
-                          shape: BoxShape.circle, color: AppColor.gray),
+                        shape: BoxShape.circle,
+                        color: AppColor.gray,
+                      ),
                       child: Container(
                         height: 8,
                         width: 7,
                         decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.green),
+                          shape: BoxShape.circle,
+                          color: Colors.green,
+                        ),
                       ),
-                    ))
-              ]),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               width: 10,
@@ -210,38 +220,6 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      //   child: Row(
-      //     children: [
-      //       Expanded(
-      //         child: CustomTextField(
-      //           controller: chatCn,
-      //           hintText: 'Type a message',
-      //           hintTextStyle: AppFonts.normalText
-      //               .copyWith(fontSize: 17, color: AppColor.bg),
-      //           radius: 4,
-      //           isFilled: true,
-      //           style: AppFonts.textFieldFont.copyWith(color: AppColor.black),
-      //           fillColor: const Color(0xffF4F4F4),
-      //         ),
-      //       ),
-      //       const SizedBox(
-      //         width: 10,
-      //       ),
-      //       InkWell(
-      //         onTap: () {
-      //           onSendMessage();
-      //         },
-      //         child: SvgPicture.asseSendt(
-      //           AppIcon.sendIcon,
-      //           height: 60,
-      //           width: 58,
-      //         ),
-      //       )
-      //     ],
-      //   ),
-      // ),
     );
   }
 

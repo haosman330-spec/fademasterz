@@ -18,6 +18,7 @@ import '../Modal/booking_summary_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
+import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
@@ -315,7 +316,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
         false,
       );
     }
-    //Helper().showToast(jsonResponse['message']);
+    Helper().showToast(jsonResponse['message']);
     if (jsonResponse["status"] == 'true') {
       debugPrint('>>>>>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
       showDialog(

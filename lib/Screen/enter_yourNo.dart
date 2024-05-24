@@ -1,15 +1,14 @@
 import 'dart:convert';
 
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:fademasterz/Screen/verify_screen.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
-import 'package:fademasterz/Utils/custom_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 
 import '../ApiService/api_service.dart';
@@ -27,6 +26,12 @@ class EnterYourNo extends StatefulWidget {
 class _EnterYourNoState extends State<EnterYourNo> {
   TextEditingController phoneCn = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  CountryCode? _selctedCountry = CountryCode(
+      name: 'United Kingdom',
+      flagUri: 'flags/gb.png',
+      code: 'GB',
+      dialCode: '+44');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,11 +64,9 @@ class _EnterYourNoState extends State<EnterYourNo> {
             ),
             Form(
               key: _formKey,
-              child: CustomTextField(
+              child: TextFormField(
                 controller: phoneCn,
-                hintText: AppStrings.phoneNumber,
-                maxLength: 11,
-                textInputType: TextInputType.number,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(
@@ -72,17 +75,95 @@ class _EnterYourNoState extends State<EnterYourNo> {
                     ),
                   ),
                 ],
-                prefixIcon: Align(
-                  heightFactor: 2,
-                  widthFactor: 2,
-                  child: SvgPicture.asset(
-                    AppIcon.phoneIcon,
-                    height: 17,
-                    width: 17,
-                  ),
-                ),
+                decoration: InputDecoration(
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      borderSide: BorderSide.none,
+                    ),
+                    border: const OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.all(Radius.circular(16))),
+                    prefixIcon: CountryCodePicker(
+                      onChanged: (data) {
+                        _selctedCountry = data;
+                        setState(() {});
+                        debugPrint(
+                            '>>>>>>>>>>>>>>${data.name}<<name<<<<<<<<<<<<');
+                        debugPrint(
+                            '>>>>>>>>>>>>>>${data.code}<<code<<<<<<<<<<<<');
+                        debugPrint(
+                            '>>>>>>>>>>>>>>${data.dialCode}<<dialcode<<<<<<<<<<<<');
+                        debugPrint(
+                            '>>>>>>>>>>>>>>${data.flagUri}<<flag<<<<<<<<<<<<');
+                      },
+                      initialSelection: 'GB',
+                      favorite: const ['GB'],
+                      countryFilter: ['GB', 'IN'],
+                      // countryFilter: ['In', 'FR'],
+                      textStyle: const TextStyle(
+                        color: Color(
+                          0xffFFFFFF,
+                        ),
+                      ),
+                      flagDecoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            5,
+                          ),
+                        ),
+                      ),
+                      showCountryOnly: false,
+                      showOnlyCountryWhenClosed: false,
+                      alignLeft: false,
+                    ),
+                    filled: true,
+                    fillColor: AppColor.black,
+                    hintText: AppStrings.phoneNumber,
+                    hintStyle: AppFonts.textFieldHint),
               ),
             ),
+            // Form(
+            //   key: _formKey,
+            //   child: CustomTextField(
+            //     controller: phoneCn,
+            //     hintText: AppStrings.phoneNumber,
+            //     maxLength: 11,
+            //     textInputType: TextInputType.number,
+            //     textInputAction: TextInputAction.done,
+            //     inputFormatters: [
+            //       FilteringTextInputFormatter.allow(
+            //         RegExp(
+            //           r'^\d+?\d*',
+            //         ),
+            //       ),
+            //     ],
+            //     prefixIcon: Row(
+            //       children: [
+            //         const CountryCodePicker(
+            //           onChanged: print,
+            //           // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+            //           initialSelection: 'IT', textStyle: AppFonts.appText,
+            //           favorite: ['+91', 'In'],
+            //           // optional. Shows only country name and flag
+            //           showCountryOnly: false,
+            //           // optional. Shows only country name and flag when popup is closed.
+            //           showOnlyCountryWhenClosed: false,
+            //           // optional. aligns the flag and the Text left
+            //           alignLeft: false,
+            //         ),
+            //         Align(
+            //           heightFactor: 2,
+            //           widthFactor: 2,
+            //           child: SvgPicture.asset(
+            //             AppIcon.phoneIcon,
+            //             height: 17,
+            //             width: 17,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -165,7 +246,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.verifyPhoneNumber(
-        phoneNumber: '+91${phoneCn.text}',
+        phoneNumber: '${_selctedCountry?.dialCode}${phoneCn.text}',
         verificationCompleted: (e) {
           setState(() {
             Utility.progressLoadingDialog(context, false);
@@ -188,13 +269,15 @@ class _EnterYourNoState extends State<EnterYourNo> {
           await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => VerifyScreen(
-                      phoneNo: phoneCn.text.toString(),
-                      verificationId: verificationId,
-                    )),
+              builder: (context) => VerifyScreen(
+                  phoneNo: phoneCn.text.toString(),
+                  verificationId: verificationId,
+                  selctedCountry: _selctedCountry),
+            ),
           );
           setState(() {});
         },
+        timeout: const Duration(seconds: 60),
         codeAutoRetrievalTimeout: (e) {
           setState(() {});
         });

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:country_code_picker/src/country_code.dart';
 import 'package:fademasterz/Modal/verify_otp_modal.dart';
 import 'package:fademasterz/Screen/profile_setup_screen.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
@@ -24,8 +24,9 @@ import '../Utils/utility.dart';
 class VerifyScreen extends StatefulWidget {
   final String? phoneNo;
   final String? verificationId;
-
-  const VerifyScreen({super.key, this.phoneNo, this.verificationId});
+  final CountryCode? selctedCountry;
+  const VerifyScreen(
+      {super.key, this.phoneNo, this.verificationId, this.selctedCountry});
 
   @override
   State<VerifyScreen> createState() => _VerifyScreenState();
@@ -69,6 +70,73 @@ class _VerifyScreenState extends State<VerifyScreen> {
     }
   }
 
+  Future<void> resendOtpFirebaseAuth() {
+    Utility.progressLoadingDialog(context, true);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.verifyPhoneNumber(
+        phoneNumber: '${widget.selctedCountry?.dialCode}${widget.phoneNo}',
+        verificationCompleted: (e) {
+          setState(() {
+            Utility.progressLoadingDialog(context, false);
+          });
+        },
+        verificationFailed: (e) {
+          setState(() {
+            debugPrint(
+                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
+
+            Helper().showToast('Otp failed $e');
+            debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
+            Utility.progressLoadingDialog(context, false);
+          });
+        },
+        timeout: const Duration(seconds: 60),
+        codeSent: (String verificationId, int? token) async {
+          setState(() {
+            Utility.progressLoadingDialog(context, false);
+          });
+          mobileStarttimer();
+
+          FirebaseAuth auth = FirebaseAuth.instance;
+          int error;
+          String otp = otpTextFieldCn.text;
+          if (otp.isEmpty) {
+            error = 0;
+            Helper().showToast('Please enter  otp');
+            setState(() {});
+          } else if (otp.length < 6) {
+            error = 1;
+            Helper().showToast('Please enter conform otp');
+            setState(() {});
+          } else {
+            // verifyMobileNumber();
+            setState(() {
+              Utility.progressLoadingDialog(context, true);
+            });
+            final credential = PhoneAuthProvider.credential(
+                verificationId: verificationId, smsCode: otpTextFieldCn.text);
+            debugPrint('>>>>>credential>>>>>>>>>${credential}<<<<<<<<<<<<<<');
+            try {
+              await auth.signInWithCredential(credential);
+
+              verifyOtp(context);
+
+              setState(() {});
+            } catch (e) {
+              setState(() {
+                Utility.progressLoadingDialog(context, false);
+              });
+            }
+
+            setState(() {});
+          }
+          setState(() {});
+        },
+        codeAutoRetrievalTimeout: (e) {
+          setState(() {});
+        });
+  }
+
   snackBar(String? message) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -103,64 +171,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
     );
   }
 
-  Future<void> otpVerify() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    int error;
-    String otp = otpTextFieldCn.text;
-    if (otp.isEmpty) {
-      error = 0;
-      Helper().showToast('Please enter  otp');
-      setState(() {});
-    } else if (otp.length < 6) {
-      error = 1;
-      Helper().showToast('Please enter conform otp');
-      setState(() {});
-    } else {
-      // verifyMobileNumber();
-      setState(() {
-        Utility.progressLoadingDialog(context, true);
-      });
-      final credential = PhoneAuthProvider.credential(
-          verificationId: widget.verificationId.toString(),
-          smsCode: otpTextFieldCn.text);
-      try {
-        await auth.signInWithCredential(credential);
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => LoginScreen()),
-        //     (route) => false);
-        // dialogSuccess(context);
-        // if (mounted) {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => const DashBoardScreen(
-        //               selectIndex: 0,
-        //             )),
-        //   );
-        // }
-        setState(() {});
-      } catch (e) {
-        setState(() {
-          Utility.progressLoadingDialog(context, false);
-        });
-        // Helper().showToast('Please enter valid otp');
-        // Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => LoginScreen()),
-        //     (route) => false);
-      }
-
-      setState(() {});
-    }
-  }
-
   @override
   void initState() {
     mobileStarttimer();
-
     super.initState();
   }
 
@@ -198,7 +211,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                     style: AppFonts.text1.copyWith(color: AppColor.lightWhite),
                   ),
                   TextSpan(
-                    text: ' +${widget.phoneNo}',
+                    text:
+                        ' ${widget.selctedCountry?.dialCode}${widget.phoneNo}',
                     style: AppFonts.text1.copyWith(
                         color: AppColor.yellow, fontWeight: FontWeight.w500),
                   ),
@@ -299,7 +313,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 TextButton(
                   onPressed: () {
                     if (mobileOtpSecondsRemaining == 0) {
-                      resendOtp(context);
+                      //  resendOtp(context);
+                      resendOtpFirebaseAuth();
                     }
                   },
                   child: Text(
@@ -325,50 +340,51 @@ class _VerifyScreenState extends State<VerifyScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         onPress: () async {
           if (isValidate()) {
-            FirebaseAuth auth = FirebaseAuth.instance;
-            int error;
-            String otp = otpTextFieldCn.text;
-            if (otp.isEmpty) {
-              error = 0;
-              Helper().showToast('Please enter  otp');
-              setState(() {});
-            } else if (otp.length < 6) {
-              error = 1;
-              Helper().showToast('Please enter conform otp');
-              setState(() {});
-            } else {
-              // verifyMobileNumber();
-              setState(() {
-                Utility.progressLoadingDialog(context, true);
-              });
-              final credential = PhoneAuthProvider.credential(
-                  verificationId: widget.verificationId.toString(),
-                  smsCode: otpTextFieldCn.text);
-              debugPrint('>>>>>>>>>>>>>>${credential}<<<<<<<<<<<<<<');
-              try {
-                await auth.signInWithCredential(credential);
-                // dialogSuccess(context);
-                // verifyOtp(context);
-
-                setState(() {});
-              } catch (e) {
-                setState(() {
-                  Utility.progressLoadingDialog(context, false);
-                });
-              }
-
-              setState(() {});
-            }
-            final List<ConnectivityResult> connectivityResult =
-                await (Connectivity().checkConnectivity());
-
-            if (connectivityResult.contains(ConnectivityResult.mobile)) {
-              verifyOtp(context);
-            } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-              verifyOtp(context);
-            } else {
-              Utility.showNoNetworkDialog(context);
-            }
+            otpVerifyFirebase();
+            // FirebaseAuth auth = FirebaseAuth.instance;
+            // int error;
+            // String otp = otpTextFieldCn.text;
+            // if (otp.isEmpty) {
+            //   error = 0;
+            //   Helper().showToast('Please enter  otp');
+            //   setState(() {});
+            // } else if (otp.length < 6) {
+            //   error = 1;
+            //   Helper().showToast('Please enter conform otp');
+            //   setState(() {});
+            // } else {
+            //   // verifyMobileNumber();
+            //   setState(() {
+            //     Utility.progressLoadingDialog(context, true);
+            //   });
+            //   final credential = PhoneAuthProvider.credential(
+            //       verificationId: widget.verificationId.toString(),
+            //       smsCode: otpTextFieldCn.text);
+            //   debugPrint('>>>>>credential>>>>>>>>>${credential}<<<<<<<<<<<<<<');
+            //   try {
+            //     await auth.signInWithCredential(credential);
+            //
+            //     verifyOtp(context);
+            //
+            //     setState(() {});
+            //   } catch (e) {
+            //     setState(() {
+            //       Utility.progressLoadingDialog(context, false);
+            //     });
+            //   }
+            //
+            //   setState(() {});
+            // }
+            // // final List<ConnectivityResult> connectivityResult =
+            // //     await (Connectivity().checkConnectivity());
+            // //
+            // // if (connectivityResult.contains(ConnectivityResult.mobile)) {
+            // //   verifyOtp(context);
+            // // } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
+            // //   verifyOtp(context);
+            // // } else {
+            // //   Utility.showNoNetworkDialog(context);
+            // // }
           }
         },
       ),
@@ -386,6 +402,52 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   bool? profileSetUp = false;
   VerifyOtpModal verifyOtpModal = VerifyOtpModal();
+  Future<void> otpVerifyFirebase() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    int error;
+    String otp = otpTextFieldCn.text;
+    if (otp.isEmpty) {
+      error = 0;
+      Helper().showToast('Please enter  otp');
+      setState(() {});
+    } else if (otp.length < 6) {
+      error = 1;
+      Helper().showToast('Please enter conform otp');
+      setState(() {});
+    } else {
+      // verifyMobileNumber();
+      setState(() {
+        Utility.progressLoadingDialog(context, true);
+      });
+      final credential = PhoneAuthProvider.credential(
+          verificationId: widget.verificationId.toString(),
+          smsCode: otpTextFieldCn.text);
+      debugPrint('>>>>>credential>>>>>>>>>${credential}<<<<<<<<<<<<<<');
+      try {
+        await auth.signInWithCredential(credential);
+
+        verifyOtp(context);
+
+        setState(() {});
+      } catch (e) {
+        setState(() {
+          Utility.progressLoadingDialog(context, false);
+        });
+      }
+
+      setState(() {});
+    }
+    // final List<ConnectivityResult> connectivityResult =
+    //     await (Connectivity().checkConnectivity());
+    //
+    // if (connectivityResult.contains(ConnectivityResult.mobile)) {
+    //   verifyOtp(context);
+    // } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
+    //   verifyOtp(context);
+    // } else {
+    //   Utility.showNoNetworkDialog(context);
+    // }
+  }
 
   Future<void> verifyOtp(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -394,7 +456,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       Utility.progressLoadingDialog(context, true);
     }
     var request = {};
-    request["country_code"] = "+91";
+    request["country_code"] = widget.selctedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
     request["otp"] = otpTextFieldCn.text.trim();
     request["fcm_token"] = "test";
