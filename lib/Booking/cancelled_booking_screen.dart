@@ -90,7 +90,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                 ),
               ),
               child: ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount:
                     (cancelledBookingResponse?.data?.cancelBooking?.length ??

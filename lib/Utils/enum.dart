@@ -1,1 +1,1 @@
-enum Service1 { AboutUs, Services, Gallery, Reviews }
+// enum Service1 { AboutUs, Services, Gallery, Reviews }

@@ -10,7 +10,7 @@ class MyAppBar {
   }) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: title ?? Text('App Bar'),
+      title: title ?? const Text('App Bar'),
       centerTitle: centerTile,
       leading: leading,
       elevation: 0,

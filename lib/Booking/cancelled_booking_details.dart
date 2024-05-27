@@ -311,7 +311,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                   ),
                   child: ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount:
                         bookingDetailResponse?.data?.services?.length ?? 0,
                     itemBuilder: (context, index) {
