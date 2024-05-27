@@ -25,6 +25,7 @@ class ChatService {
       receiverId: receiverId,
       message: message,
       timestamp: int.parse(time),
+      fcmToken: sharedPreferences.getString('fcmToken'),
     );
     List<String> ids = [currentUserId.toString(), receiverId];
     ids.sort();
@@ -35,7 +36,7 @@ class ChatService {
         .collection('messages')
         .add(messages.toMap());
     await firestore.collection('chat_rooms').doc(chatRoomId).set({
-      "last_message_time": time,
+      "last_message_time": int.parse(time),
       "last_message": message,
       "sender_id": currentUserId,
       "image": sharedPreferences.getString('image'),

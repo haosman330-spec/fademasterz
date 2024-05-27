@@ -6,7 +6,7 @@ import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -66,6 +66,8 @@ class _EnterYourNoState extends State<EnterYourNo> {
               key: _formKey,
               child: TextFormField(
                 controller: phoneCn,
+                style: AppFonts.appText.copyWith(fontSize: 16),
+                maxLength: 11,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
                 inputFormatters: [
@@ -118,6 +120,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
                     ),
                     filled: true,
                     fillColor: AppColor.black,
+                    counterText: '',
                     hintText: AppStrings.phoneNumber,
                     hintStyle: AppFonts.textFieldHint),
               ),
@@ -174,6 +177,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         onPress: () async {
           if (isValidate()) {
             signUpOtpAuth();
+            // verifyPhoneNumber(phoneCn.text);
             // final List<ConnectivityResult> connectivityResult =
             //     await (Connectivity().checkConnectivity());
             //
@@ -192,10 +196,17 @@ class _EnterYourNoState extends State<EnterYourNo> {
 
   bool isValidate() {
     if (phoneCn.text.isEmpty || phoneCn.text.length < 10) {
-      Helper().showToast('Please Enter 11 Digit Mobile No.');
+      Helper().showToast('Please Enter Mobile No.');
       return false;
     }
     return true;
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   Future<void> enterNumberApi(BuildContext context) async {
@@ -248,8 +259,20 @@ class _EnterYourNoState extends State<EnterYourNo> {
     return auth.verifyPhoneNumber(
         phoneNumber: '${_selctedCountry?.dialCode}${phoneCn.text}',
         verificationCompleted: (e) {
-          setState(() {
+          setState(() async {
             Utility.progressLoadingDialog(context, false);
+            Helper().showToast(e.toString());
+            debugPrint(
+                '>>>>>>>>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
+            // await Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => VerifyScreen(
+            //         phoneNo: phoneCn.text.toString(),
+            //         verificationId: e.verificationId,
+            //         selctedCountry: _selctedCountry),
+            //   ),
+            // );
           });
         },
         verificationFailed: (e) {
@@ -278,49 +301,32 @@ class _EnterYourNoState extends State<EnterYourNo> {
           setState(() {});
         },
         timeout: const Duration(seconds: 60),
-        codeAutoRetrievalTimeout: (e) {
+        codeAutoRetrievalTimeout: (String verificationId) {
           setState(() {});
         });
   }
 
-  @override
-  void setState(VoidCallback fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
+  Future<void> verifyPhoneNumber(String phoneNumber) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebasePhoneAuthHandler(
+      phoneNumber: "${_selctedCountry?.dialCode}$phoneNumber",
+      // If true, the user is signed out before the onLoginSuccess callback is fired when the OTP is verified successfully.
+      signOutOnSuccessfulVerification: false,
 
-  // Future<void> verifyPhoneNumber(String phoneNumber) async {
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   debugPrint('>>>phoneNumber>>>>>>>>>>>${phoneNumber}<<<<<<<<<<<<<<');
-  //
-  //   await auth.verifyPhoneNumber(
-  //     phoneNumber: '+91${phoneNumber}',
-  //     verificationCompleted: (
-  //       PhoneAuthCredential credential,
-  //     ) async {},
-  //     verificationFailed: (FirebaseAuthException e) {
-  //       debugPrint('>>>>>>>e>>>>>>>${e}<<<<<<<<<<<<<<');
-  //       // Handle verification failure (e.g., invalid phone number)
-  //     },
-  //
-  //     codeAutoRetrievalTimeout: (String phoneNumber) {
-  //       debugPrint('>>>>phoneNumber>>>>>>>>>>${phoneNumber}<<<<<<<<<<<<<<');
-  //     },
-  //     timeout: const Duration(seconds: 60), // Timeout for OTP entry
-  //     forceResendingToken: 0,
-  //     codeSent: (String verificationId, int? resendToken) {
-  //       Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => VerifyScreen(
-  //               verificationId: verificationId,
-  //             ),
-  //           ));
-  //       debugPrint(
-  //           '>>>>>>verificationId>>>>>>>>${verificationId}<<<<<<<<<<<<<<');
-  //       debugPrint('>>>>>resendToken>>>>>>>>>${resendToken}<<<<<<<<<<<<<<');
-  //     }, // Used for resending OTP (0 for new OTP)
-  //   );
-  // }
+      linkWithExistingUser: false,
+      builder: (context, controller) {
+        return SizedBox.shrink();
+      },
+      autoRetrievalTimeOutDuration: const Duration(seconds: 60),
+      otpExpirationDuration: const Duration(seconds: 60),
+      onLoginSuccess: (userCredential, autoVerified) {
+        debugPrint("autoVerified: $autoVerified");
+        debugPrint("Login success UID: ${userCredential.user?.uid}");
+      },
+      onLoginFailed: (authException, stackTrace) {
+        debugPrint("An error occurred: ${authException.message}");
+      },
+      onError: (error, stackTrace) {},
+    );
+  }
 }

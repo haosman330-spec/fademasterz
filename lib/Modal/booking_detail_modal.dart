@@ -59,7 +59,7 @@ class BookingDetailData {
   String? shopName;
   String? shopAddress;
   String? specialistName;
-  List<Service>? services;
+  List<bookingDetailService>? services;
   Rating? rating;
 
   BookingDetailData({
@@ -105,8 +105,8 @@ class BookingDetailData {
       specialistName: json["specialist_name"],
       services: json["services"] == null
           ? []
-          : List<Service>.from(
-              json["services"]!.map((x) => Service.fromJson(x))),
+          : List<bookingDetailService>.from(
+              json["services"]!.map((x) => bookingDetailService.fromJson(x))),
       rating: json["rating"] == null || json["rating"].runtimeType == String
           ? null
           : Rating.fromJson(json["rating"]),
@@ -191,18 +191,19 @@ class Rating {
       };
 }
 
-class Service {
+class bookingDetailService {
   int? id;
   String? name;
   int? price;
 
-  Service({
+  bookingDetailService({
     this.id,
     this.name,
     this.price,
   });
 
-  factory Service.fromJson(Map<String, dynamic> json) => Service(
+  factory bookingDetailService.fromJson(Map<String, dynamic> json) =>
+      bookingDetailService(
         id: json["id"],
         name: json["name"],
         price: json["price"],

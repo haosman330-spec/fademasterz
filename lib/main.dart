@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +75,9 @@ class _MyAppState extends State<MyApp> {
   Future<String?> _getId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var deviceInfo = DeviceInfoPlugin();
-
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    debugPrint("fcmtoken.....$fcmToken");
+    sharedPreferences.setString('fcmToken', fcmToken!);
     if (Platform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
       deviceType = 'ios';

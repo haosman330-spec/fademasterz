@@ -711,7 +711,7 @@ class _ShopDetailState extends State<ShopDetail> {
                       child: ListView.separated(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: services.length,
+                        itemCount: shopServicesList.length,
                         addSemanticIndexes: true,
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         itemBuilder: (BuildContext context, int index) {
@@ -734,7 +734,7 @@ class _ShopDetailState extends State<ShopDetail> {
                                 borderRadius: BorderRadius.circular(19),
                               ),
                               //  margin: const EdgeInsets.all(5),
-                              child: Text(services[index],
+                              child: Text(shopServicesList[index],
                                   style: selectIndex1 == index
                                       ? AppFonts.text.copyWith(
                                           color: AppColor.black1, fontSize: 14)

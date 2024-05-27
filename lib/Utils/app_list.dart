@@ -38,7 +38,7 @@ List<CategoryService> categoryServices1 = [
   // CategoryService('Manicure', 40, 'Approx Time 45 min'),
 ];
 
-List<String> services = [
+List<String> shopServicesList = [
   'About Us',
   'Services',
   'Gallery',

@@ -100,12 +100,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
       (value) => initData(),
     );
 
-    // if (widget.filterData?.serviceId?.isNotEmpty ?? false) {
-    //   for (var element in categoryService) {
-    //     element.isSelected = true;
-    //   }
-    // }
-
     super.initState();
   }
 
@@ -150,19 +144,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
     }
   }
 
-  // List<String>? selectedServiceIds = widget.filterData?.serviceId;
-  // debugPrint(
-  // '>>>>>>>selectedServiceIds>>>>>>>${selectedServiceIds}<<<<<<<<<<<<<<');
-  // for (var id in selectedServiceIds ?? []) {
-  // debugPrint('>>>>>>>id>>>>>>>${id}<<<<<<<<<<<<<<');
-  // int index =
-  // categoryService.indexWhere((serviceId) => serviceId.id == id);
-  // debugPrint('>>>>>>>>>index>>>>>${index}<<<<<<<<<<<<<<');
-  // if (index != -1) {
-  // categoryService[index].isSelected = true;
-  // serviceId?.add(categoryService[index].id.toString());
-  // }
-  // }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -358,10 +339,10 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                 setState(() {
                   startYr = value.start;
                   endYr = value.end;
-                  debugPrint(
-                      '>>>>>>startYr>>>>>>>>${startYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
-                  debugPrint(
-                      '>>>>>>>>>>>>>>${endYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
+                  // debugPrint(
+                  //     '>>>>>>startYr>>>>>>>>${startYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
+                  // debugPrint(
+                  //     '>>>>>>>>>>>>>>${endYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
                 });
               },
               min: 0.0,

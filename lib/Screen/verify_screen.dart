@@ -37,105 +37,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
   TextEditingController otpTextFieldCn = TextEditingController();
   StreamController<ErrorAnimationType>? errorController;
   String currentText = "";
-
-  Future<void> resendOtp(BuildContext context) async {
-    Utility.progressLoadingDialog(context, true);
-    var request = {};
-    request["country_code"] = "91";
-    request['mobile_number'] = widget.phoneNo;
-
-    var response = await http.post(
-      Uri.parse(
-        ApiService.enterNumber,
-      ),
-      body: jsonEncode(request),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    );
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, false);
-    }
-
-    Map<String, dynamic> jsonResponse = jsonDecode(
-      response.body,
-    );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
-
-    if (jsonResponse['status']) {
-      mobileStarttimer();
-    }
-  }
-
-  Future<void> resendOtpFirebaseAuth() {
-    Utility.progressLoadingDialog(context, true);
-    FirebaseAuth auth = FirebaseAuth.instance;
-    return auth.verifyPhoneNumber(
-        phoneNumber: '${widget.selctedCountry?.dialCode}${widget.phoneNo}',
-        verificationCompleted: (e) {
-          setState(() {
-            Utility.progressLoadingDialog(context, false);
-          });
-        },
-        verificationFailed: (e) {
-          setState(() {
-            debugPrint(
-                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
-
-            Helper().showToast('Otp failed $e');
-            debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
-            Utility.progressLoadingDialog(context, false);
-          });
-        },
-        timeout: const Duration(seconds: 60),
-        codeSent: (String verificationId, int? token) async {
-          setState(() {
-            Utility.progressLoadingDialog(context, false);
-          });
-          mobileStarttimer();
-
-          FirebaseAuth auth = FirebaseAuth.instance;
-          int error;
-          String otp = otpTextFieldCn.text;
-          if (otp.isEmpty) {
-            error = 0;
-            Helper().showToast('Please enter  otp');
-            setState(() {});
-          } else if (otp.length < 6) {
-            error = 1;
-            Helper().showToast('Please enter conform otp');
-            setState(() {});
-          } else {
-            // verifyMobileNumber();
-            setState(() {
-              Utility.progressLoadingDialog(context, true);
-            });
-            final credential = PhoneAuthProvider.credential(
-                verificationId: verificationId, smsCode: otpTextFieldCn.text);
-            debugPrint('>>>>>credential>>>>>>>>>${credential}<<<<<<<<<<<<<<');
-            try {
-              await auth.signInWithCredential(credential);
-
-              verifyOtp(context);
-
-              setState(() {});
-            } catch (e) {
-              setState(() {
-                Utility.progressLoadingDialog(context, false);
-              });
-            }
-
-            setState(() {});
-          }
-          setState(() {});
-        },
-        codeAutoRetrievalTimeout: (e) {
-          setState(() {});
-        });
-  }
+  bool? profileSetUp = false;
+  VerifyOtpModal verifyOtpModal = VerifyOtpModal();
+  Timer? optTimer;
+  int mobileOtpSecondsRemaining = 60;
 
   snackBar(String? message) {
     return ScaffoldMessenger.of(context).showSnackBar(
@@ -146,10 +51,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     );
   }
 
-  Timer? optTimer;
-  int mobileOtpSecondsRemaining = 60;
-
-  void mobileStarttimer() {
+  void mobileStartTimer() {
     mobileOtpSecondsRemaining = 60;
     optTimer = Timer.periodic(
       const Duration(seconds: 1),
@@ -173,7 +75,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   @override
   void initState() {
-    mobileStarttimer();
+    mobileStartTimer();
     super.initState();
   }
 
@@ -400,8 +302,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
     }
   }
 
-  bool? profileSetUp = false;
-  VerifyOtpModal verifyOtpModal = VerifyOtpModal();
   Future<void> otpVerifyFirebase() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     int error;
@@ -422,15 +322,17 @@ class _VerifyScreenState extends State<VerifyScreen> {
       final credential = PhoneAuthProvider.credential(
           verificationId: widget.verificationId.toString(),
           smsCode: otpTextFieldCn.text);
-      debugPrint('>>>>>credential>>>>>>>>>${credential}<<<<<<<<<<<<<<');
+
       try {
         await auth.signInWithCredential(credential);
-
+        //   Helper().showToast('Please enter confirm otp');
         verifyOtp(context);
 
         setState(() {});
       } catch (e) {
         setState(() {
+          debugPrint('>>>>>>>>>>>>>>${e.toString()}<<<<<<<<<<<<<<');
+          Helper().showToast('Please enter valid otp');
           Utility.progressLoadingDialog(context, false);
         });
       }
@@ -451,7 +353,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   Future<void> verifyOtp(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // profileSetUp = sharedPreferences.getBool('profileSetUp');
+
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
@@ -459,7 +361,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
     request["country_code"] = widget.selctedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
     request["otp"] = otpTextFieldCn.text.trim();
-    request["fcm_token"] = "test";
+    request["fcm_token"] = sharedPreferences.getString(
+      'fcmToken',
+    );
     request["device_id"] = sharedPreferences.getString('deviceId');
     request["device"] = sharedPreferences.getString('deviceType');
 
@@ -518,4 +422,80 @@ class _VerifyScreenState extends State<VerifyScreen> {
       }
     }
   }
+
+  Future<void> resendOtpFirebaseAuth() {
+    Utility.progressLoadingDialog(context, true);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.verifyPhoneNumber(
+        phoneNumber: '${widget.selctedCountry?.dialCode}${widget.phoneNo}',
+        verificationCompleted: (e) {
+          setState(() {
+            Utility.progressLoadingDialog(context, false);
+          });
+        },
+        verificationFailed: (e) {
+          setState(() {
+            debugPrint(
+                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
+
+            Helper().showToast('Otp failed $e');
+            debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
+            Utility.progressLoadingDialog(context, false);
+          });
+        },
+        timeout: const Duration(seconds: 60),
+        codeSent: (String verificationId, int? token) async {
+          setState(() {
+            Utility.progressLoadingDialog(context, false);
+          });
+
+          Helper().showToast(
+              "Otp successfully sent to ${widget.selctedCountry?.dialCode}${widget.phoneNo}");
+          mobileStartTimer();
+          otpVerifyFirebase();
+          setState(() {});
+        },
+        codeAutoRetrievalTimeout: (e) {
+          setState(() {});
+        });
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+/*  Future<void> resendOtp(BuildContext context) async {
+    Utility.progressLoadingDialog(context, true);
+    var request = {};
+    request["country_code"] = "91";
+    request['mobile_number'] = widget.phoneNo;
+
+    var response = await http.post(
+      Uri.parse(
+        ApiService.enterNumber,
+      ),
+      body: jsonEncode(request),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, false);
+    }
+
+    Map<String, dynamic> jsonResponse = jsonDecode(
+      response.body,
+    );
+    // Helper().showToast(
+    //   jsonResponse['message'],
+    // );
+
+    if (jsonResponse['status']) {
+      mobileStartTimer();
+    }
+  }*/
 }

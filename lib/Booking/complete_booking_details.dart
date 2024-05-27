@@ -480,7 +480,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 15, vertical: 5),
@@ -511,7 +511,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${bookingDetailResponse?.data?.rating?.comment ?? ''}',
+                                  bookingDetailResponse
+                                          ?.data?.rating?.comment ??
+                                      '',
                                   style: AppFonts.regular.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
@@ -524,7 +526,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           ],
                         ),
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               ],
             ),
           ),
@@ -676,7 +678,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                     );
                   },
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -725,8 +727,8 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         var currentTime =
                             DateTime.now().subtract(const Duration(hours: 2));
                         var scheduleTime = DateTime.parse('$date $time');
-                        debugPrint('>>>>>>>>>>>>>>${currentTime} ' +
-                            ' ${scheduleTime}}<<<<<<<<<<<<<<');
+                        debugPrint('>>>>>>>>>>>>>>$currentTime ' +
+                            ' $scheduleTime}<<<<<<<<<<<<<<');
                         // if (bookingDetailResponse?.data?.bookingStatus ==
                         //     "Cancelled") {
                         //   Helper().showToast('Booking already Cancelled');
@@ -734,12 +736,13 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         //  else {
                         if (currentTime.isBefore(scheduleTime)) {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChooseAvailabilityBarber(
-                                  data: bookingDetailResponse?.data,
-                                ),
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChooseAvailabilityBarber(
+                                data: bookingDetailResponse?.data,
+                              ),
+                            ),
+                          );
                         } else {
                           showBottomSheet();
                         }
@@ -1006,7 +1009,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    Helper().showToast(jsonResponse['message']);
+    //  Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status']) {
       if (context.mounted) {
         bookingDetailApi(context);

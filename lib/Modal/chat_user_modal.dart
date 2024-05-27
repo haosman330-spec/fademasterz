@@ -5,7 +5,8 @@ class Messages {
   String receiverId;
   String message;
   int timestamp;
-
+  bool? boolData;
+  String? fcmToken;
   Messages({
     required this.senderId,
     required this.senderEmail,
@@ -13,6 +14,8 @@ class Messages {
     required this.receiverId,
     required this.message,
     required this.timestamp,
+    this.boolData,
+    this.fcmToken,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +26,8 @@ class Messages {
       "image": image,
       'message': message,
       'timestamp': timestamp,
+      'boolData': boolData,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -34,6 +39,8 @@ class Messages {
       receiverId: map['receiverId'],
       message: map['message'],
       timestamp: map['timestamp'],
+      boolData: map['boolData'],
+      fcmToken: map['fcmToken'],
     );
   }
 }

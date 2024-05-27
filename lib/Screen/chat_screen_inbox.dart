@@ -156,33 +156,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
               const Divider(
                 color: Color(0xff434343),
               ),
-
               _buildMessages(),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: CustomTextField(
-              //         controller: chatCn,
-              //         hintText: 'Type a message',
-              //         hintTextStyle: AppFonts.normalText
-              //             .copyWith(fontSize: 17, color: AppColor.bg),
-              //         radius: 4,
-              //         isFilled: true,
-              //         style:
-              //             AppFonts.textFieldFont.copyWith(color: AppColor.black),
-              //         fillColor: Color(0xffF4F4F4),
-              //       ),
-              //     ),
-              //     SizedBox(
-              //       width: 10,
-              //     ),
-              //     SvgPicture.asset(
-              //       AppIcon.sendIcon,
-              //       height: 60,
-              //       width: 58,
-              //     )
-              //   ],
-              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(
@@ -278,7 +252,10 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                 //
                 final currentMessage = listt[index];
                 final currentDateTime = DateTime.fromMillisecondsSinceEpoch(
-                    int.parse(currentMessage.timestamp!.toString()));
+                  int.parse(
+                    currentMessage.timestamp!.toString(),
+                  ),
+                );
                 final nextMessageDateTime = index < listt.length - 1
                     ? DateTime.fromMillisecondsSinceEpoch(
                         int.parse(listt[index + 1].timestamp!.toString()))
