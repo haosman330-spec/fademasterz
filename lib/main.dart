@@ -8,17 +8,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'Notification/notification_service.dart';
 import 'SplashScreen/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // FirebaseServices.initialNotification();
+  // FirebaseServices.getfcm();
+  // FirebaseServices.requestNotificationPermission();
+  FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
+  NotificationService.initialize();
   // await FirebaseAppCheck.instance.activate(
   //   webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+
   // );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -27,6 +34,15 @@ void main() async {
       const MyApp(),
     ),
   );
+}
+
+Future<void> _backgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  await updateFirestoreCount();
+
+  debugPrint('Handling a background title>>>> ${message.notification?.title}');
+  debugPrint('Handling a background body>>>> ${message.notification?.body}');
+  debugPrint('Background state>>>');
 }
 
 class MyApp extends StatefulWidget {

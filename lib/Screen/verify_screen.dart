@@ -361,9 +361,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     request["country_code"] = widget.selctedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
     request["otp"] = otpTextFieldCn.text.trim();
-    request["fcm_token"] = sharedPreferences.getString(
-      'fcmToken',
-    );
+    request["fcm_token"] = sharedPreferences.getString('fcmToken');
     request["device_id"] = sharedPreferences.getString('deviceId');
     request["device"] = sharedPreferences.getString('deviceType');
 

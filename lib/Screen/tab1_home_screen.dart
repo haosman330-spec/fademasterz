@@ -260,8 +260,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           context,
                           url,
                         ) =>
-                            const CircularProgressIndicator(
-                          color: AppColor.yellow,
+                            Container(
+                          height: 20,
+                          width: 20,
+                          child: const CircularProgressIndicator(
+                            color: AppColor.yellow,
+                          ),
                         ),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
@@ -484,8 +488,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         context,
                                         url,
                                       ) =>
-                                          const CircularProgressIndicator(
-                                        color: AppColor.yellow,
+                                          Container(
+                                        height: 30,
+                                        width: 30,
+                                        child: const CircularProgressIndicator(
+                                          color: AppColor.yellow,
+                                        ),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           const Icon(Icons.error),
