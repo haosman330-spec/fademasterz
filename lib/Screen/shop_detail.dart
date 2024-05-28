@@ -434,7 +434,9 @@ class _ShopDetailState extends State<ShopDetail> {
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(
-                          color: AppColor.yellow, shape: BoxShape.circle),
+                        color: AppColor.yellow,
+                        shape: BoxShape.circle,
+                      ),
                       child: SvgPicture.asset(
                         AppIcon.backIcon,
                         color: AppColor.black,
@@ -490,7 +492,9 @@ class _ShopDetailState extends State<ShopDetail> {
                               overflow: TextOverflow.ellipsis,
                               shopDetailModal.data?.address ?? '',
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 15, fontWeight: FontWeight.w500),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],
@@ -512,7 +516,9 @@ class _ShopDetailState extends State<ShopDetail> {
                                 ? 'No Rating Yet'
                                 : (shopDetailModal.data?.avgRating ?? ''),
                             style: AppFonts.regular.copyWith(
-                                fontSize: 15, fontWeight: FontWeight.w500),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -525,8 +531,10 @@ class _ShopDetailState extends State<ShopDetail> {
                         children: [
                           InkWell(
                             onTap: () {
-                              launchUrl(Uri.parse(
-                                  shopDetailModal.data?.instagramLink ?? ''));
+                              launchUrl(
+                                Uri.parse(
+                                    shopDetailModal.data?.instagramLink ?? ''),
+                              );
                             },
                             child: Column(
                               children: [
@@ -536,42 +544,53 @@ class _ShopDetailState extends State<ShopDetail> {
                                 ),
                                 Text(
                                   AppStrings.instagram,
-                                  style:
-                                      AppFonts.regular.copyWith(fontSize: 15),
+                                  style: AppFonts.regular.copyWith(
+                                    fontSize: 15,
+                                  ),
                                 )
                               ],
                             ),
                           ),
                           Column(
                             children: [
-                              SvgPicture.asset(AppIcon.openNowIcon),
+                              SvgPicture.asset(
+                                AppIcon.openNowIcon,
+                              ),
                               const SizedBox(
                                 height: 6,
                               ),
                               Text(
                                 _shopStatus,
-                                style: AppFonts.regular.copyWith(fontSize: 15),
+                                style: AppFonts.regular.copyWith(
+                                  fontSize: 15,
+                                ),
                               )
                             ],
                           ),
                           InkWell(
                             onTap: () {
                               MapsLauncher.launchCoordinates(
-                                  double.parse(
-                                      shopDetailModal.data!.lat.toString()),
-                                  double.parse(
-                                      shopDetailModal.data!.lng.toString()));
+                                double.parse(
+                                  shopDetailModal.data!.lat.toString(),
+                                ),
+                                double.parse(
+                                  shopDetailModal.data!.lng.toString(),
+                                ),
+                              );
                             },
                             child: Column(
                               children: [
-                                SvgPicture.asset(AppIcon.directionIcon),
+                                SvgPicture.asset(
+                                  AppIcon.directionIcon,
+                                ),
                                 const SizedBox(
                                   height: 6,
                                 ),
                                 Text(
                                   AppStrings.direction,
-                                  style:
-                                      AppFonts.regular.copyWith(fontSize: 15),
+                                  style: AppFonts.regular.copyWith(
+                                    fontSize: 15,
+                                  ),
                                 )
                               ],
                             ),
@@ -580,21 +599,30 @@ class _ShopDetailState extends State<ShopDetail> {
                       ),
                     ),
                     const Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                      padding: EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 15,
+                      ),
                       child: Divider(
                         height: 2,
                         color: AppColor.dividerColor,
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 15, right: 15, top: 21),
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 21,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             AppStrings.ourSpecialists,
-                            style: AppFonts.regular.copyWith(fontSize: 16),
+                            style: AppFonts.regular.copyWith(
+                              fontSize: 16,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -602,8 +630,9 @@ class _ShopDetailState extends State<ShopDetail> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => SpecialistScreen(
-                                      specialist: (shopDetailModal
-                                          .data!.ourSpecialist)),
+                                    specialist:
+                                        (shopDetailModal.data!.ourSpecialist),
+                                  ),
                                 ),
                               );
                               setState(() {});
@@ -632,7 +661,9 @@ class _ShopDetailState extends State<ShopDetail> {
                       replacement: Center(
                         child: Text(
                           'No Specialist Found',
-                          style: AppFonts.appText.copyWith(fontSize: 14),
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                       child: SizedBox(
@@ -670,12 +701,15 @@ class _ShopDetailState extends State<ShopDetail> {
                                       height: 60,
                                       width: 60,
                                       fit: BoxFit.fill,
-                                      progressIndicatorBuilder: (context, url,
-                                              downloadProgress) =>
-                                          CircularProgressIndicator(
-                                              value: downloadProgress.progress),
+                                      progressIndicatorBuilder:
+                                          (context, url, downloadProgress) =>
+                                              CircularProgressIndicator(
+                                        value: downloadProgress.progress,
+                                      ),
                                       errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
+                                          const Icon(
+                                        Icons.error,
+                                      ),
                                     ),
 
                                     //   Image.network(
@@ -688,8 +722,9 @@ class _ShopDetailState extends State<ShopDetail> {
                                   ),
                                   Text(
                                     (specialist?.name ?? ''),
-                                    style: AppFonts.normalText
-                                        .copyWith(fontSize: 14),
+                                    style: AppFonts.normalText.copyWith(
+                                      fontSize: 14,
+                                    ),
                                   )
                                 ],
                               ),
