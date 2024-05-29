@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -260,11 +262,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           context,
                           url,
                         ) =>
-                            Container(
-                          height: 20,
-                          width: 20,
-                          child: const CircularProgressIndicator(
-                            color: AppColor.yellow,
+                            const Center(
+                          child: SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: AppColor.yellow,
+                            ),
                           ),
                         ),
                         errorWidget: (context, url, error) =>
@@ -386,8 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           endYr = value?.endYear;
                           availability = value?.availability;
                           serviceId = value?.serviceId;
-                          debugPrint(
-                              '>>>>>>>>>>>>>>${serviceId}<<<<<<<<<<<<<<');
+                          debugPrint('>>>>>>>>>>>>>>$serviceId<<<<<<<<<<<<<<');
                           await homeDetailApi(context: context);
                         }
                       });
@@ -424,9 +427,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 visible: (searchCn.text.trim().isNotEmpty),
                 replacement: Visibility(
                   visible: (homePageModal.data?.shops?.isNotEmpty ?? false),
-                  replacement: Center(
-                    child: Visibility(
-                      visible: !isDataLoading,
+                  replacement: Visibility(
+                    visible: !isDataLoading,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      alignment: Alignment.center,
                       child: const Text(
                         'No Shop Available',
                         style: AppFonts.normalText,
@@ -488,11 +493,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                         context,
                                         url,
                                       ) =>
-                                          Container(
-                                        height: 30,
-                                        width: 30,
-                                        child: const CircularProgressIndicator(
-                                          color: AppColor.yellow,
+                                          const Center(
+                                        child: SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                            color: AppColor.yellow,
+                                          ),
                                         ),
                                       ),
                                       errorWidget: (context, url, error) =>
@@ -796,7 +803,7 @@ class _HomeScreenState extends State<HomeScreen> {
     request["category_ids"] = serviceId?.join(',') ?? '';
     request["experience_level"] =
         ((startYr?.isNotEmpty ?? false) && (endYr?.isNotEmpty ?? false))
-            ? "${startYr}" "-" "${endYr}"
+            ? "$startYr" "-" "$endYr"
             : ' ';
     // (startYr?.isNotEmpty ?? false) ?
     var response = await http.post(
@@ -821,7 +828,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-
+    debugPrint('>>>>>response>>>>>>>>>${jsonResponse}<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
     if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {

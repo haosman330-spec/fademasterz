@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:fademasterz/Booking/cancelled_booking_details.dart';
 import 'package:fademasterz/Modal/cancelled_booking_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,12 +7,13 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../ApiService/api_service.dart';
-import '../Utils/app_assets.dart';
-import '../Utils/app_color.dart';
-import '../Utils/app_fonts.dart';
-import '../Utils/app_string.dart';
-import '../Utils/custom_app_bar.dart';
+import '../../ApiService/api_service.dart';
+import '../../Utils/app_assets.dart';
+import '../../Utils/app_color.dart';
+import '../../Utils/app_fonts.dart';
+import '../../Utils/app_string.dart';
+import '../../Utils/custom_app_bar.dart';
+import 'cancelled_booking_details.dart';
 
 class CancelledBookingScreen extends StatefulWidget {
   const CancelledBookingScreen({super.key});

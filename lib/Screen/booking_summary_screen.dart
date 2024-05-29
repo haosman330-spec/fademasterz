@@ -12,13 +12,13 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Dashboard/dashboard.dart';
 import '../Modal/book_now_modal.dart';
 import '../Modal/booking_summary_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
 import '../Utils/utility.dart';
+import 'Dashboard/dashboard.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
   final BookingSummaryArgument data;
@@ -124,7 +124,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     if (widget.data.image?.isNotEmpty ?? false) {
       request.files.add(
         await http.MultipartFile.fromPath(
-            'desired_look', (widget.data.image.toString() ?? ' ')),
+            'desired_look', (widget.data.image.toString())),
       );
     }
     request.headers.addAll(headers);
@@ -280,7 +280,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     var request =
         http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
     debugPrint(
-        '>>>>>>>>>>ubookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
+        '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
     request.fields.addAll({
       'booking_id': sharedPreferences.getInt('ubookingId').toString(),
       'date': widget.data.date.toString(),
@@ -288,7 +288,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
       'specialist_id': widget.data.specialistId.toString(),
       'note': widget.data.noteText.toString(),
     });
-    if (widget.data.image.toString().isNotEmpty ?? false) {
+    if (widget.data.image.toString().isNotEmpty) {
       request.files.add(
         await http.MultipartFile.fromPath(
             'desired_look', (widget.data.image ?? ' ')),
@@ -370,7 +370,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                DashBoardScreen(selectIndex: 1),
+                                const DashBoardScreen(selectIndex: 1),
                           ));
                     },
                     height: 48,
@@ -696,7 +696,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                     ),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: bookingSummaryResponse?.data?.services?.length,
                       itemBuilder: (context, index) {
                         var service =
@@ -824,7 +824,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             ],
                           ),
                         )
-                      : SizedBox.shrink(),
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

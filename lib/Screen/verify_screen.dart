@@ -15,18 +15,18 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Dashboard/dashboard.dart';
 import '../Utils/app_color.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
 import '../Utils/utility.dart';
+import 'Dashboard/dashboard.dart';
 
 class VerifyScreen extends StatefulWidget {
   final String? phoneNo;
   final String? verificationId;
-  final CountryCode? selctedCountry;
+  final CountryCode? selectedCountry;
   const VerifyScreen(
-      {super.key, this.phoneNo, this.verificationId, this.selctedCountry});
+      {super.key, this.phoneNo, this.verificationId, this.selectedCountry});
 
   @override
   State<VerifyScreen> createState() => _VerifyScreenState();
@@ -114,7 +114,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   ),
                   TextSpan(
                     text:
-                        ' ${widget.selctedCountry?.dialCode}${widget.phoneNo}',
+                        ' ${widget.selectedCountry?.dialCode}${widget.phoneNo}',
                     style: AppFonts.text1.copyWith(
                         color: AppColor.yellow, fontWeight: FontWeight.w500),
                   ),
@@ -358,7 +358,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       Utility.progressLoadingDialog(context, true);
     }
     var request = {};
-    request["country_code"] = widget.selctedCountry?.dialCode;
+    request["country_code"] = widget.selectedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
     request["otp"] = otpTextFieldCn.text.trim();
     request["fcm_token"] = sharedPreferences.getString('fcmToken');
@@ -394,7 +394,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
 
-      debugPrint('>>>>>senderId>>>>>>>>>${senderId}<<<<<<<<<<<<<<');
+      debugPrint('>>>>>senderId>>>>>>>>>$senderId<<<<<<<<<<<<<<');
       sharedPreferences.setInt("senderId", senderId!);
       sharedPreferences.setString("email", email!);
 
@@ -425,7 +425,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.verifyPhoneNumber(
-        phoneNumber: '${widget.selctedCountry?.dialCode}${widget.phoneNo}',
+        phoneNumber: '${widget.selectedCountry?.dialCode}${widget.phoneNo}',
         verificationCompleted: (e) {
           setState(() {
             Utility.progressLoadingDialog(context, false);
@@ -437,7 +437,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                 '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
 
             Helper().showToast('Otp failed $e');
-            debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
+            debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
             Utility.progressLoadingDialog(context, false);
           });
         },
@@ -448,7 +448,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
           });
 
           Helper().showToast(
-              "Otp successfully sent to ${widget.selctedCountry?.dialCode}${widget.phoneNo}");
+              "Otp successfully sent to ${widget.selectedCountry?.dialCode}${widget.phoneNo}");
           mobileStartTimer();
           otpVerifyFirebase();
           setState(() {});

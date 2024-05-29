@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:fademasterz/Dashboard/dashboard.dart';
 import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
 import 'package:fademasterz/Modal/get_category_modal.dart';
 import 'package:fademasterz/Utils/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
+import '../Screen/Dashboard/dashboard.dart';
 import 'app_color.dart';
 import 'app_fonts.dart';
 import 'app_list.dart';
@@ -107,7 +106,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
   List<String>? serviceId;
 
   Future<void> getCategory(BuildContext context) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
@@ -388,7 +386,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                DashBoardScreen(selectIndex: 0),
+                                const DashBoardScreen(selectIndex: 0),
                           ),
                           (route) => false);
                     },

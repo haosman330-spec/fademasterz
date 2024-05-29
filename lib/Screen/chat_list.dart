@@ -34,7 +34,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
   String? currentUserId;
   @override
   void initState() {
-    // navcheckchating = true;
     super.initState();
     getUserId();
     // APIs.getSelfInfo();
@@ -50,7 +49,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
     currentUserName = sharedPreferences.getString("user_Name").toString();
     currentUserImage = sharedPreferences.getString("user_Image").toString();
     debugPrint(
-        '>>>>>sharedPreferences.getString("User_Id").myid>>>>>>>>>${receiverId}<<<<<<<<<<<<<<');
+        '>>>>>sharedPreferences.getString("User_Id").myId>>>>>>>>>$receiverId<<<<<<<<<<<<<<');
     setState(() {});
   }
 
@@ -99,12 +98,12 @@ class _ChatListScreenState extends State<ChatListScreen> {
           final documents = snapshot.data?.docs;
 
           if (documents?.isEmpty ?? true) {
-            return Center(
-              child: Text(
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              alignment: Alignment.center,
+              child: const Text(
                 "No messages available",
-                style: AppFonts.regular.copyWith(
-                  fontSize: 16,
-                ),
+                style: AppFonts.normalText,
               ),
             );
           }
@@ -117,7 +116,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 var dd = documents?[index].data() as Map<String, dynamic>;
                 // debugPrint(
                 //     '>>>>>>>>documents?.length>>>>>>${documents?[index].data().toString()}<<<<<<<<<<<<<<');
-                var i = msg.fromJson(dd);
+                var i = Mesg.fromJson(dd);
 
                 int indexx = 0;
                 if (i.membersList!.first.id.toString() == senderId.toString()) {
@@ -127,7 +126,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 Map otherUserData = {};
                 return InkWell(
                   onTap: () {
-                    debugPrint('>>>>>>>>>>>>>> otherUserDa${dd}<<<<<<<<<<<<');
+                    debugPrint('>>>>>>>>>>>>>> otherUserDa$dd<<<<<<<<<<<<');
 
                     debugPrint(
                         '>>>>>>>>>>>>>>${i.membersList?[indexx].id.toString()}<<<<<<<<<<<<<<');
@@ -221,221 +220,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
             ),
           );
-          // return ListView.builder(
-          //   itemCount: documents?.length ?? 0,
-          //   itemBuilder: (context, index) {
-          //     // var doc = documents[index].data();
-          //+
-
-          //     var dd = documents?[index].data() as Map<String, dynamic>;
-          //
-          //     var i = msg.fromJson(dd);
-          //
-          //     int indexx = index;
-          //     // int indexx = 0;
-          //     // if (i.memberDetailsList?[indexx].id.toString() == myId) {
-          //     //   indexx = 1;
-          //     // }
-          //     // if (indexx == 1) {}
-          //     print(
-          //         "chatListDataFromJson>>>>>>>>>>>>>>>>>>>>>>>>>${documents?[index].data()}");
-          //     return InkWell(
-          //       onTap: () {
-          //         // Navigator.push(
-          //         //   context,
-          //         //   MaterialPageRoute(
-          //         //       builder: (context) => ChatingScreen(
-          //         //           providercheck: widget.online,
-          //         //           id: i.memberDetailsList![indexx].propertyid,
-          //         //           cityid: i.memberDetailsList![indexx].cityid,
-          //         //           isBooked: i.boolData,
-          //         //           currentusername: currentuserName,
-          //         //           prousername: i
-          //         //               .memberDetailsList![indexx].name
-          //         //               .toString(),
-          //         //           image: i.memberDetailsList![indexx].image
-          //         //               .toString(),
-          //         //           propertyname: i.propertyName.toString(),
-          //         //           currentuserimage: currentuserImage,
-          //         //           providerfirechatid: i
-          //         //               .memberDetailsList![indexx].id
-          //         //               .toString())),
-          //         // ).then((value) => returnonlne());
-          //       },
-          //       child: Padding(
-          //         padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-          //         child: Container(
-          //           // height: 80,
-          //           margin: const EdgeInsets.only(bottom: 10),
-          //           decoration: const BoxDecoration(
-          //             borderRadius: BorderRadius.all(Radius.circular(10)),
-          //             shape: BoxShape.rectangle,
-          //             color:
-          //                 Color(0xffF5F4F8), //remove this when you add image.
-          //           ),
-          //           child: Padding(
-          //             padding: const EdgeInsets.all(5.0),
-          //             child: Row(
-          //               crossAxisAlignment: CrossAxisAlignment.center,
-          //               children: [
-          //                 // Padding(
-          //                 //   padding: const EdgeInsets.only(
-          //                 //       left: 2, right: 8, top: 5, bottom: 4),
-          //                 //   child: ClipOval(
-          //                 //     child: i.memberDetailsList![indexx].image
-          //                 //                 .toString() ==
-          //                 //             "null"
-          //                 //         ? Image.asset(
-          //                 //             "assets/images/ic_demoPerson.png",
-          //                 //             width: 62,
-          //                 //             height: 65,
-          //                 //           )
-          //                 //         : CachedNetworkImage(
-          //                 //             imageUrl: i.memberDetailsList![indexx]
-          //                 //                         .image
-          //                 //                         .toString() ==
-          //                 //                     "null"
-          //                 //                 ? ""
-          //                 //                 : i.memberDetailsList![indexx].image
-          //                 //                     .toString(),
-          //                 //             progressIndicatorBuilder:
-          //                 //                 (context, url, downloadProgress) =>
-          //                 //                     Padding(
-          //                 //               padding: const EdgeInsets.all(15.0),
-          //                 //               child: CircularProgressIndicator(
-          //                 //                   color: Colors.red,
-          //                 //                   value: downloadProgress.progress),
-          //                 //             ),
-          //                 //             errorWidget: (context, url, error) =>
-          //                 //                 Image.asset(
-          //                 //                     "assets/images/ic_demoPerson.png"),
-          //                 //             fit: BoxFit.cover,
-          //                 //             width: 62,
-          //                 //             height: 65,
-          //                 //           ),
-          //                 //   ),
-          //                 // ),
-          //                 Expanded(
-          //                   child: Column(
-          //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //                     crossAxisAlignment: CrossAxisAlignment.start,
-          //                     children: [
-          //                       Row(
-          //                         mainAxisAlignment:
-          //                             MainAxisAlignment.spaceBetween,
-          //                         crossAxisAlignment: CrossAxisAlignment.start,
-          //                         children: [
-          //                           // Expanded(
-          //                           //   flex: 1,
-          //                           //   child: Text(
-          //                           //     i.memberDetailsList![indexx].image
-          //                           //                 .toString() ==
-          //                           //             "null"
-          //                           //         ? ""
-          //                           //         : i.memberDetailsList![indexx].name
-          //                           //             .toString(),
-          //                           //     style: const TextStyle(
-          //                           //       fontSize: 15,
-          //                           //       color: Colors.black,
-          //                           //       overflow: TextOverflow.ellipsis,
-          //                           //       fontFamily: "Raleway",
-          //                           //       fontWeight: FontWeight.w700,
-          //                           //     ),
-          //                           //   ),
-          //                           // ),
-          //                           Flexible(
-          //                             flex: 1,
-          //                             child: Text(
-          //                               i.lastMessage.toString(),
-          //                               style: const TextStyle(
-          //                                 fontSize: 11,
-          //                                 color: Colors.pink,
-          //                                 overflow: TextOverflow.ellipsis,
-          //                                 fontFamily: "Raleway",
-          //                                 fontWeight: FontWeight.w600,
-          //                               ),
-          //                             ),
-          //                           ),
-          //                         ],
-          //                       ),
-          //                       const SizedBox(
-          //                         height: 5,
-          //                       ),
-          //                       const SizedBox(
-          //                         height: 5,
-          //                       ),
-          //                       Row(
-          //                         mainAxisAlignment:
-          //                             MainAxisAlignment.spaceBetween,
-          //                         children: [
-          //                           Expanded(
-          //                             flex: 1,
-          //                             child: Text(
-          //                               DateFormat('MMM dd, hh:mm a')
-          //                                   .format(DateTime.parse(
-          //                                     DateTime.fromMillisecondsSinceEpoch(
-          //                                             int.parse(i
-          //                                                 .lastMessageTime
-          //                                                 .toString()))
-          //                                         .toString(),
-          //                                   ))
-          //                                   .toString(),
-          //                               style: const TextStyle(
-          //                                 fontSize: 10,
-          //                                 color: Colors.red,
-          //                                 overflow: TextOverflow.ellipsis,
-          //                                 fontFamily: "Raleway",
-          //                                 fontWeight: FontWeight.w400,
-          //                               ),
-          //                             ),
-          //                           ),
-          //                           // Expanded(
-          //                           //   flex: 2,
-          //                           //   child: Text(
-          //                           //     'Feb 6 - Feb 7',
-          //                           //     style: const TextStyle(
-          //                           //       fontSize: 10,
-          //                           //       color: Colors.grey,
-          //                           //       overflow:
-          //                           //           TextOverflow.ellipsis,
-          //                           //       fontFamily: "Raleway",
-          //                           //       fontWeight: FontWeight.w400,
-          //                           //     ),
-          //                           //   ),
-          //                           // ),
-          //                         ],
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //                 // SizedBox(
-          //                 //   height: 5,
-          //                 // ),
-          //                 // Text(
-          //                 //   'Sunset Villa',
-          //                 //   style: const TextStyle(
-          //                 //     fontSize: 11,
-          //                 //     color: MyColor.pink,
-          //                 //     overflow: TextOverflow.ellipsis,
-          //                 //     fontFamily: "Raleway",
-          //                 //     fontWeight: FontWeight.w600,
-          //                 //   ),
-          //                 // ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // );
         },
       ),
     );
   }
 }
 
-class msg {
+class Mesg {
   String? lastMsg;
   String? image;
   List<int>? members;
@@ -444,7 +235,7 @@ class msg {
   String? lastMessage;
   String? senderId;
 
-  msg(
+  Mesg(
       {this.lastMsg,
       this.image,
       this.members,
@@ -453,7 +244,7 @@ class msg {
       this.lastMessage,
       this.senderId});
 
-  msg.fromJson(Map<String, dynamic> json) {
+  Mesg.fromJson(Map<String, dynamic> json) {
     lastMsg = json['last_msg'];
     image = json['image'];
     members = json['members'].cast<int>();
@@ -469,7 +260,7 @@ class msg {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['last_msg'] = lastMsg;
     data['image'] = image;
     data['members'] = members;
@@ -502,7 +293,7 @@ class MembersList {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['image'] = image;
     data['name'] = name;
     data['id'] = id;

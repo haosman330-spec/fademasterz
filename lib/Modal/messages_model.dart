@@ -24,7 +24,7 @@ class Msg1 {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['image'] = image;
     data['senderId'] = senderId;
     data['receiverId'] = receiverId;

@@ -20,7 +20,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: AppColor.bg,
       appBar: MyAppBar.myAppbar(
-        title: Text(
+        title: const Text(
           AppStrings.notification,
           style: AppFonts.appText,
         ),
@@ -45,7 +45,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(
+            const Align(
               alignment: Alignment.topRight,
               child: Text(
                 AppStrings.clearAll,
@@ -58,7 +58,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   'Lorem ipsum',
                   style: AppFonts.regular.copyWith(fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   '1 hr',
                   style: AppFonts.regular.copyWith(fontSize: 12),
@@ -79,7 +79,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   'Lorem ipsum',
                   style: AppFonts.regular.copyWith(fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   '1 hr',
                   style: AppFonts.regular.copyWith(fontSize: 12),
@@ -100,7 +100,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   'Lorem ipsum',
                   style: AppFonts.regular.copyWith(fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   '1 hr',
                   style: AppFonts.regular.copyWith(fontSize: 12),
@@ -121,7 +121,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   'Lorem ipsum',
                   style: AppFonts.regular.copyWith(fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   '1 hr',
                   style: AppFonts.regular.copyWith(fontSize: 12),
@@ -142,7 +142,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   'Lorem ipsum',
                   style: AppFonts.regular.copyWith(fontSize: 16),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   '1 hr',
                   style: AppFonts.regular.copyWith(fontSize: 12),

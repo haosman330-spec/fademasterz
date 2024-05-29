@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Booking/complete_booking_details.dart';
 import '../Utils/app_assets.dart';
+import 'Booking/complete_booking_details.dart';
 
 class MyBookingScreen extends StatefulWidget {
   const MyBookingScreen({
@@ -89,7 +89,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                         style: isVisible == true
                             ? AppFonts.regular.copyWith(
                                 fontSize: 15,
-                                color: Color(0xff272727),
+                                color: const Color(0xff272727),
                               )
                             : AppFonts.regular.copyWith(fontSize: 15),
                       ),

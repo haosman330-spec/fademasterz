@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Notification/notification_service.dart';
-import 'SplashScreen/splash_screen.dart';
+import 'Screen/SplashScreen/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {

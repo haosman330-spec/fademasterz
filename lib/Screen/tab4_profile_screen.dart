@@ -17,11 +17,11 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Booking/cancelled_booking_screen.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';
-import 'enter_yourNo.dart';
+import 'Booking/cancelled_booking_screen.dart';
+import 'enter_your_no.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(int) onTap;
@@ -93,11 +93,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 72,
                           fit: BoxFit.fill,
                           progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      value: downloadProgress.progress),
+                              (context, url, downloadProgress) => Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                            ),
+                          ),
                           errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
+                              const Icon(Icons.error),
                         ),
                         // child: Image.network(
                         //   ApiService.imageUrl + (image ?? ''),

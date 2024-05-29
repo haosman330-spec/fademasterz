@@ -10,10 +10,10 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Modal/messagesModel.dart';
+import '../Modal/messages_model.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/chat_service.dart';
-import '../Utils/custom_textfield.dart';
+import '../Utils/custom_tex_field.dart';
 
 class ChatScreenInBox extends StatefulWidget {
   final String? receiverName;
@@ -44,7 +44,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
       senderId = sharedPreferences.getInt('senderId').toString();
 
       debugPrint(
-          '>>>>>>>>sharedPreferences.getInt(receiverId)>>>>>>${senderId}<<<<<<<<<<<<<<');
+          '>>>>>>>>sharedPreferences.getInt(receiverId)>>>>>>$senderId<<<<<<<<<<<<<<');
 
       await chatService.sendMessage(
         //receiverId: sharedPreferences.getInt('receiverId').toString(),
@@ -65,7 +65,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     senderId = sharedPreferences.getInt('senderId').toString();
     receiverId = sharedPreferences.getString('receiverId');
     debugPrint(
-        '>>>>>>receiverIdreceiverIdreceiverIdreceiverId>>>>>>>>${receiverId}<<<<<<<<<<<<<<');
+        '>>>>>>receiverIdreceiverIdreceiverIdreceiverId>>>>>>>>$receiverId<<<<<<<<<<<<<<');
     setState(() {});
   }
 
@@ -212,7 +212,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                   height: MediaQuery.of(context).size.height * 0.74,
                   child: const Center(child: CircularProgressIndicator())),
             ],
@@ -235,7 +235,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             }
           }
         }
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.74,
           // color: Colors.amber,
           child: Padding(
@@ -248,7 +248,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
               itemCount: snapshot.data?.docs.length,
               itemBuilder: (context, index) {
                 var map = snapshot.data?.docs[index].data();
-                print(">>>>>>>map>>>>>>>>>>${map}");
+                debugPrint('>>>>>>>>>>>>>>$map<<<<<<<<<<<<<<');
+
                 //
                 final currentMessage = listt[index];
                 final currentDateTime = DateTime.fromMillisecondsSinceEpoch(
@@ -374,7 +375,7 @@ class Timestamp {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['seconds'] = seconds;
     data['nanoseconds'] = nanoseconds;
     return data;

@@ -68,7 +68,7 @@ class _MyTextFieldState extends State<MyTextField> {
 class MyTextField {
   static Widget myTextFormField({
     String? title,
-    bool? is_border,
+    bool? isBorder,
     required TextEditingController controller,
     FocusNode? focusNode,
     required TextInputType textInputType,

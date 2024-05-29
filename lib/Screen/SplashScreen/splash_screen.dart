@@ -1,9 +1,9 @@
-import 'package:fademasterz/Dashboard/dashboard.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Screen/enter_yourNo.dart';
+import '../Dashboard/dashboard.dart';
+import '../enter_your_no.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

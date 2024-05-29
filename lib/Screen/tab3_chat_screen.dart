@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         height: 49,
                         width: 49,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Column(
@@ -65,21 +65,21 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ],
                       ),
-                      Spacer(),
-                      Text(
+                      const Spacer(),
+                      const Text(
                         '3:00pm',
                         style: AppFonts.yellowFont,
                       )
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     color: AppColor.dividerColor,
                   )
                 ],
               ),
             );
           },
-          separatorBuilder: (BuildContext context, int index) => SizedBox(
+          separatorBuilder: (BuildContext context, int index) => const SizedBox(
             height: 10,
           ),
         ),

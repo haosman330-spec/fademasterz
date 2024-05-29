@@ -6,7 +6,6 @@ import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +26,7 @@ class EnterYourNo extends StatefulWidget {
 class _EnterYourNoState extends State<EnterYourNo> {
   TextEditingController phoneCn = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  CountryCode? _selctedCountry = CountryCode(
+  CountryCode? _selectedCountry = CountryCode(
       name: 'United Kingdom',
       flagUri: 'flags/gb.png',
       code: 'GB',
@@ -88,20 +87,20 @@ class _EnterYourNoState extends State<EnterYourNo> {
                         borderRadius: BorderRadius.all(Radius.circular(16))),
                     prefixIcon: CountryCodePicker(
                       onChanged: (data) {
-                        _selctedCountry = data;
+                        _selectedCountry = data;
                         setState(() {});
                         // debugPrint(
                         //     '>>>>>>>>>>>>>>${data.name}<<name<<<<<<<<<<<<');
                         // debugPrint(
                         //     '>>>>>>>>>>>>>>${data.code}<<code<<<<<<<<<<<<');
                         debugPrint(
-                            '>>>>>>>>>>>>>>${data.dialCode}<<dialcode<<<<<<<<<<<<');
+                            '>>>>>>>>>>>>>>${data.dialCode}<<dial code<<<<<<<<<<<<');
                         // debugPrint(
                         //     '>>>>>>>>>>>>>>${data.flagUri}<<flag<<<<<<<<<<<<');
                       },
                       initialSelection: 'GB',
                       favorite: const ['GB'],
-                      countryFilter: [
+                      countryFilter: const [
                         'GB',
                         'IN',
                       ],
@@ -261,7 +260,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.verifyPhoneNumber(
-        phoneNumber: '${_selctedCountry?.dialCode}${phoneCn.text}',
+        phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text}',
         verificationCompleted: (e) {
           setState(() async {
             Utility.progressLoadingDialog(context, false);
@@ -274,7 +273,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
             //     builder: (context) => VerifyScreen(
             //         phoneNo: phoneCn.text.toString(),
             //         verificationId: e.verificationId,
-            //         selctedCountry: _selctedCountry),
+            //         selectedCountry: _selectedCountry),
             //   ),
             // );
           });
@@ -285,7 +284,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
                 '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
 
             Helper().showToast('Otp failed $e');
-            debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
+            debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
             Utility.progressLoadingDialog(context, false);
           });
         },
@@ -299,7 +298,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
               builder: (context) => VerifyScreen(
                   phoneNo: phoneCn.text.toString(),
                   verificationId: verificationId,
-                  selctedCountry: _selctedCountry),
+                  selectedCountry: _selectedCountry),
             ),
           );
           setState(() {});
@@ -311,15 +310,14 @@ class _EnterYourNoState extends State<EnterYourNo> {
   }
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
     FirebasePhoneAuthHandler(
-      phoneNumber: "${_selctedCountry?.dialCode}$phoneNumber",
+      phoneNumber: "${_selectedCountry?.dialCode}$phoneNumber",
       // If true, the user is signed out before the onLoginSuccess callback is fired when the OTP is verified successfully.
       signOutOnSuccessfulVerification: false,
 
       linkWithExistingUser: false,
       builder: (context, controller) {
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       },
       autoRetrievalTimeOutDuration: const Duration(seconds: 60),
       otpExpirationDuration: const Duration(seconds: 60),

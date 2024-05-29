@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
-import 'package:fademasterz/Utils/custom_textfield.dart';
+import 'package:fademasterz/Utils/custom_tex_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -13,15 +13,15 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../ApiService/api_service.dart';
+import '../../ApiService/api_service.dart';
+import '../../Modal/booking_detail_modal.dart';
+import '../../Utils/app_assets.dart';
+import '../../Utils/app_string.dart';
+import '../../Utils/custom_app_button.dart';
+import '../../Utils/helper.dart';
 import '../Dashboard/dashboard.dart';
-import '../Modal/booking_detail_modal.dart';
-import '../Screen/chat_screen_inbox.dart';
-import '../Screen/choose_availability_barber.dart';
-import '../Utils/app_assets.dart';
-import '../Utils/app_string.dart';
-import '../Utils/custom_app_button.dart';
-import '../Utils/helper.dart';
+import '../chat_screen_inbox.dart';
+import '../choose_availability_barber.dart';
 
 class CompleteBookingDetail extends StatefulWidget {
   final int? bookingId;
@@ -727,7 +727,8 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         var currentTime =
                             DateTime.now().subtract(const Duration(hours: 2));
                         var scheduleTime = DateTime.parse('$date $time');
-                        debugPrint('>>>>>>>>>>>>>>$currentTime ' +
+                        debugPrint('>>>>>>>>>>>>>>$currentTime '
+                            '+'
                             ' $scheduleTime}<<<<<<<<<<<<<<');
                         // if (bookingDetailResponse?.data?.bookingStatus ==
                         //     "Cancelled") {
@@ -855,18 +856,18 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                     child: MyAppButton(
                                       onPress: () {
                                         Navigator.pop(ctx);
-                                        var currentTime = DateTime.now()
+                                        /* var currentTime = DateTime.now()
                                             .subtract(const Duration(hours: 2));
                                         var scheduleTime =
-                                            DateTime.parse('$date $time');
+                                            DateTime.parse('$date $time');*/
                                         // .isBefore(scheduleTime)) {
                                         cancelBookingApi(context);
-                                        //   }
-                                        // else {
-                                        //   showBottomSheet();
-                                        // }
-                                        // Navigator.popUntil(
-                                        //     context, (route) => false);
+                                        /*     }
+                                        else {
+                                          showBottomSheet();
+                                        }
+                                        Navigator.popUntil(
+                                            context, (route) => false);*/
                                       },
                                       radius: 6,
                                       height: 50,
@@ -932,7 +933,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
     // );
     if (jsonResponse['status']) {
       bookingDetailResponse = BookingDetailResponse.fromJson(jsonResponse);
-      var shopId = bookingDetailResponse?.data?.shopId;
+      // var shopId = bookingDetailResponse?.data?.shopId;
       bookingId = bookingDetailResponse?.data?.bookingId;
       time = bookingDetailResponse?.data?.startTime;
       date = bookingDetailResponse?.data?.date?.toString().split(" ").first;
@@ -1028,8 +1029,8 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
       isDismissible: false,
       context: context,
       builder: (context) {
-        return WillPopScope(
-          onWillPop: () async => false,
+        return PopScope(
+          canPop: false,
           child: Container(
             height: 220,
             decoration: const BoxDecoration(
@@ -1128,8 +1129,8 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
       builder: (ctx) {
         // debugPrint('>>>isSuccess>>>>>>>>>>>${isSuccess}<<<<<<<<<<<<<<');
         // debugPrint('>>>>>>>description>>>>>>>${description}<<<<<<<<<<<<<<');
-        return WillPopScope(
-          onWillPop: () async => false,
+        return PopScope(
+          canPop: false,
           child: Container(
             height: 230,
             decoration: const BoxDecoration(

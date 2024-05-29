@@ -1,15 +1,15 @@
-import 'package:fademasterz/Dashboard/dashboard.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../Booking/cancelled_booking_details.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_bar.dart';
 import '../Utils/custom_app_button.dart';
+import 'Booking/cancelled_booking_details.dart';
+import 'Dashboard/dashboard.dart';
 
 class PaymentDirection extends StatefulWidget {
   final String? url;
@@ -50,7 +50,7 @@ class PaymentDirectionState extends State<PaymentDirection> {
             CreditCardWidget(
               cardNumber: '4444 4744 4477 4777',
               expiryDate: '01/30',
-              cardHolderName: 'Adam Nilson',
+              cardHolderName: 'Adam Nils',
               cvvCode: '411',
               cardBgColor: AppColor.black,
               obscureCardNumber: false,
@@ -64,7 +64,7 @@ class PaymentDirectionState extends State<PaymentDirection> {
             ),
             CreditCardForm(
               formKey: formKey, // Required
-              cardHolderName: 'Adam Nilson', // Required
+              cardHolderName: 'Adam Nils', // Required
               cardNumber: '4444 4744 4477 4777', // Required
               expiryDate: '01/2030', // Required
               cvvCode: '411',
@@ -83,10 +83,18 @@ class PaymentDirectionState extends State<PaymentDirection> {
               cvvValidationMessage: 'Please input a valid CVV',
               dateValidationMessage: 'Please input a valid date',
               numberValidationMessage: 'Please input a valid number',
-              cardHolderValidator: (String? cardHolderName) {},
-              cardNumberValidator: (String? cardNumber) {},
-              expiryDateValidator: (String? expiryDate) {},
-              cvvValidator: (String? cvv) {},
+              cardHolderValidator: (String? cardHolderName) {
+                return null;
+              },
+              cardNumberValidator: (String? cardNumber) {
+                return null;
+              },
+              expiryDateValidator: (String? expiryDate) {
+                return null;
+              },
+              cvvValidator: (String? cvv) {
+                return null;
+              },
 
               onFormComplete: () {
                 // callback to execute at the end of filling card data

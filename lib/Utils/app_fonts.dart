@@ -56,7 +56,7 @@ class AppFonts {
       fontWeight: FontWeight.w500,
       fontSize: 15,
       color: AppColor.gray);
-  static const TextStyle blackFont = const TextStyle(
+  static const TextStyle blackFont = TextStyle(
     fontFamily: 'Poppins',
     fontWeight: FontWeight.bold,
     fontSize: 16,

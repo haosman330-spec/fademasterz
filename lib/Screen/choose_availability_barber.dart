@@ -7,7 +7,7 @@ import 'package:fademasterz/Modal/choose_availiabilty_modal.dart';
 import 'package:fademasterz/Modal/shop_service_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
-import 'package:fademasterz/Utils/custom_textfield.dart';
+import 'package:fademasterz/Utils/custom_tex_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

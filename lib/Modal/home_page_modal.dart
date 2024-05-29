@@ -31,6 +31,11 @@ class HomePageModal {
         "message": message,
         "data": data?.toJson(),
       };
+
+  @override
+  String toString() {
+    return 'HomePageModal{status: $status, message: $message, data: $data}';
+  }
 }
 
 class HomeData {

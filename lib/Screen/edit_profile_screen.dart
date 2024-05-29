@@ -18,7 +18,7 @@ import '../Modal/profile_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/custom_app_bar.dart';
 import '../Utils/custom_app_button.dart';
-import '../Utils/custom_textfield.dart';
+import '../Utils/custom_tex_field.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 
@@ -166,7 +166,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         CircularProgressIndicator(
                                             value: downloadProgress.progress),
                                 errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
+                                    const Icon(Icons.error),
                               ),
 
                               // Image.network(
@@ -396,7 +396,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       emailCn.text = (profileModal?.data?.email ?? '');
       nameCn.text = (profileModal?.data?.name ?? '');
       phoneCn.text = (profileModal?.data?.phone ?? '');
-      print(">>>>>>>>>>${profileModal?.data?.image}");
+      debugPrint('>>>>>>>>>>>>>>${profileModal?.data?.image}<<<<<<<<<<<<<<');
       sharedPreferences.setString('image', profileModal?.data?.image ?? '');
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');
       sharedPreferences.setString(
@@ -405,7 +405,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .setInt(
               'senderId', int.parse(profileModal?.data!.id?.toString() ?? ''))
           .toString();
-      print(">>>User_Id>>>>>>>${sharedPreferences.getString('User_Id')}");
+      debugPrint(
+          '>>>>>>>>>>>User_Id>>>>>${sharedPreferences.getString('User_Id')}<<<<<<<<<<<<<<');
+
       setState(() {});
     }
   }

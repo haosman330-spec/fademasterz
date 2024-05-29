@@ -54,7 +54,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: HtmlWidget(
             (privacyPolicyModal.data?.privacyPolicy ?? ''),
             customStylesBuilder: (element) {

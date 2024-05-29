@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fademasterz/Modal/shop_detail_modal.dart';
-import 'package:fademasterz/Screen/reviewes_screen.dart';
+import 'package:fademasterz/Screen/reviews_screen.dart';
 import 'package:fademasterz/Screen/select_your_service_screen.dart';
 import 'package:fademasterz/Screen/services_screen.dart';
 import 'package:fademasterz/Screen/specialist_screen.dart';
@@ -250,9 +250,14 @@ class _ShopDetailState extends State<ShopDetail> {
                           height: 88,
                           fit: BoxFit.fill,
                           progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      value: downloadProgress.progress),
+                              (context, url, downloadProgress) => Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                  value: downloadProgress.progress),
+                            ),
+                          ),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                         ),
@@ -703,8 +708,14 @@ class _ShopDetailState extends State<ShopDetail> {
                                       fit: BoxFit.fill,
                                       progressIndicatorBuilder:
                                           (context, url, downloadProgress) =>
-                                              CircularProgressIndicator(
-                                        value: downloadProgress.progress,
+                                              Center(
+                                        child: SizedBox(
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                            value: downloadProgress.progress,
+                                          ),
+                                        ),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           const Icon(
@@ -885,7 +896,7 @@ class _ShopDetailState extends State<ShopDetail> {
       shopDetailModal = ShopDetailModal.fromJson(jsonResponse);
       openTime = shopDetailModal.data?.shopStartTime;
       closeTime = shopDetailModal.data?.shopEndTime;
-      var id = shopDetailModal.data?.id;
+      // var id = shopDetailModal.data?.id;
 
       _updateShopStatus(openTime!, closeTime!);
       setState(() {});
