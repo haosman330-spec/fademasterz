@@ -29,7 +29,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   void initState() {
     // TODO: implement initState
-
+    // final listener =
+    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
+    //   switch (status) {
+    //     case InternetStatus.connected:
+    //       debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+    //       // The internet is now connected
+    //       break;
+    //     case InternetStatus.disconnected:
+    //       Utility.showNoGetNetworkDialog(context);
+    //       debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+    //
+    //       // The internet is now disconnected
+    //       break;
+    //   }
+    // });
     pages = [
       const HomeScreen(),
       const MyBookingScreen(),

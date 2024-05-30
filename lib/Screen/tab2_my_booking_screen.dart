@@ -1,14 +1,17 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fademasterz/Modal/my_booking_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
+import 'package:fademasterz/Utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,7 +32,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   bool isVisible = true;
   int? bookingId;
   bool showLoader = false;
-
+  List<ConnectivityResult>? _connectionStatus;
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});
@@ -38,10 +41,111 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    // initConnectivity();
+
     SchedulerBinding.instance.addPostFrameCallback((_) {
       getBookingListApi(context);
     });
+    //internetConnected();
+    // var listener = InternetConnectionChecker().onStatusChange.listen((status) {
+    //   switch (status) {
+    //     case InternetConnectionStatus.connected:
+    //       // homeDetail(context: context);
+    //       debugPrint(
+    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
+    //
+    //       break;
+    //     case InternetConnectionStatus.disconnected:
+    //       Utility.showNoGetNetworkDialog(context);
+    //       debugPrint(
+    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
+    //       break;
+    //   }
+    // });
     super.initState();
+  }
+
+  static Future<bool> internetConnected() async {
+    bool isConnected = await InternetConnection().hasInternetAccess;
+    if (!isConnected) {
+      Helper().showToast("No Internet Connection");
+    }
+    return isConnected;
+  }
+
+  void initConnectivity() async {
+    final List<ConnectivityResult> connectivityResult =
+        await (Connectivity().checkConnectivity());
+
+    if (connectivityResult.contains(ConnectivityResult.mobile)) {
+      getBookingListApi(context);
+      // Mobile network available.
+    } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
+      getBookingListApi(context);
+
+      // Wi-fi is available.
+      // Note for Android:
+      // When both mobile and Wi-Fi are turned on system will return Wi-Fi only as active network type
+    } else {
+      // ignore: use_build_context_synchronously
+      showNoNetworkMyBookingDialog(context);
+      setState(() {});
+    }
+
+    // final List<ConnectivityResult> connectivityResult =
+    //     await (Connectivity().checkConnectivity());
+    //
+    // setState(() {
+    //   _connectionStatus = connectivityResult;
+    // });
+    // if (_connectionStatus == ConnectivityResult.wifi) {
+    //   Future.delayed(Duration.zero, () async {
+    //     //  await WebServices.getMyBookingsApi(context, myBookingResponse);
+    //     getBookingListApi(context);
+    //     setState(() {});
+    //     //     setListData();
+    //   });
+    // } else if (_connectionStatus == ConnectivityResult.mobile) {
+    //   Future.delayed(Duration.zero, () async {
+    //     //   await WebServices.getMyBookingsApi(context, myBookingResponse);
+    //     getBookingListApi(context);
+    //     setState(() {});
+    //     //   setListData();
+    //   });
+    // } else {
+    //   // ignore: use_build_context_synchronously
+    //   showNoNetworkMyBookingDialog(context);
+    //   setState(() {});
+    // }
+  }
+
+  ///NetworkDialog
+  void showNoNetworkMyBookingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // ignore: deprecated_member_use
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text('No Network Connection'),
+            content:
+                const Text('Please check your internet and Wi-Fi connection.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // geteBooking();
+                  getBookingListApi(context);
+                  setState(() {});
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

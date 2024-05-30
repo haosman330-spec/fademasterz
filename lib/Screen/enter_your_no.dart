@@ -180,6 +180,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         onPress: () async {
           if (isValidate()) {
             signUpOtpAuth();
+
             // verifyPhoneNumber(phoneCn.text);
             // final List<ConnectivityResult> connectivityResult =
             //     await (Connectivity().checkConnectivity());
@@ -259,40 +260,36 @@ class _EnterYourNoState extends State<EnterYourNo> {
   Future<void> signUpOtpAuth() {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
+    debugPrint(
+        '>>>>>>>>>>>>>>${_selectedCountry?.dialCode}${phoneCn.text}<<<<<<<<<<<<<<');
     return auth.verifyPhoneNumber(
         phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text}',
         verificationCompleted: (e) {
-          setState(() async {
-            Utility.progressLoadingDialog(context, false);
-            Helper().showToast(e.toString());
-            debugPrint(
-                '>>>>>>>>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
-            // await Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => VerifyScreen(
-            //         phoneNo: phoneCn.text.toString(),
-            //         verificationId: e.verificationId,
-            //         selectedCountry: _selectedCountry),
-            //   ),
-            // );
-          });
+          Utility.progressLoadingDialog(context, false);
+          Helper().showToast(e.toString());
+          debugPrint(
+              '>>>>>>>>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
+          // await Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => VerifyScreen(
+          //         phoneNo: phoneCn.text.toString(),
+          //         verificationId: e.verificationId,
+          //         selectedCountry: _selectedCountry),
+          //   ),
+          // );
         },
         verificationFailed: (e) {
-          setState(() {
-            debugPrint(
-                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
+          debugPrint(
+              '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
 
-            Helper().showToast('Otp failed $e');
-            debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
-            Utility.progressLoadingDialog(context, false);
-          });
+          Helper().showToast('Otp failed $e');
+          debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
+          Utility.progressLoadingDialog(context, false);
         },
         codeSent: (String verificationId, int? token) async {
-          setState(() {
-            Utility.progressLoadingDialog(context, false);
-          });
-          await Navigator.push(
+          Utility.progressLoadingDialog(context, false);
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => VerifyScreen(
@@ -301,7 +298,6 @@ class _EnterYourNoState extends State<EnterYourNo> {
                   selectedCountry: _selectedCountry),
             ),
           );
-          setState(() {});
         },
         timeout: const Duration(seconds: 60),
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -310,6 +306,8 @@ class _EnterYourNoState extends State<EnterYourNo> {
   }
 
   Future<void> verifyPhoneNumber(String phoneNumber) async {
+    debugPrint(
+        '>>>>>>>>>>>>>>${_selectedCountry?.dialCode}$phoneNumber}<<<<<<<<<<<<<<');
     FirebasePhoneAuthHandler(
       phoneNumber: "${_selectedCountry?.dialCode}$phoneNumber",
       // If true, the user is signed out before the onLoginSuccess callback is fired when the OTP is verified successfully.

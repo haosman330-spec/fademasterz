@@ -243,6 +243,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
         onPress: () async {
           if (isValidate()) {
             otpVerifyFirebase();
+
             // FirebaseAuth auth = FirebaseAuth.instance;
             // int error;
             // String otp = otpTextFieldCn.text;
@@ -357,14 +358,18 @@ class _VerifyScreenState extends State<VerifyScreen> {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
+
+    var fcmToken = sharedPreferences.getString('fcmToken');
+    debugPrint('>>>>>>>>fcmToken>>>>>>${fcmToken}<<<<<<<<<<<<<<');
     var request = {};
     request["country_code"] = widget.selectedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
     request["otp"] = otpTextFieldCn.text.trim();
-    request["fcm_token"] = sharedPreferences.getString('fcmToken');
+    request["fcm_token"] = fcmToken ?? 'fcmToken';
     request["device_id"] = sharedPreferences.getString('deviceId');
     request["device"] = sharedPreferences.getString('deviceType');
 
+    debugPrint('>>>>request>>>>>>>>>>${request.toString()}<<<<<<<<<<<<<<');
     var response = await http.post(
       Uri.parse(
         ApiService.verifyOtp,
@@ -385,7 +390,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
     Helper().showToast(
       jsonResponse['message'],
     );
-
+    debugPrint(
+        '>>>>jsonResponse>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       verifyOtpModal = VerifyOtpModal.fromJson(jsonResponse);
 
@@ -393,10 +399,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
           "access_Token", verifyOtpModal.data!.userDetail!.token.toString());
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
-
+      debugPrint('>>>>>>>email>>>>>>>${email}<<<<<<<<<<<<<<');
       debugPrint('>>>>>senderId>>>>>>>>>$senderId<<<<<<<<<<<<<<');
       sharedPreferences.setInt("senderId", senderId!);
-      sharedPreferences.setString("email", email!);
+      sharedPreferences.setString("email", email.toString());
 
       if (context.mounted) {
         if (verifyOtpModal.data?.isSetup == 'yes') {

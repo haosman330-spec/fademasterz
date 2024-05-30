@@ -639,8 +639,11 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
         Utility.progressLoadingDialog(context, true);
       }
       shopId ??= sharedPreferences.getInt('shop_id');
+      debugPrint('>>>>>>>shopId>>>>>>>${shopId}<<<<<<<<<<<<<<');
+      debugPrint(
+          '>>>>>>>widget.data?.shopId>>>>>>>${widget.data?.shopId}<<<<<<<<<<<<<<');
       var request = {};
-      request["shop_id"] = shopId;
+      request["shop_id"] = shopId ?? widget.data?.shopId;
       request["selected_date"] = DateFormat('yyyy-MM-dd')
           .format(
             DateTime.parse(

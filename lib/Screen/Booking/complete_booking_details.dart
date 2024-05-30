@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
@@ -42,6 +43,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
   String? image;
   String? date;
   String? specialistId;
+  List<ConnectivityResult>? _connectionStatus;
   BookingDetailResponse? bookingDetailResponse;
   void setLoader(bool value) {
     showLoader = value;
@@ -51,6 +53,22 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
   @override
   void initState() {
     debugPrint('>>>>>>>>>>>>>>${widget.bookingId}<<<<<<<<<<<<<<');
+    // initConnectivity();
+    // var listener = InternetConnectionChecker().onStatusChange.listen((status) {
+    //   switch (status) {
+    //     case InternetConnectionStatus.connected:
+    //       // homeDetail(context: context);
+    //       debugPrint(
+    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
+    //
+    //       break;
+    //     case InternetConnectionStatus.disconnected:
+    //       Utility.showNoGetNetworkDialog(context);
+    //       debugPrint(
+    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
+    //       break;
+    //   }
+    // });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       bookingDetailApi(
         context,
@@ -59,7 +77,37 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
     super.initState();
   }
 
-  willPopScop() {
+  /*void initConnectivity() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+
+    setState(() {
+      _connectionStatus = connectivityResult;
+    });
+    if (connectivityResult.contains(ConnectivityResult.mobile)) {
+      Future.delayed(Duration.zero, () async {
+        //  await WebServices.getMyBookingsApi(context, myBookingResponse);
+        bookingDetailApi(
+          context,
+        );
+        setState(() {});
+        //     setListData();
+      });
+    } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
+      Future.delayed(Duration.zero, () async {
+        //   await WebServices.getMyBookingsApi(context, myBookingResponse);
+        bookingDetailApi(
+          context,
+        );
+        setState(() {});
+        //   setListData();
+      });
+    } else {
+      // ignore: use_build_context_synchronously
+      showNoNetworkMyBookingDialog(context);
+    }
+  }*/
+
+  void willPopScop() {
     bookingDetailResponse?.data?.bookingStatus == "Completed"
         ? Navigator.pop(context)
         : '';
@@ -1233,6 +1281,35 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                 ],
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  ///NetworkDialog
+  void showNoNetworkMyBookingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // ignore: deprecated_member_use
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: const Text('No Network Connection'),
+            content:
+                const Text('Please check your internet and Wi-Fi connection.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // geteBooking();
+                  bookingDetailApi(context);
+                  setState(() {});
+                },
+              ),
+            ],
           ),
         );
       },
