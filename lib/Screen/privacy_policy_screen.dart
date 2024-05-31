@@ -26,7 +26,9 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _privacyPolicy());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _privacyPolicy(context),
+    );
   }
 
   @override
@@ -70,7 +72,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   }
 
   PrivacyPolicyModal privacyPolicyModal = PrivacyPolicyModal();
-  void _privacyPolicy() async {
+  void _privacyPolicy(BuildContext context) async {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }

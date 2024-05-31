@@ -56,15 +56,16 @@ class Utility {
             child: AlertDialog(
               title: const Text('No Network Connection'),
               content: const Text(
-                  'Please check your internet and Wi-Fi connection.'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+                'No Internet Please check your internet connection',
+              ),
+              // actions: <Widget>[
+              //   TextButton(
+              //     child: const Text('OK'),
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //   ),
+              // ],
             ));
       },
     );

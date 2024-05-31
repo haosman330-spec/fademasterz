@@ -83,8 +83,10 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
               visible:
                   (cancelledBookingResponse?.data?.cancelBooking?.isNotEmpty ??
                       false),
-              replacement: const Center(
-                child: Text(
+              replacement: Container(
+                height: MediaQuery.of(context).size.height / 1.3,
+                alignment: Alignment.center,
+                child: const Text(
                   'No Cancelled Booking',
                   style: AppFonts.normalText,
                 ),

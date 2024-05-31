@@ -16,12 +16,15 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
 import '../Modal/booking_summary_argument_modal.dart';
 import '../Utils/bottam_sheet.dart';
 import '../Utils/custom_app_button.dart';
+import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -110,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPress: () async {
                         // await Geolocator.openLocationSettings();
                         //   await getLocation();
-                        await getLetLongPosition();
+                        getLetLongPosition();
 
                         Navigator.of(ctx).pop();
                       },
@@ -192,42 +195,79 @@ class _HomeScreenState extends State<HomeScreen> {
     latitude = position.latitude;
   }
 
+  InternetStatus? _connectionStatus;
+  late StreamSubscription<InternetStatus> listener;
+  bool? internetConnection;
+  static Future<bool> internetConnected() async {
+    bool internetConnection = await InternetConnectionChecker().hasConnection;
+
+    if (!internetConnection) {
+      debugPrint('>>>>>>>>>>>>>>No Internet Connection<<<<<<<<<<<<<<');
+      Helper().showToast("No Internet Connection");
+    }
+    return internetConnection;
+  }
+
   @override
   void initState() {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      await _showDialog(context);
-    });
-    // final listener =
+    // listener =
     //     InternetConnection().onStatusChange.listen((InternetStatus status) {
+    //   if (status == InternetStatus.disconnected) {
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (ctx) {
+    //     return WillPopScope(
+    //       onWillPop: () async => false,
+    //       child: AlertDialog(
+    //         shape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.circular(16),
+    //         ),
+    //         content: const Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             Icon(
+    //               Icons.network_check,
+    //               color: AppColor.yellow,
+    //               size: 200,
+    //             ),
+    //             Text(
+    //               'No Internet Please check your internet connection',
+    //               style: AppFonts.blackFont,
+    //               textAlign: TextAlign.center,
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
+    //   Utility.showNoGetNetworkDialog(context);
+    //   } else if (status == InternetStatus.connected) {
+    //     if (_connectionStatus == InternetStatus.disconnected) {
+    //       Navigator.pop(context);
+    //       SchedulerBinding.instance.addPostFrameCallback((_) async {
+    //         await _showDialog(context);
+    //       });
+    //     }
+    //   }
     //   switch (status) {
     //     case InternetStatus.connected:
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
+    //       _connectionStatus = status;
+    //
     //       // The internet is now connected
     //       break;
     //     case InternetStatus.disconnected:
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
+    //       _connectionStatus = status;
+    //
     //       // The internet is now disconnected
     //       break;
     //   }
     // });
 
-    // var listener = InternetConnectionChecker().onStatusChange.listen((status) {
-    //   switch (status) {
-    //     case InternetConnectionStatus.connected:
-    //       // homeDetail(context: context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
-    //
-    //       break;
-    //     case InternetConnectionStatus.disconnected:
-    //       Utility.showNoGetNetworkDialog(context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
-    //       break;
-    //   }
-    // });
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _showDialog(context);
+    });
     super.initState();
   }
 
@@ -609,9 +649,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Visibility(
                   visible:
                       (searchHomePageModal?.data?.shops?.isNotEmpty ?? false),
-                  replacement: Center(
-                    child: Visibility(
-                      visible: !isDataLoading,
+                  replacement: Visibility(
+                    visible: !isDataLoading,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 3,
+                      alignment: Alignment.center,
                       child: const Text(
                         'No Shop Available',
                         style: AppFonts.normalText,
@@ -856,6 +898,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void setState(VoidCallback fn) {
-    super.setState(fn);
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 }

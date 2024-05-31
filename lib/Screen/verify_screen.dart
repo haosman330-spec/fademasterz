@@ -41,7 +41,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   VerifyOtpModal verifyOtpModal = VerifyOtpModal();
   Timer? optTimer;
   int mobileOtpSecondsRemaining = 60;
-
+  String? resendVerificationId;
   snackBar(String? message) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -321,8 +321,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
         Utility.progressLoadingDialog(context, true);
       });
       final credential = PhoneAuthProvider.credential(
-          verificationId: widget.verificationId.toString(),
-          smsCode: otpTextFieldCn.text);
+        verificationId:
+            resendVerificationId ?? widget.verificationId.toString(),
+        smsCode: otpTextFieldCn.text,
+      );
 
       try {
         await auth.signInWithCredential(credential);
@@ -350,6 +352,48 @@ class _VerifyScreenState extends State<VerifyScreen> {
     // } else {
     //   Utility.showNoNetworkDialog(context);
     // }
+  }
+
+  Future<void> resendOtpFirebaseAuth() {
+    Utility.progressLoadingDialog(context, true);
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.verifyPhoneNumber(
+        phoneNumber: '${widget.selectedCountry?.dialCode}${widget.phoneNo}',
+        verificationCompleted: (e) {
+          debugPrint(
+              '>>>>>>>e.verificationId>>>>>>>${e.verificationId}<<<<<<<<<<<<<<');
+          setState(() {
+            Utility.progressLoadingDialog(context, false);
+          });
+        },
+        verificationFailed: (e) {
+          setState(() {
+            debugPrint(
+                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
+
+            Helper().showToast('Otp failed $e');
+            debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
+            Utility.progressLoadingDialog(context, false);
+          });
+        },
+        timeout: const Duration(seconds: 60),
+        codeSent: (String verificationId, int? token) async {
+          resendVerificationId = verificationId.toString();
+          debugPrint(
+              '>>>>>>>>resendVerificationId>>>>>>${resendVerificationId}<<<<<<<<<<<<<<');
+          setState(() {
+            Utility.progressLoadingDialog(context, false);
+          });
+
+          Helper().showToast(
+              "Otp successfully sent to ${widget.selectedCountry?.dialCode}${widget.phoneNo}");
+          mobileStartTimer();
+          // otpVerifyFirebase();
+          setState(() {});
+        },
+        codeAutoRetrievalTimeout: (e) {
+          setState(() {});
+        });
   }
 
   Future<void> verifyOtp(BuildContext context) async {
@@ -425,43 +469,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
         }
       }
     }
-  }
-
-  Future<void> resendOtpFirebaseAuth() {
-    Utility.progressLoadingDialog(context, true);
-    FirebaseAuth auth = FirebaseAuth.instance;
-    return auth.verifyPhoneNumber(
-        phoneNumber: '${widget.selectedCountry?.dialCode}${widget.phoneNo}',
-        verificationCompleted: (e) {
-          setState(() {
-            Utility.progressLoadingDialog(context, false);
-          });
-        },
-        verificationFailed: (e) {
-          setState(() {
-            debugPrint(
-                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
-
-            Helper().showToast('Otp failed $e');
-            debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
-            Utility.progressLoadingDialog(context, false);
-          });
-        },
-        timeout: const Duration(seconds: 60),
-        codeSent: (String verificationId, int? token) async {
-          setState(() {
-            Utility.progressLoadingDialog(context, false);
-          });
-
-          Helper().showToast(
-              "Otp successfully sent to ${widget.selectedCountry?.dialCode}${widget.phoneNo}");
-          mobileStartTimer();
-          otpVerifyFirebase();
-          setState(() {});
-        },
-        codeAutoRetrievalTimeout: (e) {
-          setState(() {});
-        });
   }
 
   @override

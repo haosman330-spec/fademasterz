@@ -38,7 +38,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> userProfile() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
     image = sharedPreferences.getString('image');
     name = sharedPreferences.getString('name');
     setState(() {});
@@ -608,14 +607,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   Expanded(
                                     child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const EnterYourNo(),
-                                            ),
-                                            (route) => false);
+                                      onPressed: () async {
+                                        final List<ConnectivityResult>
+                                            connectivityResult =
+                                            await (Connectivity()
+                                                .checkConnectivity());
+
+                                        if (connectivityResult.contains(
+                                            ConnectivityResult.mobile)) {
+                                          deleteAccountApi(context);
+                                        } else if (connectivityResult.contains(
+                                            ConnectivityResult.wifi)) {
+                                          deleteAccountApi(context);
+                                        } else {
+                                          Utility.showNoNetworkDialog(context);
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(
@@ -727,6 +733,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'Accept': 'application/json',
           'Authorization':
               'Bearer ${sharedPreferences.getString("access_Token")}'
+        });
+    Map<String, dynamic> jsonResponse = jsonDecode(
+      response.body,
+    );
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(
+        context,
+        false,
+      );
+    }
+    Helper().showToast(jsonResponse['message']);
+    if (jsonResponse['status'] == true) {
+      await sharedPreferences.setBool("profileSetUp", false);
+      await sharedPreferences.setString("access_Token", '');
+      setState(() {});
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EnterYourNo(),
+            ),
+            (route) => false);
+      }
+    } else if (jsonResponse['message'] == 'Unauthenticated.') {
+      await sharedPreferences.setBool("profileSetUp", false);
+      await sharedPreferences.setString("access_Token", '');
+      setState(() {});
+      if (context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const EnterYourNo(),
+            ),
+            (Route<dynamic> route) => false);
+      }
+    }
+  }
+
+  Future<void> deleteAccountApi(BuildContext context) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, true);
+    }
+
+    var request = {};
+    var response = await http.post(
+        Uri.parse(
+          ApiService.deleteAccount,
+        ),
+        body: jsonEncode(request),
+        headers: {
+          "content-type": "application/json",
+          'Accept': 'application/json',
+          'Authorization':
+              'Bearer ${sharedPreferences.getString("access_Token")} '
         });
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,

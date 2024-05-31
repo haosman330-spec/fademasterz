@@ -396,7 +396,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       emailCn.text = (profileModal?.data?.email ?? '');
       nameCn.text = (profileModal?.data?.name ?? '');
       phoneCn.text = (profileModal?.data?.phone ?? '');
-      debugPrint('>>>>>>>>>>>>>>${profileModal?.data?.image}<<<<<<<<<<<<<<');
+
       sharedPreferences.setString('image', profileModal?.data?.image ?? '');
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');
       sharedPreferences.setString('email', profileModal?.data?.email ?? '');

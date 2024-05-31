@@ -288,6 +288,8 @@ class _EnterYourNoState extends State<EnterYourNo> {
           Utility.progressLoadingDialog(context, false);
         },
         codeSent: (String verificationId, int? token) async {
+          debugPrint(
+              '>>>>>>>>verificationId>>>>>>${verificationId}<<<<<<<<<<<<<<');
           Utility.progressLoadingDialog(context, false);
           Navigator.push(
             context,
@@ -301,6 +303,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         },
         timeout: const Duration(seconds: 60),
         codeAutoRetrievalTimeout: (String verificationId) {
+          Utility.progressLoadingDialog(context, false);
           setState(() {});
         });
   }

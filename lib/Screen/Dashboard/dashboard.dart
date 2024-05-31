@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../../Utils/app_assets.dart';
 import '../../Utils/app_string.dart';
@@ -25,25 +28,68 @@ class DashBoardScreen extends StatefulWidget {
 class _DashBoardScreenState extends State<DashBoardScreen> {
   int selectIndex = 0;
   List<Widget> pages = [];
+  InternetStatus? _connectionStatus;
+  late StreamSubscription<InternetStatus> listener;
 
   @override
   void initState() {
     // TODO: implement initState
-    // final listener =
-    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
-    //   switch (status) {
-    //     case InternetStatus.connected:
-    //       debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
-    //       // The internet is now connected
-    //       break;
-    //     case InternetStatus.disconnected:
-    //       Utility.showNoGetNetworkDialog(context);
-    //       debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
-    //
-    //       // The internet is now disconnected
-    //       break;
-    //   }
-    // });
+    listener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      debugPrint('>>>>InternetStatus status>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+      debugPrint(
+          '>>>>_connectionStatus>>>>>>>>>>${_connectionStatus}<<<<<<<<<<<<<<');
+      if (status == InternetStatus.disconnected) {
+        debugPrint('>>>>InSide<<<<<<<<<<<<<<');
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (ctx) {
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.network_check,
+                      color: AppColor.yellow,
+                      size: 150,
+                    ),
+                    Text(
+                      'No Internet Please check your internet connection',
+                      style: AppFonts.blackFont,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        //   Utility.showNoGetNetworkDialog(context);
+      } else if (status == InternetStatus.connected) {
+        if (_connectionStatus == InternetStatus.disconnected) {
+          Navigator.pop(context);
+        }
+      }
+      switch (status) {
+        case InternetStatus.connected:
+          _connectionStatus = status;
+          debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+          // The internet is now connected
+          break;
+        case InternetStatus.disconnected:
+          _connectionStatus = status;
+          debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+
+          // The internet is now disconnected
+          break;
+      }
+    });
     pages = [
       const HomeScreen(),
       const MyBookingScreen(),
@@ -56,6 +102,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
     ];
     selectIndex = widget.selectIndex;
+
     setState(() {});
     super.initState();
   }
@@ -64,6 +111,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     setState(() {
       selectIndex = value;
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    listener.cancel();
   }
 
   @override
