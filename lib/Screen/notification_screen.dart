@@ -52,110 +52,38 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 style: AppFonts.yellowFont,
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  'Lorem ipsum',
-                  style: AppFonts.regular.copyWith(fontSize: 16),
-                ),
-                const Spacer(),
-                Text(
-                  '1 hr',
-                  style: AppFonts.regular.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
-              ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
-              style: AppFonts.normalText.copyWith(fontSize: 11),
-            ),
-            Divider(
-              color: AppColor.white.withOpacity(.5),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Lorem ipsum',
-                  style: AppFonts.regular.copyWith(fontSize: 16),
-                ),
-                const Spacer(),
-                Text(
-                  '1 hr',
-                  style: AppFonts.regular.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
-              ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
-              style: AppFonts.normalText.copyWith(fontSize: 11),
-            ),
-            Divider(
-              color: AppColor.white.withOpacity(.5),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Lorem ipsum',
-                  style: AppFonts.regular.copyWith(fontSize: 16),
-                ),
-                const Spacer(),
-                Text(
-                  '1 hr',
-                  style: AppFonts.regular.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
-              ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
-              style: AppFonts.normalText.copyWith(fontSize: 11),
-            ),
-            Divider(
-              color: AppColor.white.withOpacity(.5),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Lorem ipsum',
-                  style: AppFonts.regular.copyWith(fontSize: 16),
-                ),
-                const Spacer(),
-                Text(
-                  '1 hr',
-                  style: AppFonts.regular.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
-              ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
-              style: AppFonts.normalText.copyWith(fontSize: 11),
-            ),
-            Divider(
-              color: AppColor.white.withOpacity(.5),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Lorem ipsum',
-                  style: AppFonts.regular.copyWith(fontSize: 16),
-                ),
-                const Spacer(),
-                Text(
-                  '1 hr',
-                  style: AppFonts.regular.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
-              ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
-              style: AppFonts.normalText.copyWith(fontSize: 11),
-            ),
-            Divider(
-              color: AppColor.white.withOpacity(.5),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Divider(
+                        color: AppColor.white.withOpacity(.5),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Lorem ipsum',
+                            style: AppFonts.regular.copyWith(fontSize: 16),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '1 hr',
+                            style: AppFonts.regular.copyWith(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
+                        ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
+                        style: AppFonts.normalText.copyWith(fontSize: 11),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),

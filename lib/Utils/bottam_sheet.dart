@@ -4,6 +4,7 @@ import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
 import 'package:fademasterz/Modal/get_category_modal.dart';
 import 'package:fademasterz/Utils/utility.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 
 import '../ApiService/api_service.dart';
@@ -95,9 +96,11 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
 
   @override
   void initState() {
-    getCategory(context).then(
-      (value) => initData(),
-    );
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      getCategory(context).then(
+        (value) => initData(),
+      );
+    });
 
     super.initState();
   }

@@ -45,7 +45,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
   int? cancelBookingId;
   @override
   void initState() {
-    cancelBookingApi(context);
+    cancelBookingListApi(context);
     super.initState();
   }
 
@@ -284,7 +284,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
   }
 
   CancelledBookingResponse? cancelledBookingResponse;
-  Future<void> cancelBookingApi(BuildContext context) async {
+  Future<void> cancelBookingListApi(BuildContext context) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

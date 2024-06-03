@@ -134,7 +134,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              (bookingDetailResponse?.data?.shopName ?? ''),
+                              bookingDetailResponse?.data?.shopName ?? ' ',
                               style: AppFonts.regular.copyWith(fontSize: 16),
                             ),
                             const SizedBox(
@@ -264,34 +264,37 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                         ],
                       ),
                       const Spacer(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            DateFormat('dd MMM yyyy').format(
-                              bookingDetailResponse?.data?.date ??
-                                  DateTime.now(),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              DateFormat('dd MMM yyyy').format(
+                                bookingDetailResponse?.data?.date ??
+                                    DateTime.now(),
+                              ),
+                              style: AppFonts.regular.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
-                            style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(
-                            height: 9,
-                          ),
-                          Text(
-                            (bookingDetailResponse?.data?.startTime ?? ''),
-                            style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                          const SizedBox(
-                            height: 9,
-                          ),
-                          Text(
-                            (bookingDetailResponse?.data?.specialistName ?? ''),
-                            style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 9,
+                            ),
+                            Text(
+                              '${bookingDetailResponse?.data?.startTime ?? ' '}',
+                              style: AppFonts.regular.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                            const SizedBox(
+                              height: 9,
+                            ),
+                            Text(
+                              (bookingDetailResponse?.data?.specialistName ??
+                                  ''),
+                              style: AppFonts.regular.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

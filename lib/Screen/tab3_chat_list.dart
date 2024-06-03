@@ -9,7 +9,6 @@ import '../Utils/app_color.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_bar.dart';
-import 'apis.dart';
 import 'chat_screen_inbox.dart';
 
 class ChatListScreen extends StatefulWidget {
@@ -25,7 +24,6 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  List<ChatUser> list = [];
   dynamic document;
   dynamic senderId;
   String? currentUserName;

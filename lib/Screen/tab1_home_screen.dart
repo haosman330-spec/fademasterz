@@ -44,13 +44,22 @@ class _HomeScreenState extends State<HomeScreen> {
   String? startYr;
   String? endYr;
   String? availability;
+  int _currentPage = 1;
+  bool _hasMore = true;
+  FilterData? filterData;
+  final ScrollController _scrollController = ScrollController();
   List<String>? serviceId;
+  double? latitude;
+  double? longitude;
+  late LocationPermission permission;
+  InternetStatus? _connectionStatus;
+  late StreamSubscription<InternetStatus> listener;
+  bool? internetConnection;
+
   void setLoader(bool value) {
     isDataLoading = value;
     setState(() {});
   }
-
-  FilterData? filterData;
 
   Future<void> _showDialog(BuildContext context) async {
     var permission = await Geolocator.checkPermission();
@@ -148,25 +157,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  double? latitude;
-  double? longitude;
-  late LocationPermission permission;
-
-  // Future<void> getLocation() async {
-  //   try {
-  //     Position position = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high);
-  //     latitude = position.latitude;
-  //     longitude = position.longitude;
-  //
-  //     debugPrint('>>>>>>>>>>>>>>${latitude}<<<<<<<<<<<<<<');
-  //     debugPrint('>>>>>>>>>>>>>>${longitude}<<<<<<<<<<<<<<');
-  //     setState(() {});
-  //   } catch (e) {
-  //     Helper().showToast(e.toString());
-  //   }
-  // }
-
   Future<void> getLetLongPosition() async {
     bool serviceEnabled;
 
@@ -195,9 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
     latitude = position.latitude;
   }
 
-  InternetStatus? _connectionStatus;
-  late StreamSubscription<InternetStatus> listener;
-  bool? internetConnection;
   static Future<bool> internetConnected() async {
     bool internetConnection = await InternetConnectionChecker().hasConnection;
 
@@ -210,64 +197,72 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // listener =
-    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
-    //   if (status == InternetStatus.disconnected) {
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (ctx) {
-    //     return WillPopScope(
-    //       onWillPop: () async => false,
-    //       child: AlertDialog(
-    //         shape: RoundedRectangleBorder(
-    //           borderRadius: BorderRadius.circular(16),
-    //         ),
-    //         content: const Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             Icon(
-    //               Icons.network_check,
-    //               color: AppColor.yellow,
-    //               size: 200,
-    //             ),
-    //             Text(
-    //               'No Internet Please check your internet connection',
-    //               style: AppFonts.blackFont,
-    //               textAlign: TextAlign.center,
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
-    //   Utility.showNoGetNetworkDialog(context);
-    //   } else if (status == InternetStatus.connected) {
-    //     if (_connectionStatus == InternetStatus.disconnected) {
-    //       Navigator.pop(context);
-    //       SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //         await _showDialog(context);
-    //       });
-    //     }
-    //   }
-    //   switch (status) {
-    //     case InternetStatus.connected:
-    //       _connectionStatus = status;
-    //
-    //       // The internet is now connected
-    //       break;
-    //     case InternetStatus.disconnected:
-    //       _connectionStatus = status;
-    //
-    //       // The internet is now disconnected
-    //       break;
-    //   }
-    // });
+    listener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      if (status == InternetStatus.disconnected) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (ctx) {
+            return WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.network_check,
+                      color: AppColor.yellow,
+                      size: 150,
+                    ),
+                    Text(
+                      'No Internet Please check your internet connection',
+                      style: AppFonts.blackFont,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      } else if (status == InternetStatus.connected) {
+        if (_connectionStatus == InternetStatus.disconnected) {
+          Navigator.pop(context);
+          SchedulerBinding.instance.addPostFrameCallback((_) async {
+            await _showDialog(context);
+          });
+        }
+      }
+      switch (status) {
+        case InternetStatus.connected:
+          _connectionStatus = status;
+
+          // The internet is now connected
+          break;
+        case InternetStatus.disconnected:
+          _connectionStatus = status;
+
+          // The internet is now disconnected
+          break;
+      }
+    });
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _showDialog(context);
     });
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels ==
+    //           _scrollController.position.maxScrollExtent &&
+    //       _hasMore) {
+    //     SchedulerBinding.instance.addPostFrameCallback((_) async {
+    //       _showDialog(context);
+    //     });
+    //   }
+    // });
     super.initState();
   }
 

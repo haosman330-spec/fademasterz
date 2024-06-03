@@ -4,6 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,11 +19,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // OneSignalServices oneSignalServices = OneSignalServices();
+  // await oneSignalServices.initPlatformState();
+
   // FirebaseServices.initialNotification();
   // FirebaseServices.getfcm();
   // FirebaseServices.requestNotificationPermission();
+
   FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
   NotificationService.initialize();
+
   // await FirebaseAppCheck.instance.activate(
   //   webRecaptchaSiteKey: 'recaptcha-v3-site-key',
 
@@ -67,22 +73,24 @@ class _MyAppState extends State<MyApp> {
       statusBarColor: Colors.transparent, // Transparent status bar
       statusBarBrightness: Brightness.light, // Dark text for status bar
     ));
-    return MaterialApp(
-      title: 'Fade Masterz',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColor.yellow),
-        useMaterial3: false,
+    return FirebasePhoneAuthProvider(
+      child: MaterialApp(
+        title: 'Fade Masterz',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColor.yellow),
+          useMaterial3: false,
+        ),
+        home: const SplashScreen(),
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: const TextScaler.linear(1.0),
+            ),
+            child: child!,
+          );
+        },
       ),
-      home: const SplashScreen(),
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: const TextScaler.linear(1.0),
-          ),
-          child: child!,
-        );
-      },
     );
   }
 
