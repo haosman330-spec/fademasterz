@@ -76,6 +76,7 @@ class _MyAppState extends State<MyApp> {
     return FirebasePhoneAuthProvider(
       child: MaterialApp(
         title: 'Fade Masterz',
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColor.yellow),

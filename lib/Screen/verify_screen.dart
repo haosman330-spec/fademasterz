@@ -327,9 +327,14 @@ class _VerifyScreenState extends State<VerifyScreen> {
       );
 
       try {
-        await auth.signInWithCredential(credential);
-        //   Helper().showToast('Please enter confirm otp');
+        await auth.signInWithCredential(credential).then((value) {
+          debugPrint('>>>>>value>>>>>>>>>${value.credential}<<<<<<<<<<<<<<');
+        });
+        // .timeout(Duration(seconds: 60));
+
         verifyOtp(context);
+
+        //   Helper().showToast('Please enter confirm otp');
 
         setState(() {});
       } catch (e) {

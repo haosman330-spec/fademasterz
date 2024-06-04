@@ -183,15 +183,14 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           ),
                           const Spacer(),
                           Text(
-                            DateFormat('hh:mm a')
-                                .format(DateTime.parse(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                    int.parse(
-                                      i.lastMessageTime.toString(),
-                                    ),
-                                  ).toString(),
-                                ))
-                                .toString(),
+                            DateFormat('hh:mm a').format(DateTime.parse(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(
+                                  i.lastMessageTime.toString(),
+                                ),
+                              ).toString(),
+                            )),
+
                             // DateFormat('hh:mm a')
                             //     .format(DateTime.parse(
                             //       DateTime.fromMillisecondsSinceEpoch(int.parse(

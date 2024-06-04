@@ -44,10 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? startYr;
   String? endYr;
   String? availability;
-  int _currentPage = 1;
-  bool _hasMore = true;
   FilterData? filterData;
-  final ScrollController _scrollController = ScrollController();
   List<String>? serviceId;
   double? latitude;
   double? longitude;
@@ -55,7 +52,10 @@ class _HomeScreenState extends State<HomeScreen> {
   InternetStatus? _connectionStatus;
   late StreamSubscription<InternetStatus> listener;
   bool? internetConnection;
-
+  int currentPage = 1;
+  bool hasMore = true;
+  List<String> item = [];
+  final ScrollController _scrollController = ScrollController();
   void setLoader(bool value) {
     isDataLoading = value;
     setState(() {});
@@ -197,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    listener =
+/*    listener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
       if (status == InternetStatus.disconnected) {
         showDialog(
@@ -231,10 +231,10 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       } else if (status == InternetStatus.connected) {
         if (_connectionStatus == InternetStatus.disconnected) {
-          Navigator.pop(context);
           SchedulerBinding.instance.addPostFrameCallback((_) async {
             await _showDialog(context);
           });
+          Navigator.pop(context);
         }
       }
       switch (status) {
@@ -249,11 +249,12 @@ class _HomeScreenState extends State<HomeScreen> {
           // The internet is now disconnected
           break;
       }
-    });
+    });*/
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _showDialog(context);
     });
+
     // _scrollController.addListener(() {
     //   if (_scrollController.position.pixels ==
     //           _scrollController.position.maxScrollExtent &&
@@ -465,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   replacement: Visibility(
                     visible: !isDataLoading,
                     child: Container(
-                      height: MediaQuery.of(context).size.height / 2,
+                      height: MediaQuery.of(context).size.height / 3,
                       alignment: Alignment.center,
                       child: const Text(
                         'No Shop Available',
@@ -865,7 +866,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    debugPrint('>>>>>response>>>>>>>>>${jsonResponse}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>response>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
     if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {
