@@ -446,6 +446,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
       sharedPreferences.setString(
           "access_Token", verifyOtpModal.data!.userDetail!.token.toString());
+
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
       debugPrint('>>>>>>>email>>>>>>>${email}<<<<<<<<<<<<<<');

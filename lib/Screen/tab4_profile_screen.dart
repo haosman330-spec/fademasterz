@@ -52,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     // TODO: implement initState
     userProfile();
+
     setState(() {});
     super.initState();
   }

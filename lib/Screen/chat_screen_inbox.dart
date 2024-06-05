@@ -106,7 +106,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) =>
                               CircularProgressIndicator(
-                                  value: downloadProgress.progress),
+                        value: downloadProgress.progress,
+                      ),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.error),
                     ),
@@ -141,37 +142,50 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             ),
             Text(
               widget.receiverName.toString(),
-              style: AppFonts.regular
-                  .copyWith(fontSize: 13, fontWeight: FontWeight.w500),
+              style: AppFonts.regular.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 5,
+        ),
         child: SingleChildScrollView(
           // physics: NeverScrollableScrollPhysics(),
           child: Column(
             children: [
               const Divider(
-                color: Color(0xff434343),
+                color: Color(
+                  0xff434343,
+                ),
               ),
               _buildMessages(),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 5,
+                ),
                 child: Row(
                   children: [
                     Expanded(
                       child: CustomTextField(
                         controller: chatCn,
                         hintText: 'Type a message',
-                        hintTextStyle: AppFonts.normalText
-                            .copyWith(fontSize: 17, color: AppColor.bg),
+                        hintTextStyle: AppFonts.normalText.copyWith(
+                          fontSize: 17,
+                          color: AppColor.bg,
+                        ),
                         radius: 4,
                         isFilled: true,
-                        style: AppFonts.textFieldFont
-                            .copyWith(color: AppColor.black),
-                        fillColor: const Color(0xffF4F4F4),
+                        style: AppFonts.textFieldFont.copyWith(
+                          color: AppColor.black,
+                        ),
+                        fillColor: const Color(
+                          0xffF4F4F4,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -213,8 +227,11 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.74,
-                  child: const Center(child: CircularProgressIndicator())),
+                height: MediaQuery.of(context).size.height * 0.74,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ],
           );
         }
@@ -259,7 +276,10 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                 );
                 final nextMessageDateTime = index < listt.length - 1
                     ? DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(listt[index + 1].timestamp!.toString()))
+                        int.parse(
+                          listt[index + 1].timestamp!.toString(),
+                        ),
+                      )
                     : null;
 
                 // Check if the current message is the last message of the day
@@ -300,7 +320,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                                       topRight: Radius.circular(8),
                                       topLeft: Radius.circular(12),
                                       bottomLeft: Radius.circular(8),
-                                      bottomRight: Radius.elliptical(-20, -10))
+                                      bottomRight: Radius.elliptical(-20, -10),
+                                    )
                                   : const BorderRadius.only(),
                               color: Colors.green),
                           child: Text(
