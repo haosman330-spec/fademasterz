@@ -772,9 +772,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                   Expanded(
                     child: MyAppButton(
                       onPress: () {
-                        var currentTime =
-                            DateTime.now().subtract(const Duration(hours: 2));
-                        var scheduleTime = DateTime.parse('$date $time');
+                        var currentTime = DateTime.now();
+                        // .subtract(const Duration(hours: 2));
+                        var scheduleTime = DateTime.parse('$date $time')
+                            .subtract(const Duration(hours: 2));
                         debugPrint('>>>>>>>>>>>>>>$currentTime '
                             '+'
                             ' $scheduleTime}<<<<<<<<<<<<<<');

@@ -38,6 +38,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   String? receiverId;
   ChatService chatService = ChatService();
   // Message message = Message();
+
   void onSendMessage() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (chatCn.text.isNotEmpty) {

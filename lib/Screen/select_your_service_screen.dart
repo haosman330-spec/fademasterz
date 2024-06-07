@@ -28,6 +28,9 @@ class _SelectYourServicesState extends State<SelectYourServices> {
   int selectIndex = 0;
   int? shopWorkServiceId;
   bool isDataLoading = false;
+  List<Service1?>? selectedServiceList = [];
+  ShopWorkServiceResponse shopWorkServiceModal = ShopWorkServiceResponse();
+  ShopServiceResponse shopServiceModal = ShopServiceResponse();
 
   void setLoader(bool value) {
     isDataLoading = value;
@@ -39,8 +42,6 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     shopWorkService(context);
     super.initState();
   }
-
-  List<Service1?>? selectedServiceList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -272,8 +273,6 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     setState(() {});
   }
 
-  ShopWorkServiceResponse shopWorkServiceModal = ShopWorkServiceResponse();
-
   Future<void> shopWorkService(BuildContext context) async {
     setLoader(true);
 
@@ -318,8 +317,6 @@ class _SelectYourServicesState extends State<SelectYourServices> {
       }
     }
   }
-
-  ShopServiceResponse shopServiceModal = ShopServiceResponse();
 
   Future<void> _shopService(BuildContext context) async {
     setLoader(true);

@@ -23,6 +23,9 @@ class CancelledBookingScreen extends StatefulWidget {
 }
 
 class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
+  bool showLoader = false;
+  int? cancelBookingId;
+  CancelledBookingResponse? cancelledBookingResponse;
   willPopScop() {
     Navigator.of(context).pop();
     // Navigator.pushAndRemoveUntil(
@@ -35,14 +38,11 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
     //     (route) => false);
   }
 
-  bool showLoader = false;
-
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});
   }
 
-  int? cancelBookingId;
   @override
   void initState() {
     cancelBookingListApi(context);
@@ -283,7 +283,6 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
     );
   }
 
-  CancelledBookingResponse? cancelledBookingResponse;
   Future<void> cancelBookingListApi(BuildContext context) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

@@ -23,6 +23,7 @@ class PrivacyPolicyScreen extends StatefulWidget {
 }
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
+  PrivacyPolicyModal privacyPolicyModal = PrivacyPolicyModal();
   @override
   void initState() {
     super.initState();
@@ -71,7 +72,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     );
   }
 
-  PrivacyPolicyModal privacyPolicyModal = PrivacyPolicyModal();
   void _privacyPolicy(BuildContext context) async {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
@@ -95,21 +95,14 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
+    Helper().showToast(
+      jsonResponse['message'],
+    );
 
     if (jsonResponse['status'] == true) {
       privacyPolicyModal = PrivacyPolicyModal.fromJson(jsonResponse);
 
-      Helper().showToast(
-        jsonResponse['message'],
-      );
-
       setState(() {});
-      if (context.mounted) {
-      } else {
-        Helper().showToast(
-          jsonResponse['message'],
-        );
-      }
     }
   }
 }

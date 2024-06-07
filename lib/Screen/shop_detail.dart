@@ -37,12 +37,11 @@ class _ShopDetailState extends State<ShopDetail> {
   int selectIndex1 = 0;
   bool isListVisible = false;
   bool isDataLoad = false;
+  List<Widget> categories = [];
   void setLoader(bool value) {
     isDataLoad = value;
     setState(() {});
   }
-
-  List<Widget> categories = [];
 
   @override
   void initState() {

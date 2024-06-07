@@ -34,12 +34,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController phoneCn = TextEditingController();
   TextEditingController nameCn = TextEditingController();
   TextEditingController emailCn = TextEditingController();
-
+  final picker = ImagePicker();
+  File? _imageFile;
   String? name;
   String? image;
   String? phone;
   String? email;
-
+  ProfileUserData? profileUserData;
+  ProfileModal? profileModal;
   Future<void> userProfile() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -59,8 +61,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
   }
 
-  final picker = ImagePicker();
-  File? _imageFile;
   Future getImageFromGallery() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -293,7 +293,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return false;
   }
 
-  ProfileUserData? profileUserData;
   Future<void> userUpdateProfile(BuildContext context) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final SharedPreferences sharedPreferences =
@@ -357,7 +356,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  ProfileModal? profileModal;
   Future<void> profileDetail(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 

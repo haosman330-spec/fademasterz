@@ -23,6 +23,8 @@ class HelpScreen extends StatefulWidget {
 }
 
 class _HelpScreenState extends State<HelpScreen> {
+  HelpCenterModal helpCenterModal = HelpCenterModal();
+  SocialLinkModal socialLinkModal = SocialLinkModal();
   @override
   void initState() {
     // TODO: implement initState
@@ -270,8 +272,6 @@ class _HelpScreenState extends State<HelpScreen> {
     }
   }
 
-  HelpCenterModal helpCenterModal = HelpCenterModal();
-  SocialLinkModal socialLinkModal = SocialLinkModal();
   Future<void> helpCenterApi(BuildContext context) async {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);

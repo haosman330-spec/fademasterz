@@ -48,6 +48,13 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
   int? specialistId;
   var speciaList;
   String? time;
+  ChooseAvailabilityResponse chooseAvailabilityResponse =
+      ChooseAvailabilityResponse();
+  SelectSpecialistTimeResponse selectSpecialistTimeResponse =
+      SelectSpecialistTimeResponse();
+  int? shopId;
+  final picker = ImagePicker();
+  File? _imageFile;
 
   /// The method for [DateRangePickerSelectionChanged] callback, which will be
   /// called whenever a selection changed on the date picker widget.
@@ -58,9 +65,6 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       _chooseAvailabilityApi(context);
     });
   }
-
-  final picker = ImagePicker();
-  File? _imageFile;
 
   Future getImageFromGallery() async {
     final pickedFile = await picker.pickImage(
@@ -627,11 +631,6 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     );
   }
 
-  ChooseAvailabilityResponse chooseAvailabilityResponse =
-      ChooseAvailabilityResponse();
-
-  int? shopId;
-
   Future<void> _chooseAvailabilityApi(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
@@ -699,9 +698,6 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       Helper().showToast(e.toString());
     }
   }
-
-  SelectSpecialistTimeResponse selectSpecialistTimeResponse =
-      SelectSpecialistTimeResponse();
 
   Future<void> _selectSpecialistTimeApi(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

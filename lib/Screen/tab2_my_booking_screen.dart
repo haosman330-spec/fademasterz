@@ -33,6 +33,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   int? bookingId;
   bool showLoader = false;
   List<ConnectivityResult>? _connectionStatus;
+  MyBookingResponse? myBookingResponse;
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});
@@ -657,8 +658,6 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
       ),
     );
   }
-
-  MyBookingResponse? myBookingResponse;
 
   Future<void> getBookingListApi(BuildContext context) async {
     setLoader(true);

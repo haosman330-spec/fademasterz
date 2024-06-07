@@ -27,6 +27,9 @@ class CancelledBookingDetail extends StatefulWidget {
 }
 
 class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
+  BookingDetailResponse? bookingDetailResponse;
+  bool showLoader = false;
+
   willPopScop() {
     Navigator.of(context).pop();
     // Navigator.pushAndRemoveUntil(
@@ -38,8 +41,6 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     //     ),
     //     (route) => false);
   }
-
-  bool showLoader = false;
 
   void setLoader(bool value) {
     showLoader = value;
@@ -445,7 +446,6 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     );
   }
 
-  BookingDetailResponse? bookingDetailResponse;
   Future<void> bookingDetailApi(BuildContext context) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -454,9 +454,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     //   Utility.progressLoadingDialog(context, true);
     // }
     var request = {};
-
     request["booking_id"] = widget.cancelBookingId;
-
     var response = await http.post(
         Uri.parse(
           ApiService.bookingDetail,
@@ -473,9 +471,6 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
     if (jsonResponse['status']) {
       bookingDetailResponse = BookingDetailResponse.fromJson(jsonResponse);
       if (mounted) setState(() {});

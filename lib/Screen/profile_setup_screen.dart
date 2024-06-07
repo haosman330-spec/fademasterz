@@ -196,13 +196,12 @@ class _ProfileSetupState extends State<ProfileSetup> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-
+    Helper().showToast(
+      jsonResponse['message'],
+    );
     if (jsonResponse['status'] == true) {
       sharedPreferences.setBool("profileSetUp", true);
 
-      Helper().showToast(
-        jsonResponse['message'],
-      );
       if (context.mounted) {
         Navigator.pushAndRemoveUntil(
           context,
@@ -212,10 +211,6 @@ class _ProfileSetupState extends State<ProfileSetup> {
             ),
           ),
           (Route<dynamic> route) => false,
-        );
-      } else {
-        Helper().showToast(
-          jsonResponse['message'],
         );
       }
     }

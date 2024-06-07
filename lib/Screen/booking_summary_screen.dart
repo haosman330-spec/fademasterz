@@ -34,9 +34,7 @@ class BookingSummaryScreen extends StatefulWidget {
 
 class BookingSummaryScreenState extends State<BookingSummaryScreen> {
   BookNowResponse? bookNowResponse;
-
   BookingSummaryResponse? bookingSummaryResponse;
-
   bool showLoader = false;
 
   void setLoader(bool value) {
@@ -288,7 +286,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
       'specialist_id': widget.data.specialistId.toString(),
       'note': widget.data.noteText.toString(),
     });
-    if (widget.data.image.toString().isNotEmpty) {
+    if (widget.data.image?.isNotEmpty ?? false) {
       request.files.add(
         await http.MultipartFile.fromPath(
             'desired_look', (widget.data.image ?? ' ')),
