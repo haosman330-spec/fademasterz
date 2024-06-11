@@ -386,14 +386,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Helper().showToast(
     //   jsonResponse['message'],
     // );
-
+    debugPrint('>>>>>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       profileModal = ProfileModal.fromJson(jsonResponse);
 
       image = profileModal?.data?.image;
       emailCn.text = (profileModal?.data?.email ?? '');
       nameCn.text = (profileModal?.data?.name ?? '');
-      phoneCn.text = (profileModal?.data?.phone ?? '');
+      phoneCn.text =
+          ('+${profileModal?.data?.countryCode}${profileModal?.data?.phone}');
+      // ('${(profileModal?.data?.countryCode ?? '')
+      // ${(profileModal?.data?.phone ?? '');}');
 
       sharedPreferences.setString('image', profileModal?.data?.image ?? '');
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');

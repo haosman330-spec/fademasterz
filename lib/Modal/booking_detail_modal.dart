@@ -137,6 +137,11 @@ class BookingDetailData {
             : List<dynamic>.from(services!.map((x) => x.toJson())),
         "rating": rating?.toJson(),
       };
+
+  @override
+  String toString() {
+    return 'BookingDetailData{id: $id, bookingId: $bookingId, shopId: $shopId, date: $date, startTime: $startTime, specialistId: $specialistId, subTotal: $subTotal, tax: $tax, total: $total, bookingStatus: $bookingStatus, serviceIds: $serviceIds, desiredLook: $desiredLook, note: $note, shopImage: $shopImage, shopName: $shopName, shopAddress: $shopAddress, specialistName: $specialistName, services: $services, rating: $rating}';
+  }
 }
 
 class Rating {

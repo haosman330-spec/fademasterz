@@ -10,7 +10,7 @@ import '../Utils/app_string.dart';
 import '../Utils/custom_app_bar.dart';
 
 class ReviewsScreen extends StatefulWidget {
-  final List<Review>? review;
+  final List<Review1>? review;
   const ReviewsScreen({super.key, this.review});
 
   @override

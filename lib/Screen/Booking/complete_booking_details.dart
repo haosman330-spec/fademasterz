@@ -22,7 +22,7 @@ import '../../Utils/custom_app_button.dart';
 import '../../Utils/helper.dart';
 import '../Dashboard/dashboard.dart';
 import '../chat_screen_inbox.dart';
-import '../choose_availability_barber.dart';
+import '../choose_availability_barber_resheduale.dart';
 
 class CompleteBookingDetail extends StatefulWidget {
   final int? bookingId;
@@ -785,14 +785,24 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         // }
                         //  else {
                         if (currentTime.isBefore(scheduleTime)) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChooseAvailabilityBarber(
-                                data: bookingDetailResponse?.data,
+                          if (bookingDetailResponse?.data?.bookingStatus ==
+                              'Cancelled') {
+                            Helper().showToast('Booking already Cancelled');
+                          } else if (bookingDetailResponse
+                                  ?.data?.bookingStatus ==
+                              'Completed') {
+                            Helper().showToast('Booking already Completed');
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ChooseAvailabilityBarberReschedule(
+                                  data: bookingDetailResponse?.data,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         } else {
                           showBottomSheet();
                         }

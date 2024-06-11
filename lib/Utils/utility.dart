@@ -53,9 +53,9 @@ class Utility {
       builder: (BuildContext context) {
         return WillPopScope(
             onWillPop: () async => false,
-            child: AlertDialog(
-              title: const Text('No Network Connection'),
-              content: const Text(
+            child: const AlertDialog(
+              title: Text('No Network Connection'),
+              content: Text(
                 'No Internet Please check your internet connection',
               ),
               // actions: <Widget>[

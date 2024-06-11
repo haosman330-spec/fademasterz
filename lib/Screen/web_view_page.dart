@@ -245,7 +245,7 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
-  late WebViewXController webviewController;
+  late WebViewXController webViewController;
   var urls;
 
   var initialContent = "";
@@ -260,7 +260,7 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   void dispose() {
-    webviewController.dispose();
+    webViewController.dispose();
     super.dispose();
   }
 
@@ -304,7 +304,7 @@ class _WebViewPageState extends State<WebViewPage> {
       initialSourceType: SourceType.url,
       height: screenSize.height,
       width: min(screenSize.width * 10, 1024),
-      onWebViewCreated: (controller) => webviewController = controller,
+      onWebViewCreated: (controller) => webViewController = controller,
       javascriptMode: JavascriptMode.unrestricted,
       onPageStarted: (src) {
         loader = true;
@@ -359,18 +359,18 @@ class _WebViewPageState extends State<WebViewPage> {
   }
 
   void _setUrl() {
-    webviewController.loadContent(
+    webViewController.loadContent(
       SourceType.url.toString(),
     );
   }
 
   void readJS() async {
-    String html = await webviewController.evalRawJavascript(
+    String html = await webViewController.evalRawJavascript(
         "window.document.getElementsByTagName('body')[0].innerHTML;");
     debugPrint('>>>html>>>>>>>>>>>$html<<<<<<<<<<<<<<');
+    debugPrint(
+        '>>>>>>html data..>>>>>>>>${html.substring(1, html.toString().length - 1).replaceAll("\\", "")}<<<<<<<<<<<<<<');
 
-    print(
-        "htmldata.. ${html.substring(1, html.toString().length - 1).replaceAll("\\", "")}");
     jsondata =
         html.substring(1, html.toString().length - 1).replaceAll("\\", "");
 

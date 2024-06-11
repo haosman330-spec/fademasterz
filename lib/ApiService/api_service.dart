@@ -32,4 +32,5 @@ class ApiService {
   static const String rescheduleBooking = '${baseUrl}reschedule-booking';
   static const String getCategories = '${baseUrl}get-categories';
   static const String deleteAccount = '${baseUrl}delete-account';
+  static const String shopReviews = '${baseUrl}shop-reviews';
 }

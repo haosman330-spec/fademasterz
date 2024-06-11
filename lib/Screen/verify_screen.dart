@@ -385,7 +385,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
         codeSent: (String verificationId, int? token) async {
           resendVerificationId = verificationId.toString();
           debugPrint(
-              '>>>>>>>>resendVerificationId>>>>>>${resendVerificationId}<<<<<<<<<<<<<<');
+              '>>>>>>>>resendVerificationId>>>>>>$resendVerificationId<<<<<<<<<<<<<<');
           setState(() {
             Utility.progressLoadingDialog(context, false);
           });
@@ -409,7 +409,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     }
 
     var fcmToken = sharedPreferences.getString('fcmToken');
-    debugPrint('>>>>>>>>fcmToken>>>>>>${fcmToken}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>>>fcmToken>>>>>>$fcmToken<<<<<<<<<<<<<<');
     var request = {};
     request["country_code"] = widget.selectedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
@@ -449,7 +449,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
-      debugPrint('>>>>>>>email>>>>>>>${email}<<<<<<<<<<<<<<');
+      debugPrint('>>>>>>>email>>>>>>>$email<<<<<<<<<<<<<<');
       debugPrint('>>>>>senderId>>>>>>>>>$senderId<<<<<<<<<<<<<<');
       sharedPreferences.setInt("senderId", senderId!);
       sharedPreferences.setString("email", email.toString());

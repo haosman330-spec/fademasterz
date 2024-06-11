@@ -5,6 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
 import 'package:fademasterz/Modal/choose_availiabilty_modal.dart';
 import 'package:fademasterz/Modal/shop_service_modal.dart';
+import 'package:fademasterz/Screen/booking_summary_reschedule.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
 import 'package:fademasterz/Utils/custom_tex_field.dart';
@@ -25,21 +26,21 @@ import '../Modal/select_specialist_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';
-import 'booking_summary_screen.dart';
 
-class ChooseAvailabilityBarber extends StatefulWidget {
+class ChooseAvailabilityBarberReschedule extends StatefulWidget {
   final String? price;
   final List<Service1?>? selectedServiceList;
   final BookingDetailData? data;
-  const ChooseAvailabilityBarber(
+  const ChooseAvailabilityBarberReschedule(
       {super.key, this.price, this.selectedServiceList, this.data});
 
   @override
-  State<ChooseAvailabilityBarber> createState() =>
-      _ChooseAvailabilityBarberState();
+  State<ChooseAvailabilityBarberReschedule> createState() =>
+      _ChooseAvailabilityBarberRescheduleState();
 }
 
-class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
+class _ChooseAvailabilityBarberRescheduleState
+    extends State<ChooseAvailabilityBarberReschedule> {
   int selectIndex = 0;
   int timeSelectIndex = 0;
 
@@ -122,8 +123,16 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     );
   }
 
+  void initData() {
+    // _selectedDate = widget.data?.date?.toIso8601String();
+    // if (widget.data?.specialistId?.isNotEmpty ?? false) {
+    //   // specialistId = int.parse(widget.data?.specialistId ?? '0');
+    // }
+  }
+
   @override
   void initState() {
+    initData();
     _chooseAvailabilityApi(context);
 
     super.initState();
@@ -579,20 +588,21 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               var data = BookingSummaryArgument(
                 time: time,
                 date: date,
-                shopId: shopId.toString(),
-                price: price,
-                noteText: noteCn.text,
+                shopId: widget.data?.shopId.toString(),
+                price: widget.data?.subTotal.toString(),
+                noteText: widget.data?.note ?? noteCn.text,
                 specialistId: specialistId.toString(),
-                serviceId: serviceId.join(','),
-                image: image,
-                //  bookingStatus: widget.data?.bookingStatus,
+                serviceId: widget.data?.serviceIds,
+                image: widget.data?.desiredLook ?? image,
+                bookingStatus: widget.data?.bookingStatus,
+                bookingId: widget.data?.id,
               );
               debugPrint(
-                  '>>>>>>data?.toString>>>>>>>>${data.toString()}<<<<<<<<<<<<<<');
+                  '>>>>>>.data?.>>>>>>>>${data.toString()}<<<<<<<<<<<<<<');
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BookingSummaryScreen(
+                  builder: (context) => BookingSummaryScreenReschedule(
                     data: data,
                   ),
                 ),
@@ -640,12 +650,12 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       if (context.mounted) {
         Utility.progressLoadingDialog(context, true);
       }
-      shopId ??= sharedPreferences.getInt('shop_id');
+      // shopId ??= sharedPreferences.getInt('shop_id');
+      // debugPrint('>>>>>>>shopId>>>>>>>${shopId}<<<<<<<<<<<<<<');
       debugPrint(
-          '>>>>>>>sharedPreferences.getIntshopId>>>>>>>${shopId}<<<<<<<<<<<<<<');
-
+          '>>>>>>>widget.data?.shopId>>>>>>>${widget.data?.shopId}<<<<<<<<<<<<<<');
       var request = {};
-      request["shop_id"] = shopId;
+      request["shop_id"] = widget.data?.shopId;
       request["selected_date"] = DateFormat('yyyy-MM-dd')
           .format(
             DateTime.parse(
@@ -684,7 +694,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       Map<String, dynamic> jsonResponse = jsonDecode(
         response.body,
       );
-      debugPrint('>>>>>>>>>>>>>>${request}<<<<<<<<<<<<<<');
+
       if (jsonResponse['status'] == true) {
         chooseAvailabilityResponse =
             ChooseAvailabilityResponse.fromJson(jsonResponse);
@@ -708,11 +718,10 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     }
     var request = {};
 
-    request["shop_id"] = sharedPreferences.getInt('shop_id');
-    request["specialist_id"] = //specialistId
-        (chooseAvailabilityResponse
-                .data?.availableSpecialist?[selectIndex].id ??
-            specialistId);
+    request["shop_id"] = widget.data?.shopId;
+    request["specialist_id"] = (chooseAvailabilityResponse
+            .data?.availableSpecialist?[selectIndex].id ??
+        specialistId); // sharedPreferences.getInt('specialist_id');
     request["selected_date"] = DateFormat('yyyy-MM-dd')
         .format(
           DateTime.parse(

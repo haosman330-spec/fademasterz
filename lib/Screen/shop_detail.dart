@@ -289,9 +289,9 @@ class _ShopDetailState extends State<ShopDetail> {
             ),
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: (shopDetailModal.data?.review?.length ?? 0) > 1
-                  ? (shopDetailModal.data?.review?.length)
-                  : 1,
+              itemCount: (shopDetailModal.data?.review!.length ?? 0) > 3
+                  ? 3
+                  : (shopDetailModal.data?.review!.length ?? 0),
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
@@ -322,7 +322,7 @@ class _ShopDetailState extends State<ShopDetail> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ReviewsScreen(
-                                    review: (shopDetailModal.data?.review),
+                                    review: (shopDetailModal.data!.review),
                                   ),
                                 ),
                               );
@@ -891,12 +891,14 @@ class _ShopDetailState extends State<ShopDetail> {
     // Helper().showToast(
     //   jsonResponse['message'],
     // );
+
     if (jsonResponse['status'] == true) {
       shopDetailModal = ShopDetailModal.fromJson(jsonResponse);
       openTime = shopDetailModal.data?.shopStartTime;
       closeTime = shopDetailModal.data?.shopEndTime;
       // var id = shopDetailModal.data?.id;
-
+      debugPrint(
+          '>>>>>jsonResponse>>>>>>>>>${jsonResponse['data'].toString()}<<<<<<<<<<<<<<');
       _updateShopStatus(openTime!, closeTime!);
       setState(() {});
     }

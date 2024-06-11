@@ -65,7 +65,7 @@ class ShopDetailData {
   List<OurSpecialist>? ourSpecialist;
   List<Service>? services;
   List<Gallery>? gallery;
-  List<Review>? review;
+  List<Review1>? review;
 
   ShopDetailData({
     this.id,
@@ -143,7 +143,8 @@ class ShopDetailData {
                 json["gallery"]!.map((x) => Gallery.fromJson(x))),
         review: json["review"] == null
             ? []
-            : List<Review>.from(json["review"]!.map((x) => Review.fromJson(x))),
+            : List<Review1>.from(
+                json["review"]!.map((x) => Review1.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -184,6 +185,11 @@ class ShopDetailData {
         "review":
             review == null ? [] : List<dynamic>.from(review!.map((x) => x)),
       };
+
+  @override
+  String toString() {
+    return 'ShopDetailData{id: $id, image: $image, name: $name, email: $email, countryCode: $countryCode, phone: $phone, status: $status, address: $address, lat: $lat, lng: $lng, serviceCategoryIds: $serviceCategoryIds, workExperience: $workExperience, instagramLink: $instagramLink, shopStartTime: $shopStartTime, shopEndTime: $shopEndTime, role: $role, mobileVerify: $mobileVerify, device: $device, deviceId: $deviceId, fcmToken: $fcmToken, createdAt: $createdAt, updatedAt: $updatedAt, avgRating: $avgRating, totalReview: $totalReview, about: $about, ourSpecialist: $ourSpecialist, services: $services, gallery: $gallery, review: $review}';
+  }
 }
 
 class Gallery {
@@ -250,7 +256,7 @@ class Service {
       };
 }
 
-class Review {
+class Review1 {
   int? id;
   String? userId;
   String? rating;
@@ -258,7 +264,7 @@ class Review {
   DateTime? createdAt;
   String? userName;
 
-  Review({
+  Review1({
     this.id,
     this.userId,
     this.rating,
@@ -267,7 +273,7 @@ class Review {
     this.userName,
   });
 
-  factory Review.fromJson(Map<String, dynamic> json) => Review(
+  factory Review1.fromJson(Map<String, dynamic> json) => Review1(
         id: json["id"],
         userId: json["user_id"].toString(),
         rating: json["rating"].toString(),
@@ -289,6 +295,6 @@ class Review {
 
   @override
   String toString() {
-    return 'Review{id: $id, userId: $userId, rating: $rating, comment: $comment, createdAt: $createdAt, userName: $userName}';
+    return 'Review1{id: $id, userId: $userId, rating: $rating, comment: $comment, createdAt: $createdAt, userName: $userName}';
   }
 }

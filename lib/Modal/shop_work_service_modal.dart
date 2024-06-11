@@ -33,7 +33,7 @@ class ShopWorkServiceResponse {
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data == null ? null : data?.toJson(),
+        "data": data?.toJson(),
       };
 }
 

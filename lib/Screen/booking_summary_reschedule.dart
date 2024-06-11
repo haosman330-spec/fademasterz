@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
-import 'package:fademasterz/Screen/web_view_page.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
@@ -20,19 +19,21 @@ import '../Utils/custom_app_button.dart';
 import '../Utils/utility.dart';
 import 'Dashboard/dashboard.dart';
 
-class BookingSummaryScreen extends StatefulWidget {
+class BookingSummaryScreenReschedule extends StatefulWidget {
   final BookingSummaryArgument data;
 
-  const BookingSummaryScreen({
+  const BookingSummaryScreenReschedule({
     super.key,
     required this.data,
   });
 
   @override
-  State<BookingSummaryScreen> createState() => BookingSummaryScreenState();
+  State<BookingSummaryScreenReschedule> createState() =>
+      BookingSummaryScreenRescheduleState();
 }
 
-class BookingSummaryScreenState extends State<BookingSummaryScreen> {
+class BookingSummaryScreenRescheduleState
+    extends State<BookingSummaryScreenReschedule> {
   BookNowResponse? bookNowResponse;
   BookingSummaryResponse? bookingSummaryResponse;
   bool showLoader = false;
@@ -50,8 +51,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     // try {
     var request = {};
 
-    request["shop_id"] =
-        widget.data.shopId ?? sharedPreferences.getInt('shop_id');
+    request["shop_id"] = widget.data.shopId;
     request["specialist_id"] = widget.data.specialistId;
     request["time"] = widget.data.time.toString();
     request["price"] = widget.data.price.toString();
@@ -94,166 +94,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     // }
   }
 
-  Future<void> bookNowApi(BuildContext context) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
-
-    var headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${sharedPreferences.getString("access_Token")}'
-    };
-    var request = http.MultipartRequest('POST', Uri.parse(ApiService.bookNow));
-
-    request.fields.addAll({
-      'shop_id':
-          widget.data.shopId ?? sharedPreferences.getInt('shop_id').toString(),
-      'date': widget.data.date.toString(),
-      'time': widget.data.time.toString(),
-      'sub_total': (bookingSummaryResponse?.data?.subTotal.toString() ?? ''),
-      'tax': (bookingSummaryResponse?.data?.tax.toString() ?? ''),
-      'total': (bookingSummaryResponse?.data?.total.toString() ?? ''),
-      'specialist_id': widget.data.specialistId.toString(),
-      'service_ids': widget.data.serviceId.toString(),
-      'note': widget.data.noteText.toString(),
-    });
-    if (widget.data.image?.isNotEmpty ?? false) {
-      request.files.add(
-        await http.MultipartFile.fromPath(
-            'desired_look', (widget.data.image.toString())),
-      );
-    }
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    setState(
-      () {},
-    );
-    var result = await response.stream.bytesToString();
-
-    var jsonResponse = jsonDecode(result);
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(
-        context,
-        false,
-      );
-    }
-    if (jsonResponse["status"]) {
-      bookNowResponse = BookNowResponse.fromJson(jsonResponse);
-      String? url = bookNowResponse?.data?.url.toString();
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WebViewPage(url: url.toString()),
-        ),
-      ).then((value) {
-        if (value != null && value) {
-          return showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (ctx) {
-              return WillPopScope(
-                onWillPop: () async => false,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      17,
-                    ),
-                  ),
-                  insetPadding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 38, vertical: 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(AppIcon.paymentIcon),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 20),
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            AppStrings.paymentSuccessful,
-                            style: AppFonts.blackFont.copyWith(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            AppStrings.successfulDone,
-                            style: AppFonts.blackFont.copyWith(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        MyAppButton(
-                          onPress: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const DashBoardScreen(selectIndex: 1),
-                              ),
-                            );
-                          },
-                          height: 48,
-                          title: AppStrings.viewBookingSummary,
-                          style: AppFonts.blackFont
-                              .copyWith(fontWeight: FontWeight.w500),
-                          radius: 39,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        MyAppButton(
-                          onPress: () {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DashBoardScreen(
-                                  selectIndex: 0,
-                                ),
-                              ),
-                              (route) => false,
-                            );
-                          },
-                          height: 48,
-                          title: AppStrings.backToHome,
-                          style: AppFonts.blackFont
-                              .copyWith(fontWeight: FontWeight.w500),
-                          radius: 39,
-                          color: const Color(0xffFFFBF0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      });
-      setState(() {});
-    }
-  }
-
-/*  Future<void> rescheduleBookingApi(BuildContext context) async {
+  Future<void> rescheduleBookingApi(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     if (context.mounted) {
@@ -270,7 +111,8 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     debugPrint(
         '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
     request.fields.addAll({
-      'booking_id': sharedPreferences.getInt('ubookingId').toString(),
+      'booking_id': widget.data.bookingId
+          .toString(), //?? sharedPreferences.getInt('ubookingId').toString(),
       'date': widget.data.date.toString(),
       'time': widget.data.time.toString(),
       'specialist_id': widget.data.specialistId.toString(),
@@ -279,12 +121,11 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     if (widget.data.image?.isNotEmpty ?? false) {
       debugPrint(
           '>>>>widget.data.image>>>>>>>>>>${widget.data.image}<<<<<<<<<<<<<<');
-      debugPrint(
-          '>>>>widget.data.image>>>>>>>>>>${widget.data.image.toString()}<<<<<<<<<<<<<<');
 
-      request.files.add(
-        await http.MultipartFile.fromPath('desired_look', widget.data.image!),
-      );
+      //
+      // request.files.add(
+      //   await http.MultipartFile.fromPath('desired_look', widget.data.image!),
+      // );
     }
     request.headers.addAll(headers);
 
@@ -408,12 +249,11 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
 
       setState(() {});
     }
-  }*/
+  }
 
   @override
   void initState() {
     bookingSummaryApi(context);
-    debugPrint('>>>>>>>>>>>>>>${widget.data.toString()}<<<<<<<<<<<<<<');
     super.initState();
   }
 
@@ -732,91 +572,97 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppStrings.subTotal,
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                                Text(
-                                  AppStrings.tax,
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                              ],
+                  (widget.data.bookingStatus != "Pending")
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: AppColor.black,
+                            borderRadius: BorderRadius.circular(
+                              11,
                             ),
-                            const Spacer(),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  ' £${bookingSummaryResponse?.data?.subTotal ?? ' '}',
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                                Text(
-                                  ' £${(bookingSummaryResponse?.data?.tax ?? ' ')}',
-                                  style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const Divider(
-                          color: Color(0xff434343),
-                          height: 1,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              AppStrings.total,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '£ ${(bookingSummaryResponse?.data?.total ?? ' ')}',
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppStrings.subTotal,
+                                        style: AppFonts.regular.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        height: 9,
+                                      ),
+                                      Text(
+                                        AppStrings.tax,
+                                        style: AppFonts.regular.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        height: 9,
+                                      ),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ' £${bookingSummaryResponse?.data?.subTotal ?? ' '}',
+                                        style: AppFonts.regular.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        height: 9,
+                                      ),
+                                      Text(
+                                        ' £${(bookingSummaryResponse?.data?.tax ?? ' ')}',
+                                        style: AppFonts.regular.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        height: 9,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const Divider(
+                                color: Color(0xff434343),
+                                height: 1,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    AppStrings.total,
+                                    style: AppFonts.regular.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  const Spacer(),
+                                  Text(
+                                    '£ ${(bookingSummaryResponse?.data?.total ?? ' ')}',
+                                    style: AppFonts.regular.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
@@ -824,16 +670,10 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
         ),
       ),
       bottomNavigationBar: MyAppButton(
-        title:
-            //(widget.data.bookingStatus != "Pending")
-            AppStrings.proceedTOPay,
-        // : AppStrings.proceedToReschedule,
+        title: AppStrings.proceedToReschedule,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         onPress: () {
-          // (widget.data.bookingStatus != "Pending")
-
-          bookNowApi(context);
-          //  : rescheduleBookingApi(context);
+          rescheduleBookingApi(context);
         },
       ),
     );

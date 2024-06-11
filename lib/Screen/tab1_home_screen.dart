@@ -844,6 +844,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? "$startYr" "-" "$endYr"
             : ' ';
     // (startYr?.isNotEmpty ?? false) ?
+
     var response = await http.post(
         Uri.parse(
           ApiService.home,
@@ -866,7 +867,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    debugPrint('>>>>>response>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
     if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {
