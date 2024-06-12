@@ -309,11 +309,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
     String otp = otpTextFieldCn.text;
     if (otp.isEmpty) {
       error = 0;
-      Helper().showToast('Please enter  otp');
+      Helper().showToast(AppStrings.pleaseEnterOtp);
       setState(() {});
     } else if (otp.length < 6) {
       error = 1;
-      Helper().showToast('Please enter conform otp');
+      Helper().showToast(AppStrings.pleaseEnterConfirmOtp);
       setState(() {});
     } else {
       // verifyMobileNumber();
@@ -340,7 +340,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       } catch (e) {
         setState(() {
           debugPrint('>>>>>>>>>>>>>>${e.toString()}<<<<<<<<<<<<<<');
-          Helper().showToast('Please enter valid otp');
+          Helper().showToast(AppStrings.pleaseEnterValidOtp);
           Utility.progressLoadingDialog(context, false);
         });
       }

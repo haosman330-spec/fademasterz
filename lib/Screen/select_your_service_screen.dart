@@ -221,7 +221,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
                 ),
               );
             } else {
-              Helper().showToast('Please Select Your Service');
+              Helper().showToast(AppStrings.pleaseSelectYourService);
             }
           },
           style: ElevatedButton.styleFrom(

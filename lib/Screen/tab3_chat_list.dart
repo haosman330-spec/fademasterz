@@ -99,8 +99,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
             return Container(
               height: MediaQuery.of(context).size.height / 2,
               alignment: Alignment.center,
-              child: const Text(
-                "No messages available",
+              child: Text(
+                AppStrings.noMessagesAvailable,
                 style: AppFonts.normalText,
               ),
             );
@@ -183,6 +183,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           ),
                           const Spacer(),
                           Text(
+                            textAlign: TextAlign.left,
                             DateFormat('hh:mm a').format(DateTime.parse(
                               DateTime.fromMillisecondsSinceEpoch(
                                 int.parse(

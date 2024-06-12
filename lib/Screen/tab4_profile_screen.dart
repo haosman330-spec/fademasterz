@@ -69,7 +69,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 20,
+          ),
           child: Column(
             children: [
               Container(
@@ -78,12 +81,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
+                    borderRadius: BorderRadius.circular(
+                      7,
+                    ),
                     color: AppColor.black),
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(70),
+                      borderRadius: BorderRadius.circular(
+                        70,
+                      ),
                       child: Visibility(
                         visible: (image?.isNotEmpty ?? false),
 
@@ -98,7 +105,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 30,
                               width: 30,
                               child: CircularProgressIndicator(
-                                  value: downloadProgress.progress),
+                                value: downloadProgress.progress,
+                              ),
                             ),
                           ),
                           errorWidget: (context, url, error) =>
@@ -131,7 +139,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text(
                       (name ?? ''),
-                      style: AppFonts.appText.copyWith(fontSize: 17),
+                      style: AppFonts.appText.copyWith(
+                        fontSize: 17,
+                      ),
                     ),
                   ],
                 ),
@@ -172,8 +182,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.editProfile,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.editProfile,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -211,8 +225,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.myBookings,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.myBookings,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -239,10 +257,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black),
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -255,8 +274,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.cancelledBookings,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.cancelledBookings,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -298,8 +321,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.privacyPolicy,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.privacyPolicy,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -326,10 +353,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black),
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -341,8 +369,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.termConditions,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.termConditions,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -385,8 +417,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.help,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.help,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -415,7 +451,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 38, vertical: 16),
+                            horizontal: 38,
+                            vertical: 16,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -425,8 +463,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 height: 15,
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                                 child: Text(
                                     textAlign: TextAlign.center,
                                     AppStrings.accountLogout,
@@ -459,16 +498,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 30, vertical: 12),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              17,
-                                            ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            17,
                                           ),
-                                          backgroundColor: AppColor.yellow),
-                                      child: const Text(AppStrings.yes,
-                                          style: AppFonts.blackFont),
+                                        ),
+                                        backgroundColor: AppColor.yellow,
+                                      ),
+                                      child: const Text(
+                                        AppStrings.yes,
+                                        style: AppFonts.blackFont,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
@@ -506,7 +550,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 30, vertical: 12),
+                                          horizontal: 30,
+                                          vertical: 12,
+                                        ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                             17,
@@ -516,8 +562,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           0xffA4A4A4,
                                         ),
                                       ),
-                                      child: const Text(AppStrings.no,
-                                          style: AppFonts.blackFont),
+                                      child: const Text(
+                                        AppStrings.no,
+                                        style: AppFonts.blackFont,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -535,10 +583,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black),
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -550,8 +599,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.logout,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.logout,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,
@@ -580,24 +633,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 38, vertical: 16),
+                            horizontal: 38,
+                            vertical: 16,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(AppIcon.logout),
+                              SvgPicture.asset(
+                                AppIcon.logout,
+                              ),
                               const SizedBox(
                                 height: 15,
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                                 child: Text(
                                   textAlign: TextAlign.center,
                                   AppStrings.accountDelete,
                                   style: AppFonts.appText.copyWith(
                                     fontSize: 20,
-                                    color: const Color(0xff181725),
+                                    color: const Color(
+                                      0xff181725,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -625,16 +685,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 30, vertical: 12),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              17,
-                                            ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 30,
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            17,
                                           ),
-                                          backgroundColor: AppColor.yellow),
-                                      child: const Text(AppStrings.yes,
-                                          style: AppFonts.blackFont),
+                                        ),
+                                        backgroundColor: AppColor.yellow,
+                                      ),
+                                      child: const Text(
+                                        AppStrings.yes,
+                                        style: AppFonts.blackFont,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
@@ -649,7 +714,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 30, vertical: 12),
+                                          horizontal: 30,
+                                          vertical: 12,
+                                        ),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                             17,
@@ -659,8 +726,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           0xffA4A4A4,
                                         ),
                                       ),
-                                      child: const Text(AppStrings.no,
-                                          style: AppFonts.blackFont),
+                                      child: const Text(
+                                        AppStrings.no,
+                                        style: AppFonts.blackFont,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -681,10 +750,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black),
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -696,8 +766,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13,
                       ),
                       Expanded(
-                        child: Text(AppStrings.deleteAccount,
-                            style: AppFonts.appText.copyWith(fontSize: 14)),
+                        child: Text(
+                          AppStrings.deleteAccount,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       SvgPicture.asset(
                         AppIcon.forwardIcon,

@@ -56,14 +56,19 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+          ),
           child: HtmlWidget(
             (termsConditionModal.data?.terms ?? ''),
             customStylesBuilder: (element) {
               return {'color': 'white'};
             },
 
-            textStyle: const TextStyle(color: Colors.white, fontSize: 15),
+            textStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
             //  viewType: (privacyPolicyModal.data?.privacyPolicy ?? ''),
           ),
         ),

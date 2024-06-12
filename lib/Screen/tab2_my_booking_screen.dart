@@ -160,7 +160,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
         child: Column(
           children: [
             Row(
@@ -283,22 +286,29 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 2),
+                                  horizontal: 10,
+                                  vertical: 2,
+                                ),
                                 child: Row(
                                   children: [
                                     Text(
                                       '#${myCompleteBooking?.bookingId ?? ''}',
                                       style: AppFonts.yellowFont.copyWith(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                     const Spacer(),
-                                    SvgPicture.asset(AppIcon.timerIcon),
+                                    SvgPicture.asset(
+                                      AppIcon.timerIcon,
+                                    ),
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    Text((myCompleteBooking?.startTime ?? ''),
-                                        style: AppFonts.yellowFont),
+                                    Text(
+                                      (myCompleteBooking?.startTime ?? ''),
+                                      style: AppFonts.yellowFont,
+                                    ),
                                     const SizedBox(
                                       width: 12,
                                     ),
@@ -317,15 +327,20 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
                                 child: Divider(
-                                  color: AppColor.gray.withOpacity(.49),
+                                  color: AppColor.gray.withOpacity(
+                                    .49,
+                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8),
+                                  horizontal: 10,
+                                  vertical: 8,
+                                ),
                                 child: Row(
                                   children: [
                                     Container(
@@ -356,8 +371,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                         children: [
                                           Text(
                                             (myCompleteBooking?.shopName ?? ''),
-                                            style: AppFonts.regular
-                                                .copyWith(fontSize: 16),
+                                            style: AppFonts.regular.copyWith(
+                                              fontSize: 16,
+                                            ),
                                           ),
                                           const SizedBox(
                                             height: 5,
@@ -378,11 +394,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                   (myCompleteBooking
                                                           ?.shopAddress ??
                                                       ''),
-                                                  style: AppFonts.regular
-                                                      .copyWith(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                  style:
+                                                      AppFonts.regular.copyWith(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
                                               )
                                             ],
@@ -415,7 +431,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           CompleteBookingDetail(
-                                              bookingId: bookingId),
+                                        bookingId: bookingId,
+                                      ),
                                     ),
                                   ).then((value) {
                                     getBookingListApi(context);
@@ -429,15 +446,20 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                     decoration: const BoxDecoration(
                                       color: AppColor.yellow,
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(
+                                          10,
+                                        ),
+                                        bottomRight: Radius.circular(
+                                          10,
+                                        ),
                                       ),
                                     ),
                                     child: Text(
                                       AppStrings.viewDetails,
                                       style: AppFonts.blackFont.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColor.black1),
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColor.black1,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -480,26 +502,35 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 2),
+                                  horizontal: 10,
+                                  vertical: 2,
+                                ),
                                 child: Row(
                                   children: [
                                     Text(
                                       '#${myUpcomingBooking?.bookingId ?? ''}',
                                       style: AppFonts.yellowFont.copyWith(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                     const Spacer(),
-                                    SvgPicture.asset(AppIcon.timerIcon),
+                                    SvgPicture.asset(
+                                      AppIcon.timerIcon,
+                                    ),
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    Text((myUpcomingBooking?.startTime ?? ''),
-                                        style: AppFonts.yellowFont),
+                                    Text(
+                                      (myUpcomingBooking?.startTime ?? ''),
+                                      style: AppFonts.yellowFont,
+                                    ),
                                     const SizedBox(
                                       width: 12,
                                     ),
-                                    SvgPicture.asset(AppIcon.calenderIcon),
+                                    SvgPicture.asset(
+                                      AppIcon.calenderIcon,
+                                    ),
                                     const SizedBox(
                                       width: 5,
                                     ),
@@ -514,15 +545,20 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
                                 child: Divider(
-                                  color: AppColor.gray.withOpacity(.49),
+                                  color: AppColor.gray.withOpacity(
+                                    .49,
+                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8),
+                                  horizontal: 10,
+                                  vertical: 8,
+                                ),
                                 child: Row(
                                   children: [
                                     Container(
@@ -553,8 +589,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                         children: [
                                           Text(
                                             (myUpcomingBooking?.shopName ?? ''),
-                                            style: AppFonts.regular
-                                                .copyWith(fontSize: 16),
+                                            style: AppFonts.regular.copyWith(
+                                              fontSize: 16,
+                                            ),
                                           ),
                                           const SizedBox(
                                             height: 5,
@@ -575,11 +612,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                   (myUpcomingBooking
                                                           ?.shopAddress ??
                                                       ''),
-                                                  style: AppFonts.regular
-                                                      .copyWith(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                  style:
+                                                      AppFonts.regular.copyWith(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
                                               )
                                             ],
@@ -616,7 +653,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                               bookingId: bookingId),
                                     ),
                                   ).then((value) {
-                                    getBookingListApi(context);
+                                    getBookingListApi(
+                                      context,
+                                    );
                                   });
                                 },
                                 child: Align(
@@ -627,15 +666,20 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                     decoration: const BoxDecoration(
                                       color: AppColor.yellow,
                                       borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(
+                                          10,
+                                        ),
+                                        bottomRight: Radius.circular(
+                                          10,
+                                        ),
                                       ),
                                     ),
                                     child: Text(
                                       AppStrings.viewDetails,
                                       style: AppFonts.blackFont.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColor.black1),
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColor.black1,
+                                      ),
                                     ),
                                   ),
                                 ),

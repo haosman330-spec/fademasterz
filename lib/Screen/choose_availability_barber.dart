@@ -236,7 +236,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                             false),
                         replacement: Center(
                           child: Text(
-                            'No Specialist Found',
+                            AppStrings.noSpecialistFound,
                             style: AppFonts.appText.copyWith(
                               fontSize: 14,
                             ),
@@ -347,7 +347,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                             false),
                         replacement: Center(
                           child: Text(
-                            'No TimeSlot Found',
+                            AppStrings.noTimeSlotFound,
                             style: AppFonts.appText.copyWith(
                               fontSize: 14,
                             ),
@@ -525,7 +525,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                     ),
                     CustomTextField(
                       controller: noteCn,
-                      hintText: 'Write a message !',
+                      hintText: AppStrings.writeMessage,
                       maxLines: 4,
                       textInputAction: TextInputAction.done,
                       fillColor: const Color(0xff333333),
@@ -599,7 +599,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               );
             } else {
               Helper().showToast(
-                'No Available Specialist',
+                AppStrings.noAvailableSpecialist,
               );
             }
 

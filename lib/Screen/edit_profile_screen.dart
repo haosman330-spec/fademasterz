@@ -143,7 +143,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: WillPopScope(
         onWillPop: () async => onCallback(),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 20,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -268,7 +271,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: MyAppButton(
         title: AppStrings.update,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
         onPress: () async {
           final List<ConnectivityResult> connectivityResult =
               await (Connectivity().checkConnectivity());

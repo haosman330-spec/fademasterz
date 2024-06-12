@@ -52,23 +52,6 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
 
   @override
   void initState() {
-    debugPrint('>>>>>>>>>>>>>>${widget.bookingId}<<<<<<<<<<<<<<');
-    // initConnectivity();
-    // var listener = InternetConnectionChecker().onStatusChange.listen((status) {
-    //   switch (status) {
-    //     case InternetConnectionStatus.connected:
-    //       // homeDetail(context: context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
-    //
-    //       break;
-    //     case InternetConnectionStatus.disconnected:
-    //       Utility.showNoGetNetworkDialog(context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
-    //       break;
-    //   }
-    // });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       bookingDetailApi(
         context,

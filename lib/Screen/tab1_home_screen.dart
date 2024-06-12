@@ -97,7 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 20),
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
                       child: Text(
                         textAlign: TextAlign.center,
                         AppStrings.enableLocation,

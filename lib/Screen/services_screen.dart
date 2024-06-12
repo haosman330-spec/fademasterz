@@ -49,7 +49,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 visible: (widget.service?.isNotEmpty ?? false),
                 replacement: Center(
                   child: Text(
-                    'No Services ',
+                    AppStrings.noServices,
                     style: AppFonts.appText.copyWith(fontSize: 14),
                   ),
                 ),

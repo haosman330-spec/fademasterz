@@ -108,20 +108,35 @@ class AppStrings {
   static String successfulDone = 'Your booking has been successfully done';
   static String successfulReschedule =
       'Your booking has been  reschedule successfully done';
-
   static String rateNow = 'Rate Now';
   static String locationNearest =
       'We need location access to find the nearest barber/salon around you.';
-
   static String rating = 'Rating';
   static String customerService = 'Customer Service';
-
   static String submit = 'Submit';
-
   static String cancel = 'Cancel';
   static String twitter = 'Twitter';
   static String facebook = 'Facebook';
   static String whatsapp = 'Whatsapp';
-
   static String rescheduleSummary = 'Reschedule Summary';
+  static String pleaseEnterValidOtp = 'Please enter valid otp';
+  static String pleaseEnterOtp = 'Please enter otp';
+  static String pleaseEnterConfirmOtp = 'Please enter confirm otp';
+  static String pleaseEnterMobileNo = 'Please Enter Mobile No.';
+  static String noAvailableSpecialist = 'No Available Specialist';
+  static String noTimeSlotFound = 'No TimeSlot Found';
+  static String noSpecialistFound = 'No Specialist Found';
+  static var writeMessage = 'Write a message !';
+  static String pleaseSelectYourService = 'Please Select Your Service';
+  static var noRatingYet = 'No Rating Yet';
+
+  static String noReviewFound = 'No Review Found';
+
+  static String noGalleryImage = 'No Gallery Image';
+
+  static String noServicesFound = 'No Services Found';
+
+  static String noServices = 'No Services ';
+
+  static String noMessagesAvailable = "No messages available";
 }

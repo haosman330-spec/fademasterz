@@ -52,7 +52,7 @@ class _SpecialistScreenState extends State<SpecialistScreen> {
           visible: (widget.specialist?.isNotEmpty ?? false),
           replacement: Center(
             child: Text(
-              'No Specialist Found',
+              AppStrings.noSpecialistFound,
               style: AppFonts.appText.copyWith(fontSize: 14),
             ),
           ),

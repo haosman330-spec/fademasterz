@@ -100,7 +100,7 @@ class _ShopDetailState extends State<ShopDetail> {
                 visible: (shopDetailModal.data?.services?.isNotEmpty ?? false),
                 replacement: Center(
                   child: Text(
-                    'No Services Found',
+                    AppStrings.noServicesFound,
                     style: AppFonts.appText.copyWith(fontSize: 14),
                   ),
                 ),
@@ -180,7 +180,7 @@ class _ShopDetailState extends State<ShopDetail> {
                 visible: (shopDetailModal.data?.gallery?.isNotEmpty ?? false),
                 replacement: Center(
                   child: Text(
-                    'No Gallery Image',
+                    AppStrings.noGalleryImage,
                     style: AppFonts.appText.copyWith(fontSize: 14),
                   ),
                 ),
@@ -283,7 +283,7 @@ class _ShopDetailState extends State<ShopDetail> {
             visible: (shopDetailModal.data?.review?.isNotEmpty ?? false),
             replacement: Center(
               child: Text(
-                'No Review Found',
+                AppStrings.noReviewFound,
                 style: AppFonts.appText.copyWith(fontSize: 14),
               ),
             ),
@@ -390,21 +390,6 @@ class _ShopDetailState extends State<ShopDetail> {
         ),
       ],
     );
-    // final listener =
-    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
-    //   switch (status) {
-    //     case InternetStatus.connected:
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
-    //       // The internet is now connected
-    //       break;
-    //     case InternetStatus.disconnected:
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
-    //       // The internet is now disconnected
-    //       break;
-    //   }
-    // });
     super.initState();
   }
 
@@ -517,7 +502,7 @@ class _ShopDetailState extends State<ShopDetail> {
                           ),
                           Text(
                             (shopDetailModal.data?.avgRating) == '0'
-                                ? 'No Rating Yet'
+                                ? AppStrings.noRatingYet
                                 : (shopDetailModal.data?.avgRating ?? ''),
                             style: AppFonts.regular.copyWith(
                               fontSize: 15,
@@ -664,7 +649,7 @@ class _ShopDetailState extends State<ShopDetail> {
                               false),
                       replacement: Center(
                         child: Text(
-                          'No Specialist Found',
+                          AppStrings.noSpecialistFound,
                           style: AppFonts.appText.copyWith(
                             fontSize: 14,
                           ),

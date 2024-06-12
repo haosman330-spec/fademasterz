@@ -38,7 +38,10 @@ class _EnterYourNoState extends State<EnterYourNo> {
     return Scaffold(
       backgroundColor: AppColor.bg,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 62),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 62,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,7 +70,9 @@ class _EnterYourNoState extends State<EnterYourNo> {
               key: _formKey,
               child: TextFormField(
                 controller: phoneCn,
-                style: AppFonts.appText.copyWith(fontSize: 16),
+                style: AppFonts.appText.copyWith(
+                  fontSize: 16,
+                ),
                 maxLength: 11,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
@@ -79,54 +84,64 @@ class _EnterYourNoState extends State<EnterYourNo> {
                   ),
                 ],
                 decoration: InputDecoration(
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                      borderSide: BorderSide.none,
+                  enabledBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        16,
+                      ),
                     ),
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    prefixIcon: CountryCodePicker(
-                      onChanged: (data) {
-                        _selectedCountry = data;
-                        setState(() {});
-                        // debugPrint(
-                        //     '>>>>>>>>>>>>>>${data.name}<<name<<<<<<<<<<<<');
-                        // debugPrint(
-                        //     '>>>>>>>>>>>>>>${data.code}<<code<<<<<<<<<<<<');
-                        debugPrint(
-                            '>>>>>>>>>>>>>>${data.dialCode}<<dial code<<<<<<<<<<<<');
-                        // debugPrint(
-                        //     '>>>>>>>>>>>>>>${data.flagUri}<<flag<<<<<<<<<<<<');
-                      },
-                      initialSelection: 'GB',
-                      favorite: const ['GB'],
-                      countryFilter: const [
-                        'GB',
-                        'IN',
-                      ],
-                      // countryFilter: ['In', 'FR'],
-                      textStyle: const TextStyle(
-                        color: Color(
-                          0xffFFFFFF,
+                    borderSide: BorderSide.none,
+                  ),
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        16,
+                      ),
+                    ),
+                  ),
+                  prefixIcon: CountryCodePicker(
+                    onChanged: (data) {
+                      _selectedCountry = data;
+                      setState(() {});
+                      // debugPrint(
+                      //     '>>>>>>>>>>>>>>${data.name}<<name<<<<<<<<<<<<');
+                      // debugPrint(
+                      //     '>>>>>>>>>>>>>>${data.code}<<code<<<<<<<<<<<<');
+                      debugPrint(
+                          '>>>>>>>>>>>>>>${data.dialCode}<<dial code<<<<<<<<<<<<');
+                      // debugPrint(
+                      //     '>>>>>>>>>>>>>>${data.flagUri}<<flag<<<<<<<<<<<<');
+                    },
+                    initialSelection: 'GB',
+                    favorite: const ['GB'],
+                    countryFilter: const [
+                      'GB',
+                      'IN',
+                    ],
+                    // countryFilter: ['In', 'FR'],
+                    textStyle: const TextStyle(
+                      color: Color(
+                        0xffFFFFFF,
+                      ),
+                    ),
+                    flagDecoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          5,
                         ),
                       ),
-                      flagDecoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            5,
-                          ),
-                        ),
-                      ),
-                      showCountryOnly: false,
-                      showOnlyCountryWhenClosed: false,
-                      alignLeft: false,
                     ),
-                    filled: true,
-                    fillColor: AppColor.black,
-                    counterText: '',
-                    hintText: AppStrings.phoneNumber,
-                    hintStyle: AppFonts.textFieldHint),
+                    showCountryOnly: false,
+                    showOnlyCountryWhenClosed: false,
+                    alignLeft: false,
+                  ),
+                  filled: true,
+                  fillColor: AppColor.black,
+                  counterText: '',
+                  hintText: AppStrings.phoneNumber,
+                  hintStyle: AppFonts.textFieldHint,
+                ),
               ),
             ),
             // Form(
@@ -177,7 +192,10 @@ class _EnterYourNoState extends State<EnterYourNo> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: MyAppButton(
         title: AppStrings.next,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
         onPress: () async {
           if (isValidate()) {
             signUpOtpAuth();
@@ -201,7 +219,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
 
   bool isValidate() {
     if (phoneCn.text.isEmpty || phoneCn.text.length < 10) {
-      Helper().showToast('Please Enter Mobile No.');
+      Helper().showToast(AppStrings.pleaseEnterMobileNo);
       return false;
     }
     return true;

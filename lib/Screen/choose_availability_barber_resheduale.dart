@@ -245,7 +245,7 @@ class _ChooseAvailabilityBarberRescheduleState
                             false),
                         replacement: Center(
                           child: Text(
-                            'No Specialist Found',
+                            AppStrings.noSpecialistFound,
                             style: AppFonts.appText.copyWith(
                               fontSize: 14,
                             ),
@@ -356,7 +356,7 @@ class _ChooseAvailabilityBarberRescheduleState
                             false),
                         replacement: Center(
                           child: Text(
-                            'No TimeSlot Found',
+                            AppStrings.noTimeSlotFound,
                             style: AppFonts.appText.copyWith(
                               fontSize: 14,
                             ),
@@ -609,7 +609,7 @@ class _ChooseAvailabilityBarberRescheduleState
               );
             } else {
               Helper().showToast(
-                'No Available Specialist',
+                AppStrings.noAvailableSpecialist,
               );
             }
 
