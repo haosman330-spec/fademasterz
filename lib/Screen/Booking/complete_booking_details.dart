@@ -172,7 +172,6 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           child: Image.network(
                             ApiService.imageUrl +
                                 (bookingDetailResponse?.data?.shopImage ?? ''),
-                            // (bookingDetailResponse.data?.shopImage ?? ''),
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -187,7 +186,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           children: [
                             Text(
                               (bookingDetailResponse?.data?.shopName ?? ''),
-                              style: AppFonts.regular.copyWith(fontSize: 16),
+                              style: AppFonts.regular.copyWith(
+                                fontSize: 16,
+                              ),
                             ),
                             const SizedBox(
                               height: 5,
@@ -204,8 +205,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                   (bookingDetailResponse?.data?.startTime ??
                                       ''),
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const SizedBox(
                                   width: 20,
@@ -222,8 +224,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                         DateTime.now(),
                                   ),
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ],
                             ),
@@ -233,7 +236,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                             Text(
                               '£ ${(bookingDetailResponse?.data?.total ?? '')}',
                               style: AppFonts.yellowFont.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
@@ -246,8 +251,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -269,7 +276,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         overflow: TextOverflow.ellipsis,
                         (bookingDetailResponse?.data?.shopAddress ?? ''),
                         style: AppFonts.regular.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -279,8 +288,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -295,7 +306,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           Text(
                             AppStrings.bookingDate,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(
                             height: 9,
@@ -303,7 +316,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           Text(
                             AppStrings.bookingTime,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(
                             height: 9,
@@ -311,7 +326,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           Text(
                             AppStrings.specialist,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -325,7 +342,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                   DateTime.now(),
                             ),
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(
                             height: 9,
@@ -333,7 +352,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           Text(
                             (bookingDetailResponse?.data?.startTime ?? ''),
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(
                             height: 9,
@@ -341,7 +362,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           Text(
                             (bookingDetailResponse?.data?.specialistName ?? ''),
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -353,8 +376,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -407,8 +432,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -425,7 +452,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                               Text(
                                 AppStrings.subTotal,
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -433,7 +462,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                               Text(
                                 AppStrings.tax,
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -447,7 +478,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                               Text(
                                 '£ ${bookingDetailResponse?.data?.subTotal ?? ''}',
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -455,7 +488,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                               Text(
                                 '£ ${bookingDetailResponse?.data?.tax ?? ''}',
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -465,7 +500,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         ],
                       ),
                       const Divider(
-                        color: Color(0xff434343),
+                        color: Color(
+                          0xff434343,
+                        ),
                         height: 1,
                       ),
                       Row(
@@ -473,13 +510,17 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           Text(
                             AppStrings.total,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const Spacer(),
                           Text(
                             '£ ${bookingDetailResponse?.data?.total ?? ''}',
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -493,7 +534,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                     ? Container(
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColor.black,
                           borderRadius: BorderRadius.circular(
@@ -508,15 +551,20 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                 Text(
                                   'Rating/Review ',
                                   style: AppFonts.yellowFont.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const Spacer(),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 5),
+                                    horizontal: 15,
+                                    vertical: 5,
+                                  ),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(
+                                      12,
+                                    ),
                                     border: Border.all(
                                       color: AppColor.yellow,
                                     ),
@@ -571,8 +619,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
           child: (bookingDetailResponse?.data?.rating == null)
               ? MyAppButton(
                   title: AppStrings.rateNow,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 15,
+                  ),
                   onPress: () {
                     showDialog(
                       barrierDismissible: false,
@@ -589,7 +639,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 16),
+                              horizontal: 15,
+                              vertical: 16,
+                            ),
                             child: SingleChildScrollView(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -605,7 +657,8 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                           Navigator.pop(context);
                                         },
                                         child: SvgPicture.asset(
-                                            AppIcon.cancelIcon),
+                                          AppIcon.cancelIcon,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -625,13 +678,16 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
+                                      horizontal: 16,
+                                      vertical: 10,
+                                    ),
                                     child: Text(
                                       textAlign: TextAlign.center,
                                       'You have done using Barber/Salon Service ',
                                       style: AppFonts.blackFont.copyWith(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                   Padding(
@@ -641,8 +697,11 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                       textAlign: TextAlign.center,
                                       'Please leave your review so others people can know your opinion.',
                                       style: AppFonts.text.copyWith(
-                                        color: const Color(0xff5F5F5F)
-                                            .withOpacity(.90),
+                                        color: const Color(
+                                          0xff5F5F5F,
+                                        ).withOpacity(
+                                          .90,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -658,8 +717,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                     itemPadding: const EdgeInsets.symmetric(
                                         horizontal: 4.0),
                                     itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: AppColor.yellow),
+                                      Icons.star,
+                                      color: AppColor.yellow,
+                                    ),
                                     onRatingUpdate: (rating) {
                                       rating1 = rating.toString();
                                       setState(() {});
@@ -668,10 +728,11 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 15,
-                                        right: 15,
-                                        top: 15,
-                                        bottom: 15),
+                                      left: 15,
+                                      right: 15,
+                                      top: 15,
+                                      bottom: 15,
+                                    ),
                                     child: CustomTextField(
                                       controller: reviewCn,
                                       textInputAction: TextInputAction.done,
@@ -683,7 +744,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                           fontWeight: FontWeight.w500),
                                       borderSide: BorderSide.none,
                                       isFilled: true,
-                                      fillColor: const Color(0xffEDEDED),
+                                      fillColor: const Color(
+                                        0xffEDEDED,
+                                      ),
                                     ),
                                   ),
                                   MyAppButton(
@@ -694,10 +757,12 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                     },
                                     height: 48,
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 15),
+                                      horizontal: 15,
+                                    ),
                                     title: AppStrings.submit,
-                                    style: AppFonts.blackFont
-                                        .copyWith(fontWeight: FontWeight.w500),
+                                    style: AppFonts.blackFont.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                     radius: 6,
                                   ),
                                 ],
@@ -712,7 +777,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
               : const SizedBox.shrink(),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -727,24 +795,27 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                             'receiverId',
                             (bookingDetailResponse?.data!.shopId.toString() ??
                                 ''));
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatScreenInBox(
-                              receiverId: bookingDetailResponse?.data?.shopId
-                                  .toString(),
-                              receiverImage:
-                                  bookingDetailResponse?.data?.shopImage,
-                              receiverName:
-                                  bookingDetailResponse?.data?.shopName,
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreenInBox(
+                                receiverId: bookingDetailResponse?.data?.shopId
+                                    .toString(),
+                                receiverImage:
+                                    bookingDetailResponse?.data?.shopImage,
+                                receiverName:
+                                    bookingDetailResponse?.data?.shopName,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                       title: AppStrings.chatNow,
                       style: AppFonts.blackFont.copyWith(
-                          color: AppColor.bg, fontWeight: FontWeight.w500),
+                        color: AppColor.bg,
+                        fontWeight: FontWeight.w500,
+                      ),
                       height: 50,
                       radius: 6,
                     ),
@@ -829,7 +900,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
                           child: Column(
                             children: [
                               Align(
@@ -856,13 +929,15 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                 height: 10,
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 35),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 35,
+                                ),
                                 child: Text(
                                   textAlign: TextAlign.center,
                                   AppStrings.conformCancel,
-                                  style: AppFonts.normalText
-                                      .copyWith(fontSize: 14),
+                                  style: AppFonts.normalText.copyWith(
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -881,8 +956,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                       onPress: () {
                                         Navigator.pop(ctx);
                                       },
-                                      border:
-                                          Border.all(color: AppColor.yellow),
+                                      border: Border.all(
+                                        color: AppColor.yellow,
+                                      ),
                                       title: AppStrings.no,
                                       style: AppFonts.yellowFont.copyWith(
                                           fontWeight: FontWeight.w500),
@@ -915,9 +991,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                                       height: 50,
                                       title: AppStrings.yesCancelBooking,
                                       style: AppFonts.blackFont.copyWith(
-                                          color: AppColor.bg,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
+                                        color: AppColor.bg,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -932,8 +1009,10 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                 },
                 child: Text(
                   AppStrings.cancelBooking,
-                  style: AppFonts.yellowFont
-                      .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: AppFonts.yellowFont.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -1023,7 +1102,9 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
       jsonResponse['message'],
     );
     if (jsonResponse['status'] == true) {
-      Navigator.of(context).pop();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
       reviewCn.clear();
       setState(() {});
     }
@@ -1058,6 +1139,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
         bookingDetailApi(context);
       }
     }
+
     _showBottomSheet(
       context: context,
       description: jsonResponse["message"],

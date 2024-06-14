@@ -26,35 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   // FlutterNativeSplash.remove();
-    //
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const EnterYourNo(),
-    //     ),
-    //   );
-    // });
     getLocalData();
-
-    // final listener =
-    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
-    //   switch (status) {
-    //     case InternetStatus.connected:
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
-    //       // The internet is now connected
-    //       break;
-    //     case InternetStatus.disconnected:
-    //       Utility.showNoGetNetworkDialog(context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
-    //       // The internet is now disconnected
-    //       break;
-    //   }
-    // });
-
     super.initState();
   }
 

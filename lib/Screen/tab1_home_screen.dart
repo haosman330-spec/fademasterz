@@ -16,7 +16,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +23,6 @@ import '../ApiService/api_service.dart';
 import '../Modal/booking_summary_argument_modal.dart';
 import '../Utils/bottam_sheet.dart';
 import '../Utils/custom_app_button.dart';
-import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -49,13 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
   double? latitude;
   double? longitude;
   late LocationPermission permission;
-  InternetStatus? _connectionStatus;
+
   late StreamSubscription<InternetStatus> listener;
   bool? internetConnection;
   int currentPage = 1;
   bool hasMore = true;
   List<String> item = [];
-  final ScrollController _scrollController = ScrollController();
+
   void setLoader(bool value) {
     isDataLoading = value;
     setState(() {});
@@ -82,8 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
             insetPadding: const EdgeInsets.symmetric(
               horizontal: 18,
             ),
-            child: WillPopScope(
-              onWillPop: () async => false,
+            child: PopScope(
+              canPop: false,
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 38, vertical: 16),
@@ -186,7 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
     longitude = position.longitude;
     latitude = position.latitude;
   }
-
+  /* InternetStatus? _connectionStatus;
+  final ScrollController _scrollController = ScrollController();
   static Future<bool> internetConnected() async {
     bool internetConnection = await InternetConnectionChecker().hasConnection;
 
@@ -195,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Helper().showToast("No Internet Connection");
     }
     return internetConnection;
-  }
+  }*/
 
   @override
   void initState() {
@@ -470,8 +469,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       height: MediaQuery.of(context).size.height / 3,
                       alignment: Alignment.center,
-                      child: const Text(
-                        'No Shop Available',
+                      child: Text(
+                        AppStrings.noShopAvailable,
                         style: AppFonts.normalText,
                       ),
                     ),
@@ -577,7 +576,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           Text(
                                             (item?.avgRating) == '0'
-                                                ? 'No Rating Yet'
+                                                ? AppStrings.noRatingYet
                                                 : (item?.avgRating ?? ''),
                                             style: AppFonts.regular.copyWith(
                                                 fontSize: 14,

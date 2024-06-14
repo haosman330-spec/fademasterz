@@ -62,7 +62,7 @@ class _ChooseAvailabilityBarberRescheduleState
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       _selectedDate = args.value.toString();
-      //_selectDateApi(context);
+      debugPrint('>>>>_selectedDate>>>>>>>>>>${_selectedDate}<<<<<<<<<<<<<<');
       _chooseAvailabilityApi(context);
     });
   }
@@ -463,7 +463,9 @@ class _ChooseAvailabilityBarberRescheduleState
                                   height: 80,
                                   width: 80,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(11),
+                                    borderRadius: BorderRadius.circular(
+                                      11,
+                                    ),
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   child: Image.file(

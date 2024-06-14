@@ -170,18 +170,24 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 38, vertical: 16),
+                      horizontal: 38,
+                      vertical: 16,
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(AppIcon.paymentIcon),
+                        SvgPicture.asset(
+                          AppIcon.paymentIcon,
+                        ),
                         const SizedBox(
                           height: 15,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 20),
+                            horizontal: 16,
+                            vertical: 20,
+                          ),
                           child: Text(
                             textAlign: TextAlign.center,
                             AppStrings.paymentSuccessful,
@@ -191,12 +197,16 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
                           child: Text(
                             textAlign: TextAlign.center,
                             AppStrings.successfulDone,
                             style: AppFonts.blackFont.copyWith(
-                                fontSize: 14, fontWeight: FontWeight.w500),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -207,15 +217,17 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const DashBoardScreen(selectIndex: 1),
+                                builder: (context) => const DashBoardScreen(
+                                  selectIndex: 1,
+                                ),
                               ),
                             );
                           },
                           height: 48,
                           title: AppStrings.viewBookingSummary,
-                          style: AppFonts.blackFont
-                              .copyWith(fontWeight: FontWeight.w500),
+                          style: AppFonts.blackFont.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
                           radius: 39,
                         ),
                         const SizedBox(
@@ -235,8 +247,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           },
                           height: 48,
                           title: AppStrings.backToHome,
-                          style: AppFonts.blackFont
-                              .copyWith(fontWeight: FontWeight.w500),
+                          style: AppFonts.blackFont.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
                           radius: 39,
                           color: const Color(0xffFFFBF0),
                         ),
@@ -454,17 +467,24 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
           replacement: Center(
             child: Text(
               'No Data Found',
-              style: AppFonts.regular.copyWith(fontSize: 16),
+              style: AppFonts.regular.copyWith(
+                fontSize: 16,
+              ),
             ),
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 20,
+              ),
               child: Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColor.black,
                       borderRadius: BorderRadius.circular(
@@ -505,7 +525,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             children: [
                               Text(
                                 (bookingSummaryResponse?.data?.name ?? ' '),
-                                style: AppFonts.regular.copyWith(fontSize: 16),
+                                style: AppFonts.regular.copyWith(
+                                  fontSize: 16,
+                                ),
                               ),
                               const SizedBox(
                                 height: 5,
@@ -523,8 +545,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                             ?.data?.bookingTime ??
                                         'N/A'),
                                     style: AppFonts.regular.copyWith(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 20,
@@ -546,8 +569,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                               DateTime.now()),
                                       //  DateTime.now().toString(),
                                       style: AppFonts.regular.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -558,7 +582,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                               Text(
                                 '£${bookingSummaryResponse?.data?.subTotal ?? ' '}',
                                 style: AppFonts.yellowFont.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
@@ -594,7 +620,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           overflow: TextOverflow.ellipsis,
                           (bookingSummaryResponse?.data?.address ?? ' '),
                           style: AppFonts.regular.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
@@ -620,7 +648,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             Text(
                               AppStrings.bookingDate,
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
@@ -628,7 +658,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             Text(
                               AppStrings.bookingTime,
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
@@ -636,7 +668,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             Text(
                               AppStrings.specialist,
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
@@ -654,7 +688,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                     DateTime.now(),
                               ),
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
@@ -663,7 +699,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                               (bookingSummaryResponse?.data?.bookingTime ??
                                   ' '),
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
@@ -672,7 +710,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                               (bookingSummaryResponse?.data?.specialist?.name ??
                                   'N/A'),
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
@@ -685,7 +725,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColor.black,
                       borderRadius: BorderRadius.circular(
@@ -712,15 +754,17 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                 Text(
                                   (service?.name ?? ' '),
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const Spacer(),
                                 Text(
                                   '£ ${(service?.price ?? ' ')}',
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ],
                             ),
@@ -735,7 +779,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColor.black,
                       borderRadius: BorderRadius.circular(
@@ -752,8 +798,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                 Text(
                                   AppStrings.subTotal,
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 9,
@@ -761,8 +808,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                 Text(
                                   AppStrings.tax,
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 9,
@@ -776,8 +824,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                 Text(
                                   ' £${bookingSummaryResponse?.data?.subTotal ?? ' '}',
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 9,
@@ -785,8 +834,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                 Text(
                                   ' £${(bookingSummaryResponse?.data?.tax ?? ' ')}',
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 9,
@@ -804,13 +854,17 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             Text(
                               AppStrings.total,
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const Spacer(),
                             Text(
                               '£ ${(bookingSummaryResponse?.data?.total ?? ' ')}',
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
@@ -828,7 +882,10 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
             //(widget.data.bookingStatus != "Pending")
             AppStrings.proceedTOPay,
         // : AppStrings.proceedToReschedule,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
         onPress: () {
           // (widget.data.bookingStatus != "Pending")
 

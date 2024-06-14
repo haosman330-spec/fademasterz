@@ -121,7 +121,6 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           child: Image.network(
                             ApiService.imageUrl +
                                 (bookingDetailResponse?.data?.shopImage ?? ''),
-                            // (bookingDetailResponse.data?.shopImage ?? ''),
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -136,7 +135,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           children: [
                             Text(
                               bookingDetailResponse?.data?.shopName ?? ' ',
-                              style: AppFonts.regular.copyWith(fontSize: 16),
+                              style: AppFonts.regular.copyWith(
+                                fontSize: 16,
+                              ),
                             ),
                             const SizedBox(
                               height: 5,
@@ -153,8 +154,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                                   (bookingDetailResponse?.data?.startTime ??
                                       ''),
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 const SizedBox(
                                   width: 20,
@@ -171,8 +173,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                                         DateTime.now(),
                                   ),
                                   style: AppFonts.regular.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ],
                             ),
@@ -182,7 +185,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                             Text(
                               '£ ${(bookingDetailResponse?.data?.total ?? '')}',
                               style: AppFonts.yellowFont.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
@@ -195,8 +200,10 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -218,7 +225,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                         overflow: TextOverflow.ellipsis,
                         (bookingDetailResponse?.data?.shopAddress ?? ''),
                         style: AppFonts.regular.copyWith(
-                            fontSize: 16, fontWeight: FontWeight.w500),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -228,8 +237,10 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -244,7 +255,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           Text(
                             AppStrings.bookingDate,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(
                             height: 9,
@@ -252,7 +265,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           Text(
                             AppStrings.bookingTime,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(
                             height: 9,
@@ -260,7 +275,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           Text(
                             AppStrings.specialist,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
@@ -275,15 +292,19 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                                     DateTime.now(),
                               ),
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
                             ),
                             Text(
-                              '${bookingDetailResponse?.data?.startTime ?? ' '}',
+                              bookingDetailResponse?.data?.startTime ?? ' ',
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(
                               height: 9,
@@ -292,7 +313,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               (bookingDetailResponse?.data?.specialistName ??
                                   ''),
                               style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ],
                         ),
@@ -305,8 +328,10 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -337,7 +362,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                                         ?.data?.services?[index].name ??
                                     ' '),
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const Spacer(),
                               Text(
@@ -359,8 +386,10 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColor.black,
                     borderRadius: BorderRadius.circular(
@@ -377,7 +406,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               Text(
                                 AppStrings.subTotal,
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -385,7 +416,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               Text(
                                 AppStrings.tax,
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -399,7 +432,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               Text(
                                 '£ ${bookingDetailResponse?.data?.subTotal ?? ''}',
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -407,7 +442,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                               Text(
                                 '£ ${bookingDetailResponse?.data?.tax ?? ''}',
                                 style: AppFonts.regular.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(
                                 height: 9,
@@ -417,7 +454,9 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                         ],
                       ),
                       const Divider(
-                        color: Color(0xff434343),
+                        color: Color(
+                          0xff434343,
+                        ),
                         height: 1,
                       ),
                       Row(
@@ -425,13 +464,17 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
                           Text(
                             AppStrings.total,
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const Spacer(),
                           Text(
                             '£ ${bookingDetailResponse?.data?.total ?? ''}',
                             style: AppFonts.regular.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.w500),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),

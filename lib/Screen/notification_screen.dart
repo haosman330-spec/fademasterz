@@ -55,30 +55,38 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 10,
+                itemCount: 7,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
                       Divider(
-                        color: AppColor.white.withOpacity(.5),
+                        color: AppColor.white.withOpacity(
+                          .5,
+                        ),
                       ),
                       Row(
                         children: [
                           Text(
                             'Lorem ipsum',
-                            style: AppFonts.regular.copyWith(fontSize: 16),
+                            style: AppFonts.regular.copyWith(
+                              fontSize: 16,
+                            ),
                           ),
                           const Spacer(),
                           Text(
                             '1 hr',
-                            style: AppFonts.regular.copyWith(fontSize: 12),
+                            style: AppFonts.regular.copyWith(
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),
                       Text(
-                        'Lorem ipsum dolor sit amet consectetur. Magna nunc et nisl mauris viverra enim.'
-                        ' Turpis fusce augue diam egestas ridiculus tincidunt eget fames vestibulum. Eget hac justo nulla mauris nunc.',
-                        style: AppFonts.normalText.copyWith(fontSize: 11),
+                        'Lorem ipsum dolor sit amet consecrate. Magna nun et nil Lauris riviera enum.'
+                        ' Turps fuse argue diam gestates ridiculous incident wget frames vestibule. Ege hac justo null Lauris nun.',
+                        style: AppFonts.normalText.copyWith(
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   );

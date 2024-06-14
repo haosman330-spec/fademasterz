@@ -78,7 +78,10 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 15,
+            ),
             child: Visibility(
               visible:
                   (cancelledBookingResponse?.data?.cancelBooking?.isNotEmpty ??
@@ -118,19 +121,25 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                               Text(
                                 '#${cancelledBooking?.bookingId ?? ''}',
                                 style: AppFonts.yellowFont.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w500),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const Spacer(),
                               SvgPicture.asset(AppIcon.timerIcon),
                               const SizedBox(
                                 width: 5,
                               ),
-                              Text((cancelledBooking?.startTime ?? ''),
-                                  style: AppFonts.yellowFont),
+                              Text(
+                                (cancelledBooking?.startTime ?? ''),
+                                style: AppFonts.yellowFont,
+                              ),
                               const SizedBox(
                                 width: 12,
                               ),
-                              SvgPicture.asset(AppIcon.calenderIcon),
+                              SvgPicture.asset(
+                                AppIcon.calenderIcon,
+                              ),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -144,14 +153,20 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
                           child: Divider(
-                            color: AppColor.gray.withOpacity(.49),
+                            color: AppColor.gray.withOpacity(
+                              .49,
+                            ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                           child: Row(
                             children: [
                               Container(
@@ -186,8 +201,9 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                               ?.cancelBooking?[index].shopName
                                               .toString() ??
                                           ''),
-                                      style: AppFonts.regular
-                                          .copyWith(fontSize: 16),
+                                      style: AppFonts.regular.copyWith(
+                                        fontSize: 16,
+                                      ),
                                     ),
                                     const SizedBox(
                                       height: 5,
@@ -211,8 +227,9 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                                     .toString() ??
                                                 ''),
                                             style: AppFonts.regular.copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         )
                                       ],
@@ -242,7 +259,8 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CancelledBookingDetail(
-                                    cancelBookingId: cancelBookingId),
+                                  cancelBookingId: cancelBookingId,
+                                ),
                               ),
                             );
                           },
@@ -254,15 +272,20 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                               decoration: const BoxDecoration(
                                 color: AppColor.yellow,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(
+                                    10,
+                                  ),
+                                  bottomRight: Radius.circular(
+                                    10,
+                                  ),
                                 ),
                               ),
                               child: Text(
                                 AppStrings.viewDetails,
                                 style: AppFonts.blackFont.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColor.black1),
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColor.black1,
+                                ),
                               ),
                             ),
                           ),

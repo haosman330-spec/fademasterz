@@ -299,7 +299,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
       codeSent: (String verificationId, int? token) async {
         _verificationId = verificationId;
         debugPrint(
-            '>>>>>>>>_verificationId>>>>>>${_verificationId}<<<<<<<<<<<<<<');
+            '>>>>>>>>_verificationId>>>>>>$_verificationId<<<<<<<<<<<<<<');
         Utility.progressLoadingDialog(context, false);
         Navigator.push(
           context,

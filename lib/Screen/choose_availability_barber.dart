@@ -61,7 +61,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       _selectedDate = args.value.toString();
-      //_selectDateApi(context);
+      debugPrint('>>>>>>>>>>>>>>${_selectedDate}<<<<<<<<<<<<<<');
       _chooseAvailabilityApi(context);
     });
   }
@@ -187,14 +187,16 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                   ),
                 ),
                 monthCellStyle: DateRangePickerMonthCellStyle(
-                    textStyle: AppFonts.normalText,
-                    todayTextStyle: AppFonts.appText,
-                    weekendTextStyle: AppFonts.yellowFont,
-                    blackoutDatesDecoration: const BoxDecoration(),
-                    leadingDatesTextStyle: AppFonts.normalText,
-                    disabledDatesTextStyle:
-                        AppFonts.normalText.copyWith(color: AppColor.gray),
-                    trailingDatesTextStyle: AppFonts.appText),
+                  textStyle: AppFonts.normalText,
+                  todayTextStyle: AppFonts.appText,
+                  weekendTextStyle: AppFonts.yellowFont,
+                  blackoutDatesDecoration: const BoxDecoration(),
+                  leadingDatesTextStyle: AppFonts.normalText,
+                  disabledDatesTextStyle: AppFonts.normalText.copyWith(
+                    color: AppColor.gray,
+                  ),
+                  trailingDatesTextStyle: AppFonts.appText,
+                ),
                 showNavigationArrow: true,
                 yearCellStyle: const DateRangePickerYearCellStyle(
                   disabledDatesTextStyle: AppFonts.appText,
@@ -214,7 +216,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
+                  borderRadius: BorderRadius.circular(
+                    9,
+                  ),
                   color: AppColor.black,
                 ),
                 child: Column(
@@ -225,7 +229,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                           horizontal: 11, vertical: 10),
                       child: Text(
                         AppStrings.chooseYourSpecialists,
-                        style: AppFonts.regular.copyWith(fontSize: 16),
+                        style: AppFonts.regular.copyWith(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -249,7 +255,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                                   .data?.availableSpecialist?.length ??
                               0),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 11, vertical: 5),
+                            horizontal: 11,
+                            vertical: 5,
+                          ),
                           itemBuilder: (BuildContext context, int index) {
                             speciaList = chooseAvailabilityResponse
                                 .data?.availableSpecialist?[index];
@@ -271,7 +279,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                                     children: [
                                       Container(
                                         //  clipBehavior: Clip.antiAlias,
-                                        padding: const EdgeInsets.all(3),
+                                        padding: const EdgeInsets.all(
+                                          3,
+                                        ),
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
@@ -282,8 +292,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                                           ),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                          borderRadius: BorderRadius.circular(
+                                            30,
+                                          ),
                                           child: Image.network(
                                             ApiService.imageUrl +
                                                 (speciaList?.image ?? ''),
@@ -324,19 +335,27 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
+                  borderRadius: BorderRadius.circular(
+                    9,
+                  ),
                   color: AppColor.black,
                 ),
-                padding: const EdgeInsets.only(bottom: 9),
+                padding: const EdgeInsets.only(
+                  bottom: 9,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 11, vertical: 9),
+                        horizontal: 11,
+                        vertical: 9,
+                      ),
                       child: Text(
                         AppStrings.availableTime,
-                        style: AppFonts.regular.copyWith(fontSize: 16),
+                        style: AppFonts.regular.copyWith(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -385,7 +404,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                                       ? AppColor.yellow
                                       : Colors.transparent,
                                   border: Border.all(color: AppColor.yellow),
-                                  borderRadius: BorderRadius.circular(19),
+                                  borderRadius: BorderRadius.circular(
+                                    19,
+                                  ),
                                 ),
                                 //  margin: const EdgeInsets.all(5),
                                 child: Text((timeSlot?.time ?? ''),
@@ -413,7 +434,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               Container(
                 decoration: BoxDecoration(
                   color: AppColor.black,
-                  borderRadius: BorderRadius.circular(9),
+                  borderRadius: BorderRadius.circular(
+                    9,
+                  ),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 9,
@@ -426,7 +449,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                       children: [
                         Text(
                           AppStrings.desiredLook,
-                          style: AppFonts.regular.copyWith(fontSize: 16),
+                          style: AppFonts.regular.copyWith(
+                            fontSize: 16,
+                          ),
                         ),
                         const Spacer(),
                         const Text(
@@ -447,14 +472,18 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                         color: AppColor.yellow,
                         dashPattern: const [5, 2],
                         strokeWidth: 2,
-                        radius: const Radius.circular(5),
+                        radius: const Radius.circular(
+                          5,
+                        ),
                         child: Center(
                           child: (_imageFile?.path.isNotEmpty ?? false)
                               ? Container(
                                   height: 80,
                                   width: 80,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(11),
+                                    borderRadius: BorderRadius.circular(
+                                      11,
+                                    ),
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   child: Image.file(
@@ -498,7 +527,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               Container(
                 decoration: BoxDecoration(
                   color: AppColor.black,
-                  borderRadius: BorderRadius.circular(9),
+                  borderRadius: BorderRadius.circular(
+                    9,
+                  ),
                 ),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 9,
@@ -511,7 +542,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                       children: [
                         Text(
                           AppStrings.note,
-                          style: AppFonts.regular.copyWith(fontSize: 16),
+                          style: AppFonts.regular.copyWith(
+                            fontSize: 16,
+                          ),
                         ),
                         const Spacer(),
                         const Text(
@@ -528,7 +561,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                       hintText: AppStrings.writeMessage,
                       maxLines: 4,
                       textInputAction: TextInputAction.done,
-                      fillColor: const Color(0xff333333),
+                      fillColor: const Color(
+                        0xff333333,
+                      ),
                     ),
                   ],
                 ),
@@ -541,7 +576,10 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
         child: ElevatedButton(
           onPressed: () {
             if ((chooseAvailabilityResponse
@@ -606,10 +644,15 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
             // noteCn.clear();
           },
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 13,
+              vertical: 16,
+            ),
             backgroundColor: AppColor.yellow,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(
+                8,
+              ),
             ),
           ),
           child: Row(
@@ -626,7 +669,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
               const SizedBox(
                 width: 7,
               ),
-              SvgPicture.asset(AppIcon.forward1Icon)
+              SvgPicture.asset(
+                AppIcon.forward1Icon,
+              )
             ],
           ),
         ),
@@ -642,7 +687,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       }
       shopId ??= sharedPreferences.getInt('shop_id');
       debugPrint(
-          '>>>>>>>sharedPreferences.getIntshopId>>>>>>>${shopId}<<<<<<<<<<<<<<');
+          '>>>>>>>sharedPreferences.getIntshopId>>>>>>>$shopId<<<<<<<<<<<<<<');
 
       var request = {};
       request["shop_id"] = shopId;
@@ -684,7 +729,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       Map<String, dynamic> jsonResponse = jsonDecode(
         response.body,
       );
-      debugPrint('>>>>>>>>>>>>>>${request}<<<<<<<<<<<<<<');
+      debugPrint('>>>>>>>>>>>>>>$request<<<<<<<<<<<<<<');
       if (jsonResponse['status'] == true) {
         chooseAvailabilityResponse =
             ChooseAvailabilityResponse.fromJson(jsonResponse);

@@ -139,7 +139,7 @@ class BookingSummaryScreenRescheduleState
     var jsonResponse = jsonDecode(result);
     debugPrint('>>>>>>request.fields>>>>>>>>${request.files}<<<<<<<<<<<<<<');
     debugPrint('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>jsonResponse>>>>>>>>${jsonResponse}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>jsonResponse>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
 
     // Helper().showToast(
     //   jsonResponse["message"],
@@ -671,7 +671,10 @@ class BookingSummaryScreenRescheduleState
       ),
       bottomNavigationBar: MyAppButton(
         title: AppStrings.proceedToReschedule,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
         onPress: () {
           rescheduleBookingApi(context);
         },

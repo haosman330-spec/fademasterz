@@ -126,17 +126,15 @@ class AppStrings {
   static String noAvailableSpecialist = 'No Available Specialist';
   static String noTimeSlotFound = 'No TimeSlot Found';
   static String noSpecialistFound = 'No Specialist Found';
-  static var writeMessage = 'Write a message !';
+  static String writeMessage = 'Write a message !';
   static String pleaseSelectYourService = 'Please Select Your Service';
-  static var noRatingYet = 'No Rating Yet';
-
+  static String noRatingYet = 'No Rating Yet';
   static String noReviewFound = 'No Review Found';
-
   static String noGalleryImage = 'No Gallery Image';
-
   static String noServicesFound = 'No Services Found';
-
   static String noServices = 'No Services ';
-
   static String noMessagesAvailable = "No messages available";
+  static String typeAMessage = 'Type a message';
+
+  static String noShopAvailable = 'No Shop Available';
 }

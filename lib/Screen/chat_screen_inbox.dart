@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
+import 'package:fademasterz/Utils/app_string.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
 import 'package:fademasterz/Utils/helper.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +175,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                     Expanded(
                       child: CustomTextField(
                         controller: chatCn,
-                        hintText: 'Type a message',
+                        hintText: AppStrings.typeAMessage,
                         hintTextStyle: AppFonts.normalText.copyWith(
                           fontSize: 17,
                           color: AppColor.bg,
@@ -257,7 +258,9 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
           height: MediaQuery.of(context).size.height * 0.74,
           // color: Colors.amber,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(
+              8.0,
+            ),
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               physics: const AlwaysScrollableScrollPhysics(),
@@ -296,7 +299,12 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                         DateFormat('MMMM d, yyyy').format(currentDateTime),
                         style: const TextStyle(
                           fontSize: 12,
-                          color: Color.fromARGB(255, 156, 155, 155),
+                          color: Color.fromARGB(
+                            255,
+                            156,
+                            155,
+                            155,
+                          ),
                           // overflow: TextOverflow.ellipsis,
                           fontFamily: "Raleway",
                           fontWeight: FontWeight.w400,
@@ -312,23 +320,36 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                         child: Container(
                           height: 50,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 8),
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                               borderRadius: snapshot.data!.docs[index]
                                           ['senderId'] ==
                                       senderId
                                   ? const BorderRadius.only(
-                                      topRight: Radius.circular(8),
-                                      topLeft: Radius.circular(12),
-                                      bottomLeft: Radius.circular(8),
-                                      bottomRight: Radius.elliptical(-20, -10),
+                                      topRight: Radius.circular(
+                                        8,
+                                      ),
+                                      topLeft: Radius.circular(
+                                        12,
+                                      ),
+                                      bottomLeft: Radius.circular(
+                                        8,
+                                      ),
+                                      bottomRight: Radius.elliptical(
+                                        -20,
+                                        -10,
+                                      ),
                                     )
                                   : const BorderRadius.only(),
                               color: Colors.green),
                           child: Text(
                             snapshot.data!.docs[index]['message'].toString(),
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ),
@@ -397,7 +418,7 @@ class Timestamp {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['seconds'] = seconds;
     data['nanoseconds'] = nanoseconds;
     return data;

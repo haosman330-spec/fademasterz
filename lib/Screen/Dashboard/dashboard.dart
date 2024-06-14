@@ -36,17 +36,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // TODO: implement initState
     listener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
-      debugPrint('>>>>InternetStatus status>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+      debugPrint('>>>>InternetStatus status>>>>>>>>>>$status<<<<<<<<<<<<<<');
       debugPrint(
-          '>>>>_connectionStatus>>>>>>>>>>${_connectionStatus}<<<<<<<<<<<<<<');
+          '>>>>_connectionStatus>>>>>>>>>>$_connectionStatus<<<<<<<<<<<<<<');
       if (status == InternetStatus.disconnected) {
         debugPrint('>>>>InSide<<<<<<<<<<<<<<');
         showDialog(
           context: context,
           barrierDismissible: false,
           builder: (ctx) {
-            return WillPopScope(
-              onWillPop: () async => false,
+            return PopScope(
+              canPop: false,
               child: AlertDialog(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -79,12 +79,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       switch (status) {
         case InternetStatus.connected:
           _connectionStatus = status;
-          debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+          debugPrint('>>>>>>>>>>>>>>$status<<<<<<<<<<<<<<');
           // The internet is now connected
           break;
         case InternetStatus.disconnected:
           _connectionStatus = status;
-          debugPrint('>>>>>>>>>>>>>>${status}<<<<<<<<<<<<<<');
+          debugPrint('>>>>>>>>>>>>>>$status<<<<<<<<<<<<<<');
 
           // The internet is now disconnected
           break;
@@ -134,7 +134,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         backgroundColor: AppColor.bg,
         body: pages[selectIndex],
         bottomNavigationBar: BottomAppBar(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            vertical: 8,
+          ),
           color: AppColor.black,
           height: 70,
           child: Row(
@@ -163,9 +165,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             height: 22,
                             color: AppColor.lightGray,
                           ),
-                          const SizedBox(height: 8),
-                          Text(AppStrings.home,
-                              style: AppFonts.unselectBottomNavigationFont),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            AppStrings.home,
+                            style: AppFonts.unselectBottomNavigationFont,
+                          ),
                         ],
                       ),
                     ),
@@ -263,8 +269,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           color: AppColor.lightGray,
                         ),
                         const SizedBox(height: 8),
-                        Text(AppStrings.chat,
-                            style: AppFonts.unselectBottomNavigationFont),
+                        Text(
+                          AppStrings.chat,
+                          style: AppFonts.unselectBottomNavigationFont,
+                        ),
                       ],
                     ),
                     child: Column(
@@ -275,8 +283,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           height: 22,
                         ),
                         const SizedBox(height: 8),
-                        Text(AppStrings.chat,
-                            style: AppFonts.selectBottomNavigationFont)
+                        Text(
+                          AppStrings.chat,
+                          style: AppFonts.selectBottomNavigationFont,
+                        )
                       ],
                     ),
                   ),
@@ -305,8 +315,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         const SizedBox(
                           height: 8,
                         ),
-                        Text(AppStrings.profile,
-                            style: AppFonts.unselectBottomNavigationFont)
+                        Text(
+                          AppStrings.profile,
+                          style: AppFonts.unselectBottomNavigationFont,
+                        )
                       ],
                     ),
                     child: Column(
@@ -320,8 +332,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         const SizedBox(
                           height: 8,
                         ),
-                        Text(AppStrings.profile,
-                            style: AppFonts.selectBottomNavigationFont)
+                        Text(
+                          AppStrings.profile,
+                          style: AppFonts.selectBottomNavigationFont,
+                        )
                       ],
                     ),
                   ),
