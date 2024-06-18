@@ -75,6 +75,7 @@ dependencies:
   onesignal_flutter: ^5.2.0
   geocoding: ^3.0.0
   pretty_qr_code: ^3.3.0
+  upgrader: ^10.3.0
 
 
 

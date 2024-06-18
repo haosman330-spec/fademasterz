@@ -163,7 +163,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             AppIcon.homeIcon1,
                             width: 21,
                             height: 22,
-                            color: AppColor.lightGray,
+                            colorFilter: const ColorFilter.mode(
+                                AppColor.lightGray, BlendMode.srcIn),
+                            // color: AppColor.lightGray,
                           ),
                           const SizedBox(
                             height: 8,
@@ -266,7 +268,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           AppIcon.chatIcon,
                           width: 21,
                           height: 22,
-                          color: AppColor.lightGray,
+                          colorFilter: const ColorFilter.mode(
+                            AppColor.lightGray,
+                            BlendMode.srcIn,
+                          ),
+                          // color: AppColor.lightGray,
                         ),
                         const SizedBox(height: 8),
                         Text(

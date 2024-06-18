@@ -8,6 +8,7 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'Notification/notification_service.dart';
 import 'Screen/SplashScreen/splash_screen.dart';
@@ -18,7 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await Upgrader.clearSavedSettings();
   // OneSignalServices oneSignalServices = OneSignalServices();
   // await oneSignalServices.initPlatformState();
 
@@ -74,23 +75,26 @@ class _MyAppState extends State<MyApp> {
       statusBarBrightness: Brightness.light, // Dark text for status bar
     ));
     return FirebasePhoneAuthProvider(
-      child: MaterialApp(
-        title: 'Fade Masterz',
-        themeMode: ThemeMode.system,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColor.yellow),
-          useMaterial3: false,
+      child: UpgradeAlert(
+        dialogStyle: UpgradeDialogStyle.cupertino,
+        child: MaterialApp(
+          title: 'Fade Masterz',
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: AppColor.yellow),
+            useMaterial3: false,
+          ),
+          home: const SplashScreen(),
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.0),
+              ),
+              child: child!,
+            );
+          },
         ),
-        home: const SplashScreen(),
-        builder: (context, child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(1.0),
-            ),
-            child: child!,
-          );
-        },
       ),
     );
   }
