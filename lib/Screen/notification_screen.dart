@@ -15,6 +15,18 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  final Shader textGradient = const LinearGradient(
+    //  begin: Alignment.topRight,
+    colors: [Colors.green, Colors.yellow],
+  ).createShader(
+    const Rect.fromLTWH(
+      0.0,
+      0.0,
+      250.0,
+      60.0,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           horizontal: 15,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Align(
               alignment: Alignment.topRight,
@@ -52,6 +64,54 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 style: AppFonts.yellowFont,
               ),
             ),
+            // Text(
+            //   'Text Gradient',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     foreground: Paint()
+            //       ..shader = ui.Gradient.linear(
+            //         const Offset(0, 73),
+            //         const Offset(80, 0),
+            //         [
+            //           Colors.yellow,
+            //           Colors.red,
+            //         ],
+            //       ),
+            //   ),
+            // ),
+            // const SizedBox(
+            //   height: 30,
+            // ),
+            //
+            // Text(
+            //   'Hello Word',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     foreground: Paint()
+            //       ..shader = ui.Gradient.linear(
+            //         const Offset(0, 60),
+            //         const Offset(150, 0),
+            //         [
+            //           Colors.yellow,
+            //           Colors.green,
+            //         ],
+            //       ),
+            //   ),
+            // ),
+            // Text(
+            //   'Greetings, planet!',
+            //   style: TextStyle(
+            //       fontSize: 40,
+            //       foreground: Paint()
+            //         ..shader = ui.Gradient.linear(
+            //           const Offset(0, 20),
+            //           const Offset(150, 20),
+            //           <Color>[
+            //             Colors.red,
+            //             Colors.yellow,
+            //           ],
+            //         )),
+            // )
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,

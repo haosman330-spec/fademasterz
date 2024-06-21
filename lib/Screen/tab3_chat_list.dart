@@ -63,12 +63,16 @@ class _ChatListScreenState extends State<ChatListScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("chat_rooms")
-            .where("members", arrayContains: senderId)
+            .where(
+              "members",
+              arrayContains: senderId,
+            )
+            .orderBy('last_message_time', descending: true)
             .snapshots(),
-        builder: (context, snapshot) {
-          // debugPrint(
-          //     '>>>>>>>>>>snapshot.data?>>>>${snapshot.data?.docs.first.data().toString()}<<<<<<<<<<<<<<');
-
+        builder: (
+          context,
+          snapshot,
+        ) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             debugPrint(
                 '>>>>>>>>>>>>>>${ConnectionState.waiting}<<<<<<<<<<<<<<');
@@ -94,6 +98,24 @@ class _ChatListScreenState extends State<ChatListScreen> {
           }
 
           final documents = snapshot.data?.docs;
+          // for (var element in documents) {
+          //
+          //   if ((DateTime.parse(element.date ?? '').year == month.year) &&
+          //       (DateTime.parse(element.date ?? '').month == month.month)) {
+          //     filteredTransactionList.add(element);
+          //   }
+          // }
+          //
+          // filteredTransactionList.sort(
+          //       (a, b) => DateTime.parse(b.updated!).compareTo(
+          //     DateTime.parse(a.updated!),
+          //   ),
+          // );
+          // filteredTransactionList.sort(
+          //       (a, b) => DateTime.parse(b.date!).compareTo(
+          //     DateTime.parse(a.date!),
+          //   ),
+          // );
 
           if (documents?.isEmpty ?? true) {
             return Container(
@@ -110,11 +132,13 @@ class _ChatListScreenState extends State<ChatListScreen> {
             child: ListView.separated(
               itemCount: documents?.length ?? 0,
               shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                var dd = documents?[index].data() as Map<String, dynamic>;
-                // debugPrint(
-                //     '>>>>>>>>documents?.length>>>>>>${documents?[index].data().toString()}<<<<<<<<<<<<<<');
-                var i = Mesg.fromJson(dd);
+              itemBuilder: (
+                BuildContext context,
+                int index,
+              ) {
+                var chatData = documents?[index].data() as Map<String, dynamic>;
+
+                var i = Mesg.fromJson(chatData);
 
                 int indexx = 0;
                 if (i.membersList!.first.id.toString() == senderId.toString()) {
@@ -124,7 +148,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 Map otherUserData = {};
                 return InkWell(
                   onTap: () {
-                    debugPrint('>>>>>>>>>>>>>> otherUserDa$dd<<<<<<<<<<<<');
+                    debugPrint(
+                        '>>>>>>>>>>>>>> otherUserDa$chatData<<<<<<<<<<<<');
 
                     debugPrint(
                         '>>>>>>>>>>>>>>${i.membersList?[indexx].id.toString()}<<<<<<<<<<<<<<');
@@ -164,33 +189,38 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                i.membersList![indexx].name.toString(),
-                                style: AppFonts.regular.copyWith(fontSize: 15),
-                              ),
-                              Text(
-                                i.lastMessage.toString(),
-                                maxLines: 1,
-                                style: AppFonts.normalText.copyWith(
-                                    // overflow: TextOverflow.ellipsis,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300),
-                              ),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  i.membersList![indexx].name.toString(),
+                                  style:
+                                      AppFonts.regular.copyWith(fontSize: 15),
+                                ),
+                                Text(
+                                  i.lastMessage.toString(),
+                                  maxLines: 1,
+                                  style: AppFonts.normalText.copyWith(
+                                      // overflow: TextOverflow.ellipsis,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
                           ),
-                          const Spacer(),
+                          // const Spacer(),
                           Text(
                             textAlign: TextAlign.left,
-                            DateFormat('hh:mm a').format(DateTime.parse(
-                              DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(
-                                  i.lastMessageTime.toString(),
-                                ),
-                              ).toString(),
-                            )),
+                            DateFormat('hh:mm a').format(
+                              DateTime.parse(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                  int.parse(
+                                    i.lastMessageTime.toString(),
+                                  ),
+                                ).toString(),
+                              ),
+                            ),
 
                             // DateFormat('hh:mm a')
                             //     .format(DateTime.parse(

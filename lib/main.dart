@@ -20,16 +20,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Upgrader.clearSavedSettings();
-  // OneSignalServices oneSignalServices = OneSignalServices();
-  // await oneSignalServices.initPlatformState();
-
-  // FirebaseServices.initialNotification();
-  // FirebaseServices.getfcm();
-  // FirebaseServices.requestNotificationPermission();
 
   FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
   NotificationService.initialize();
+  final accessToken = await getAccessToken();
 
+  debugPrint('>>>>Access Token:>>>>>>>>>>${accessToken}<<<<<<<<<<<<<<');
   // await FirebaseAppCheck.instance.activate(
   //   webRecaptchaSiteKey: 'recaptcha-v3-site-key',
 

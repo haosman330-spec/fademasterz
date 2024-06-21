@@ -76,6 +76,10 @@ dependencies:
   geocoding: ^3.0.0
   pretty_qr_code: ^3.3.0
   upgrader: ^10.3.0
+  video_player: ^2.8.7
+  googleapis_auth: ^1.6.0
+
+
 
 
 
@@ -106,6 +110,7 @@ flutter:
   assets:
      - assets/images/
      - assets/icon/
+     - assets/fade-masterz-firebase-adminsdk-7y61s-c3e9bf1a49.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

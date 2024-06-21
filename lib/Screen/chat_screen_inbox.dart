@@ -32,6 +32,9 @@ class ChatScreenInBox extends StatefulWidget {
   State<ChatScreenInBox> createState() => _ChatScreenInBoxState();
 }
 
+String? pushtoken12;
+dynamic datafirebase;
+
 class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   List<Msg1> listt = [];
   TextEditingController chatCn = TextEditingController();
@@ -71,6 +74,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     setState(() {});
   }
 
+  static FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   void initState() {
     getID();
@@ -158,53 +162,67 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
         ),
         child: SingleChildScrollView(
           // physics: NeverScrollableScrollPhysics(),
-          child: Column(
+          child: Stack(
             children: [
-              const Divider(
-                color: Color(
-                  0xff434343,
-                ),
-              ),
-              _buildMessages(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 5,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        controller: chatCn,
-                        hintText: AppStrings.typeAMessage,
-                        hintTextStyle: AppFonts.normalText.copyWith(
-                          fontSize: 17,
-                          color: AppColor.bg,
-                        ),
-                        radius: 4,
-                        isFilled: true,
-                        style: AppFonts.textFieldFont.copyWith(
-                          color: AppColor.black,
-                        ),
-                        fillColor: const Color(
-                          0xffF4F4F4,
-                        ),
-                      ),
+              // StreamBuilder(
+              //     stream: firestore
+              //         .collection("users")
+              //         .doc(widget.receiverId)
+              //         .snapshots(),
+              //     builder: (context, snapshot) {
+              //       datafirebase = snapshot.data?.data();
+              //       pushtoken12 = datafirebase['push_token'];
+              //       return Container();
+              //     }),
+              Column(
+                children: [
+                  const Divider(
+                    color: Color(
+                      0xff434343,
                     ),
-                    const SizedBox(
-                      width: 10,
+                  ),
+                  _buildMessages(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 5,
                     ),
-                    InkWell(
-                      onTap: () {
-                        onSendMessage();
-                      },
-                      child: SvgPicture.asset(
-                        AppIcon.sendIcon,
-                        height: 60,
-                        width: 58,
-                      ),
-                    )
-                  ],
-                ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextField(
+                            controller: chatCn,
+                            hintText: AppStrings.typeAMessage,
+                            hintTextStyle: AppFonts.normalText.copyWith(
+                              fontSize: 17,
+                              color: AppColor.bg,
+                            ),
+                            radius: 4,
+                            isFilled: true,
+                            style: AppFonts.textFieldFont.copyWith(
+                              color: AppColor.black,
+                            ),
+                            fillColor: const Color(
+                              0xffF4F4F4,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            onSendMessage();
+                          },
+                          child: SvgPicture.asset(
+                            AppIcon.sendIcon,
+                            height: 60,
+                            width: 58,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -306,7 +324,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                             155,
                           ),
                           // overflow: TextOverflow.ellipsis,
-                          fontFamily: "Raleway",
+                          fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -318,10 +336,10 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                         child: Container(
-                          height: 50,
+                          // height: 50,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 10,
-                            vertical: 8,
+                            vertical: 10,
                           ),
                           decoration: BoxDecoration(
                               borderRadius: snapshot.data!.docs[index]
@@ -342,7 +360,21 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                                         -10,
                                       ),
                                     )
-                                  : const BorderRadius.only(),
+                                  : const BorderRadius.only(
+                                      topRight: Radius.circular(
+                                        8,
+                                      ),
+                                      topLeft: Radius.circular(
+                                        12,
+                                      ),
+                                      bottomLeft: Radius.circular(
+                                        8,
+                                      ),
+                                      bottomRight: Radius.elliptical(
+                                        -20,
+                                        -10,
+                                      ),
+                                    ),
                               color: Colors.green),
                           child: Text(
                             snapshot.data!.docs[index]['message'].toString(),

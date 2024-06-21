@@ -1,0 +1,58 @@
+class ChatUser {
+  ChatUser(
+      {required this.image,
+      required this.name,
+      required this.about,
+      required this.createdAt,
+      required this.isOnline,
+      required this.id,
+      required this.lastActive,
+      required this.lastmessage,
+      required this.email,
+      required this.pushToken,
+      required this.status});
+
+  late String image;
+  late String name;
+  late String about;
+
+  late String createdAt;
+  late String isOnline;
+  late String id;
+  late String lastActive;
+  late String lastmessage;
+  late String email;
+  late String pushToken;
+  late String status;
+  ChatUser.fromJson(Map<String, dynamic> json) {
+    image = json['image'] ?? "";
+    name = json['name'] ?? "";
+    about = json['about'] ?? "";
+
+    createdAt = json['created_at'] ?? "";
+    isOnline = json['is_online'].toString();
+    id = json['id'] ?? "";
+    lastmessage = json['last_message'] ?? "";
+    lastActive = json['last_active'] ?? "";
+    email = json['email'] ?? "";
+    pushToken = json['push_token'] ?? "";
+    status = json['status'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['image'] = image;
+    data['name'] = name;
+    data['about'] = about;
+
+    data['created_at'] = createdAt;
+    data['is_online'] = isOnline;
+    data['id'] = id;
+    data['last_message'] = lastmessage;
+    data['last_active'] = lastActive;
+    data['email'] = email;
+    data['push_token'] = pushToken;
+    data['status'] = status;
+    return data;
+  }
+}

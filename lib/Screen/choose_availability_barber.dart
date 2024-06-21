@@ -61,7 +61,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       _selectedDate = args.value.toString();
-      debugPrint('>>>>>>>>>>>>>>${_selectedDate}<<<<<<<<<<<<<<');
+      debugPrint('>>>>>>>>>>>>>>$_selectedDate<<<<<<<<<<<<<<');
       _chooseAvailabilityApi(context);
     });
   }

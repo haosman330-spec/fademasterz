@@ -247,15 +247,19 @@ class FirebaseServices {
   }
 }*/
 
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+String? tokenFcmchat;
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin
@@ -425,13 +429,48 @@ class NotificationService {
   }
 }
 
+List<String> SCOPES = ['https://www.googleapis.com/auth/cloud-platform'];
+
+Future<Map<String, dynamic>> _getServiceAccountKey() async {
+  final String response = await rootBundle.loadString(
+      'assets/fade-masterz-firebase-adminsdk-7y61s-c3e9bf1a49.json');
+  return json.decode(response);
+}
+
+// Function to get the access token
+Future<String> getAccessToken() async {
+  try {
+    final Map<String, dynamic> key = await _getServiceAccountKey();
+
+    final accountCredentials = ServiceAccountCredentials(
+      key['client_email'],
+      ClientId(key['client_id']),
+      key['private_key'],
+    );
+
+    final authClient =
+        await clientViaServiceAccount(accountCredentials, SCOPES);
+
+    // Obtain the access token
+    final accessToken = (await authClient.credentials).accessToken;
+    print("token1212>>>>>>>>>${accessToken.data}");
+    tokenFcmchat = accessToken.data;
+    // Close the auth client to prevent memory leaks
+    authClient.close();
+
+    return accessToken.data;
+  } catch (e) {
+    throw Exception('Error obtaining access token: $e');
+  }
+}
+
 Future<void> updateFirestoreCount() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String userId = prefs.getString('receiverId') ?? '';
-  await FirebaseFirestore.instance
-      .collection('notifications')
-      .doc(userId)
-      .set({'count': FieldValue.increment(1)}, SetOptions(merge: true));
+  await FirebaseFirestore.instance.collection('notifications').doc(userId).set(
+    {'count': FieldValue.increment(1)},
+    SetOptions(merge: true),
+  );
   debugPrint('Increment success>>>>');
 }
 
