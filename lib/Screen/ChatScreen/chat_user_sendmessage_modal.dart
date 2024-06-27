@@ -8,6 +8,7 @@ class Messages {
   int? fromMessage;
   int? toMessage;
   bool? readMessage;
+  List? readBy;
   String? fcmToken;
   Messages({
     required this.senderId,
@@ -19,6 +20,7 @@ class Messages {
     this.readMessage,
     this.fcmToken,
     this.fromMessage,
+    this.readBy,
     this.toMessage,
   });
 
@@ -26,14 +28,15 @@ class Messages {
     return {
       'senderId': senderId,
       'senderEmail': senderEmail,
+      'image': image,
       'receiverId': receiverId,
-      "image": image,
       'message': message,
       'timestamp': timestamp,
-      'boolData': readMessage,
-      'fcmToken': fcmToken,
       'fromMessage': fromMessage,
       'toMessage': toMessage,
+      'readMessage': readMessage,
+      'readBy': readBy,
+      'fcmToken': fcmToken,
     };
   }
 
@@ -41,52 +44,15 @@ class Messages {
     return Messages(
       senderId: map['senderId'],
       senderEmail: map['senderEmail'],
-      image: map["image"],
+      image: map['image'],
       receiverId: map['receiverId'],
       message: map['message'],
       timestamp: map['timestamp'],
-      readMessage: map['readMessage'],
-      fcmToken: map['fcmToken'],
+      fromMessage: map['fromMessage'],
       toMessage: map['toMessage'],
-      fromMessage: map['fromMessage '],
+      readMessage: map['readMessage'],
+      readBy: map['readBy'],
+      fcmToken: map['fcmToken'],
     );
-  }
-}
-
-class MemberDetailsList {
-  String? id;
-  String? image;
-  String? name;
-  String? propertyid;
-  String? cityid;
-
-  MemberDetailsList({
-    this.id,
-    this.image,
-    this.name,
-    this.cityid,
-    this.propertyid,
-  });
-
-  factory MemberDetailsList.fromJson(Map<String, dynamic> json) =>
-      MemberDetailsList(
-        id: json["id"],
-        image: json["image"],
-        name: json["name"],
-        cityid: json["cityid"],
-        propertyid: json["propertyid"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "image": image,
-        "name": name,
-        "cityid": cityid,
-        "propertyid": propertyid,
-      };
-
-  @override
-  String toString() {
-    return "('id': $id,'image': $image,'name': $name,'cityid':$cityid,'propertyid':$propertyid)";
   }
 }

@@ -1,4 +1,4 @@
-class Msg1 {
+class GetMessage {
   String? image;
   String? senderId;
   String? receiverId;
@@ -6,7 +6,7 @@ class Msg1 {
   String? message;
   String? timestamp;
 
-  Msg1(
+  GetMessage(
       {this.image,
       this.senderId,
       this.receiverId,
@@ -14,7 +14,7 @@ class Msg1 {
       this.message,
       this.timestamp});
 
-  Msg1.fromJson(Map<String, dynamic> json) {
+  GetMessage.fromJson(Map<String, dynamic> json) {
     image = json['image'];
     senderId = json['senderId'];
     receiverId = json['receiverId'];

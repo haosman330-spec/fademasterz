@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fademasterz/Modal/home_page_modal.dart';
@@ -49,10 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
   late LocationPermission permission;
 
   late StreamSubscription<InternetStatus> listener;
+  HomePageModal homePageModal = HomePageModal();
+  HomePageModal? searchHomePageModal;
   bool? internetConnection;
   int currentPage = 1;
   bool hasMore = true;
-  List<String> item = [];
+  final ScrollController scrollController = ScrollController();
+  List<Shop> shopList = [];
+
+  int totalPage = 1;
 
   void setLoader(bool value) {
     isDataLoading = value;
@@ -63,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.always ||
         permission == LocationPermission.whileInUse) {
-      homeDetailApi(context: context);
+      homeDetailApi(context: context, currentPage: 1);
 
       // return;
     } else {
@@ -153,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       );
-      homeDetailApi(context: context);
+      homeDetailApi(context: context, currentPage: 1);
     }
   }
 
@@ -170,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
       permission = await Geolocator.requestPermission();
 
       if (permission == LocationPermission.denied) {
+        Geolocator.openAppSettings();
         return Future.error('Location permissions are denied');
       }
     }
@@ -198,74 +205,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-/*    listener =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      if (status == InternetStatus.disconnected) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (ctx) {
-            return WillPopScope(
-              onWillPop: () async => false,
-              child: AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                content: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.network_check,
-                      color: AppColor.yellow,
-                      size: 150,
-                    ),
-                    Text(
-                      'No Internet Please check your internet connection',
-                      style: AppFonts.blackFont,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      } else if (status == InternetStatus.connected) {
-        if (_connectionStatus == InternetStatus.disconnected) {
-          SchedulerBinding.instance.addPostFrameCallback((_) async {
-            await _showDialog(context);
-          });
-          Navigator.pop(context);
-        }
-      }
-      switch (status) {
-        case InternetStatus.connected:
-          _connectionStatus = status;
-
-          // The internet is now connected
-          break;
-        case InternetStatus.disconnected:
-          _connectionStatus = status;
-
-          // The internet is now disconnected
-          break;
-      }
-    });*/
-
+    pagination();
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _showDialog(context);
     });
-
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.pixels ==
-    //           _scrollController.position.maxScrollExtent &&
-    //       _hasMore) {
-    //     SchedulerBinding.instance.addPostFrameCallback((_) async {
-    //       _showDialog(context);
-    //     });
-    //   }
-    // });
     super.initState();
+  }
+
+  pagination() {
+    scrollController.addListener(() {
+      debugPrint('Pagination started>>>');
+      if ((scrollController.position.maxScrollExtent ==
+              scrollController.position.pixels) &&
+          (currentPage < totalPage)) {
+        currentPage++;
+        homeDetailApi(context: context, currentPage: currentPage);
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -371,7 +328,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         onChanged: (value) {
                           // if (value.isNotEmpty) {
-                          homeDetailApi(context: context, searchValue: value);
+                          homeDetailApi(
+                              context: context,
+                              searchValue: value,
+                              currentPage: 1);
                           setState(() {});
                           // }
                         },
@@ -477,11 +437,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Expanded(
                     child: ListView.separated(
+                      controller: scrollController,
                       shrinkWrap: true,
-                      itemCount: (homePageModal.data?.shops?.length ?? 0),
+                      itemCount: (shopList.length ??
+                          0), //(homePageModal.data?.shops?.length ?? 0),
                       padding: const EdgeInsets.only(top: 15, bottom: 15),
                       itemBuilder: (context, index) {
-                        var item = homePageModal.data?.shops?[index];
+                        //  var item = homePageModal.data?.shops?[index];
+                        var item = shopList[index];
 
                         return InkWell(
                           onTap: () async {
@@ -489,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 await SharedPreferences.getInstance();
                             sharedPreferences.setInt(
                               'shop_id',
-                              item!.id!.toInt(),
+                              item.id!.toInt(),
                             );
 
                             Navigator.push(
@@ -521,10 +484,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   child: Visibility(
-                                    visible: (item?.image?.isNotEmpty ?? false),
+                                    visible: (item.image?.isNotEmpty ?? false),
                                     child: CachedNetworkImage(
                                       imageUrl: ApiService.imageUrl +
-                                          (item?.image ?? ''),
+                                          (item.image ?? ''),
                                       fit: BoxFit.fill,
                                       placeholder: (
                                         context,
@@ -559,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        (item?.name ?? ''),
+                                        (item.name ?? ''),
                                         style: AppFonts.regular
                                             .copyWith(fontSize: 16),
                                       ),
@@ -575,9 +538,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             width: 10,
                                           ),
                                           Text(
-                                            (item?.avgRating) == '0'
+                                            (item.avgRating) == '0'
                                                 ? AppStrings.noRatingYet
-                                                : (item?.avgRating ?? ''),
+                                                : (item.avgRating ?? ''),
                                             style: AppFonts.regular.copyWith(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500),
@@ -594,7 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width: 10,
                                               ),
                                               Text(
-                                                '${item?.distance ?? ' '} km',
+                                                '${item.distance ?? ' '} km',
                                                 style: AppFonts.regular
                                                     .copyWith(
                                                         fontSize: 14,
@@ -620,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Text(
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              (item?.address ?? ''),
+                                              (item.address ?? ''),
                                               style: AppFonts.regular.copyWith(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -814,12 +777,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  HomePageModal homePageModal = HomePageModal();
-  HomePageModal? searchHomePageModal;
-
   Future<void> homeDetailApi({
     required BuildContext context,
     String? searchValue,
+    int? currentPage,
   }) async {
     // try {
     if (searchValue?.isEmpty ?? true) {
@@ -831,9 +792,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (latitude == null || longitude == null) {
       await getLetLongPosition();
     }
-
+    log('>>>>>>>>>>>>>>${sharedPreferences.getString("access_Token")}<<<<<<<<<<<<<<');
     var request = {};
-
+    request['page'] = currentPage;
     request["latitude"] = latitude.toString();
     request['longitude'] = longitude.toString();
     request["search"] = searchValue ?? '';
@@ -869,7 +830,7 @@ class _HomeScreenState extends State<HomeScreen> {
       response.body,
     );
     debugPrint('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
+    log('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
     if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {
@@ -877,7 +838,13 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {});
       } else {
         homePageModal = HomePageModal.fromJson(jsonResponse);
-
+        totalPage = homePageModal.data?.totalPages ?? 1;
+        if (currentPage == 1) {
+          shopList.clear();
+          shopList.addAll(homePageModal.data?.shops ?? []);
+        } else {
+          shopList.addAll(homePageModal.data?.shops ?? []);
+        }
         setState(() {});
       }
 

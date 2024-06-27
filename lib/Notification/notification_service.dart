@@ -251,6 +251,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fademasterz/Screen/Dashboard/dashboard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -258,8 +259,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Screen/Booking/cancelled_booking_details.dart';
+import '../Screen/Booking/complete_booking_details.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-String? tokenFcmchat;
+String? tokenFcmChat;
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin
@@ -268,7 +272,6 @@ class NotificationService {
   static void notificationTapBackground(message) {
     //_handleMessage(message);
   }
-
   static void initialize() async {
     var messaging = FirebaseMessaging.instance;
     const InitializationSettings initializationSettings =
@@ -328,8 +331,8 @@ class NotificationService {
       fcmToken = await FirebaseMessaging.instance.getToken();
 
       if (fcmToken?.isNotEmpty ?? false) {
-        prefs.setString("fcm_token", fcmToken.toString());
-        debugPrint('fcm token is>>${fcmToken.toString()}');
+        //    prefs.setString("fcm_tokenff", fcmToken.toString());
+        //     debugPrint('fcm token is>>${fcmToken.toString()}');
       }
       // ignore: empty_catches
     } catch (e) {}
@@ -357,22 +360,31 @@ class NotificationService {
       (message) async {
         /// This function is for foreground state
         debugPrint('foreground >>> FirebaseMessaging.onMessage.listen');
-        debugPrint('data foreground is>>> ${message.data}');
-        debugPrint('data foreground is ${message.data.toString()}');
-        debugPrint(
-            'Message notification is### ${message.notification.toString()}');
+        debugPrint('data foreground is>>> ${message.data['booking_id']}');
+        debugPrint('data foreground is>>> ${message.data.toString()}');
+        debugPrint('>>>>>>>>>>>>>>${message.data['type']}<<<<<<<<<<<<<<');
         if (message.notification != null) {
           debugPrint(
               'Message notification is>>> ${message.notification.toString()}');
           display(message);
-          await updateFirestoreCount();
+          debugPrint('>>>>>>>>>>>>>>${message.data['type']}<<<<<<<<<<<<<<');
+          //await updateFirestoreCount();
           _flutterLocalNotificationsPlugin.initialize(initializationSettings,
               onDidReceiveBackgroundNotificationResponse:
                   notificationTapBackground,
               onDidReceiveNotificationResponse: (msg) {
+            debugPrint('>>>>>>>>>>>>>>${message.data['type']}<<<<<<<<<<<<<<');
             // var notificationData = NotificationDataModel.fromJson(message.data);
-            //
-            // _handleMessage(notificationData);
+            // if (message.data['type'] == 'cancelled') {
+            //   navigatorKey.currentState?.pushAndRemoveUntil(
+            //     MaterialPageRoute(
+            //         builder: (context) => CancelledBookingDetail(
+            //             cancelBookingId:  message.data['booking_id'],
+            //             )),
+            //     (route) => false,
+            //   );
+            // }
+            _handleMessage(message.data);
           });
         }
       },
@@ -392,7 +404,7 @@ class NotificationService {
           debugPrint(
               'message body on background is ${message.notification!.body}');
           //  _handleMessage(notificationData);
-          debugPrint("message.data22 ${message.data['_id']}");
+          debugPrint("message.data22 ${message.data['booking_id']}");
         }
       },
     );
@@ -429,7 +441,7 @@ class NotificationService {
   }
 }
 
-List<String> SCOPES = ['https://www.googleapis.com/auth/cloud-platform'];
+List<String> scopes = ['https://www.googleapis.com/auth/cloud-platform'];
 
 Future<Map<String, dynamic>> _getServiceAccountKey() async {
   final String response = await rootBundle.loadString(
@@ -449,12 +461,13 @@ Future<String> getAccessToken() async {
     );
 
     final authClient =
-        await clientViaServiceAccount(accountCredentials, SCOPES);
+        await clientViaServiceAccount(accountCredentials, scopes);
 
     // Obtain the access token
-    final accessToken = (await authClient.credentials).accessToken;
-    print("token1212>>>>>>>>>${accessToken.data}");
-    tokenFcmchat = accessToken.data;
+    final accessToken = (authClient.credentials).accessToken;
+
+    debugPrint('>>>>>>>>>>>>>>${accessToken.data}<<<<<<<<<<<<<<');
+    tokenFcmChat = accessToken.data;
     // Close the auth client to prevent memory leaks
     authClient.close();
 
@@ -483,30 +496,41 @@ Future<void> updateFirestoreCount() async {
 // "click_action": "FLUTTER_NOTIFICATION_CLICK"
 // }
 
-/*
-void _handleMessage(NotificationDataModel data) async {
+void _handleMessage(data) async {
   debugPrint('data is>>> ${data.toString()}');
-  debugPrint('clickAction>>> is ${data.clickAction.toString()}');
-  debugPrint('body>>> is ${data.body.toString()}');
+  // debugPrint('clickAction>>> is ${data.clickAction.toString()}');
+  // debugPrint('body>>> is ${data.body.toString()}');
   // steps
-  if (data.type == null) {
+
+  if (data['type'] == null) {
     navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => DashboardScreen(selectedIndex: 0)));
-  } else if (data.type == 'steps') {
-    /// Used pushAndRemoveUntil here because push navigates to Dashboard(0) after some seconds, to avoid this, used pushAndRemoveUntil
-    /// status: true, takes this because if we press back button of MyOrdersDetailsScreen, it will navigates to Dashboard(0) if status is true
+        builder: (context) => const DashBoardScreen(
+              selectIndex: 0,
+            )));
+  } else if (data['type'] == 'cancelled') {
+    int bookingId = int.parse(data['booking_id']);
+    debugPrint('>>>>>>>>>>>>>>${bookingId}<<<<<<<<<bookingId<<<<<');
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+          builder: (context) => CancelledBookingDetail(
+                cancelBookingId: bookingId,
+              )),
+    );
+  } else if (data['type'] == 'completed') {
+    int bookingId = int.parse(data['booking_id']);
     navigatorKey.currentState?.pushAndRemoveUntil(
       MaterialPageRoute(
-          builder: (context) => HomeTrainingPageScreen(
-            status: true,
-          )),
-          (route) => false,
+          builder: (context) => CompleteBookingDetail(
+                bookingId: bookingId,
+              )),
+      (route) => false,
     );
-  } else {
-    navigatorKey.currentState?.push(MaterialPageRoute(
-        builder: (context) => DashboardScreen(selectedIndex: 0)));
   }
+  // else {
+  //   navigatorKey.currentState?.push(MaterialPageRoute(
+  //       builder: (context) => DashboardScreen(selectedIndex: 0)));
+  // }
   //ISSUE BELOW
   /// If using pushReplacement, myOrderScreen is visible perfect.
   /// ISSUE If using push, myOrderScreen is visible for some seconds and then navigating to Dashboard(0) for some reason
-}*/
+}

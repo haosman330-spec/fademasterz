@@ -8,7 +8,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 
 import '../../Utils/app_assets.dart';
 import '../../Utils/app_string.dart';
-import '../../Utils/chat_service.dart';
+import '../ChatScreen/chat_service.dart';
 import '../tab1_home_screen.dart';
 import '../tab2_my_booking_screen.dart';
 import '../tab3_chat_list.dart';
@@ -96,6 +96,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     pages = [
       const HomeScreen(),
       const MyBookingScreen(),
+      //   const AllChatListScreen(),
       const ChatListScreen(),
       ProfileScreen(
         onTap: (value) {

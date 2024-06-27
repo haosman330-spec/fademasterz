@@ -8,7 +8,6 @@ import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_bar.dart';
 import '../Utils/custom_app_button.dart';
-import 'Booking/cancelled_booking_details.dart';
 import 'Dashboard/dashboard.dart';
 
 class PaymentDirection extends StatefulWidget {
@@ -254,13 +253,13 @@ class PaymentDirectionState extends State<PaymentDirection> {
                       ),
                       MyAppButton(
                         onPress: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const CancelledBookingDetail(),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         const CancelledBookingDetail(),
+                          //   ),
+                          // );
                         },
                         height: 48,
                         title: AppStrings.viewBookingSummary,

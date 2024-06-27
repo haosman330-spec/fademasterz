@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,8 @@ import '../Utils/app_color.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_bar.dart';
-import 'chat_screen_inbox.dart';
+import 'ChatScreen/chat_list_data_modal.dart';
+import 'ChatScreen/chat_screen_inbox.dart';
 
 class ChatListScreen extends StatefulWidget {
   final bool? online;
@@ -26,6 +29,7 @@ class ChatListScreen extends StatefulWidget {
 class _ChatListScreenState extends State<ChatListScreen> {
   dynamic document;
   dynamic senderId;
+  int value = 0;
   String? currentUserName;
   String? currentUserImage;
   String? receiverId;
@@ -43,12 +47,34 @@ class _ChatListScreenState extends State<ChatListScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     senderId = sharedPreferences.getInt("senderId").toString();
     receiverId = sharedPreferences.getString('receiverId');
-
     currentUserName = sharedPreferences.getString("user_Name").toString();
     currentUserImage = sharedPreferences.getString("user_Image").toString();
+
     debugPrint(
-        '>>>>>sharedPreferences.getString("User_Id").myId>>>>>>>>>$receiverId<<<<<<<<<<<<<<');
+        '>>>>>sharedPreferences.getString("User_Id").receiverId>>>>>>>>>$receiverId<<<<<<<<<<<<<<');
     setState(() {});
+  }
+
+  Future<int> countUnreadMessages(String chatId, String userId) async {
+    List<String> ids = [senderId.toString(), userId];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('chat_rooms')
+        .doc(chatRoomId)
+        .collection('messages')
+        .get();
+
+    int unreadCount = 0;
+    for (var doc in querySnapshot.docs) {
+      if (!doc['readBy'].contains(chatId)) {
+        unreadCount++;
+      }
+      debugPrint(
+          '>>>>>>>>>>unreadCountfdfdfsdfa>>>>${unreadCount}<<<<<<<<<<<<<<');
+    }
+
+    return unreadCount;
   }
 
   @override
@@ -98,24 +124,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
           }
 
           final documents = snapshot.data?.docs;
-          // for (var element in documents) {
-          //
-          //   if ((DateTime.parse(element.date ?? '').year == month.year) &&
-          //       (DateTime.parse(element.date ?? '').month == month.month)) {
-          //     filteredTransactionList.add(element);
-          //   }
-          // }
-          //
-          // filteredTransactionList.sort(
-          //       (a, b) => DateTime.parse(b.updated!).compareTo(
-          //     DateTime.parse(a.updated!),
-          //   ),
-          // );
-          // filteredTransactionList.sort(
-          //       (a, b) => DateTime.parse(b.date!).compareTo(
-          //     DateTime.parse(a.date!),
-          //   ),
-          // );
 
           if (documents?.isEmpty ?? true) {
             return Container(
@@ -138,22 +146,18 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ) {
                 var chatData = documents?[index].data() as Map<String, dynamic>;
 
-                var i = Mesg.fromJson(chatData);
+                var i = ChatDataModal.fromJson(chatData);
+
+                log('>>>>>>dddddd>>>>>>>>${i}<<<<<<<<<<<<<<');
 
                 int indexx = 0;
+
                 if (i.membersList!.first.id.toString() == senderId.toString()) {
                   indexx = 1;
                 }
 
-                Map otherUserData = {};
                 return InkWell(
                   onTap: () {
-                    debugPrint(
-                        '>>>>>>>>>>>>>> otherUserDa$chatData<<<<<<<<<<<<');
-
-                    debugPrint(
-                        '>>>>>>>>>>>>>>${i.membersList?[indexx].id.toString()}<<<<<<<<<<<<<<');
-
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -206,10 +210,22 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w300),
                                 ),
+                                // Text(
+                                //   chatData['unreadCounts'][i.senderId] > 0
+                                //       ? chatData['unreadCounts'][i.senderId]
+                                //           .toString()
+                                //       : 'null',
+                                //   maxLines: 1,
+                                //   style: AppFonts.normalText.copyWith(
+                                //       // overflow: TextOverflow.ellipsis,
+                                //       fontSize: 14,
+                                //       fontWeight: FontWeight.w300),
+                                // ),
                               ],
                             ),
                           ),
                           // const Spacer(),
+
                           Text(
                             textAlign: TextAlign.left,
                             DateFormat('hh:mm a').format(
@@ -221,16 +237,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                 ).toString(),
                               ),
                             ),
-
-                            // DateFormat('hh:mm a')
-                            //     .format(DateTime.parse(
-                            //       DateTime.fromMillisecondsSinceEpoch(int.parse(
-                            //                   i.lastMessageTime.toString()) ~/
-                            //               1000)
-                            //           .toString(),
-                            //     ))
-                            //     .toString(),
-
                             style: AppFonts.yellowFont,
                           )
                         ],
@@ -251,85 +257,5 @@ class _ChatListScreenState extends State<ChatListScreen> {
         },
       ),
     );
-  }
-}
-
-class Mesg {
-  String? lastMsg;
-  String? image;
-  List<int>? members;
-  String? lastMessageTime;
-  List<MembersList>? membersList;
-  String? lastMessage;
-  String? senderId;
-
-  Mesg(
-      {this.lastMsg,
-      this.image,
-      this.members,
-      this.lastMessageTime,
-      this.membersList,
-      this.lastMessage,
-      this.senderId});
-
-  Mesg.fromJson(Map<String, dynamic> json) {
-    lastMsg = json['last_msg'];
-    image = json['image'];
-    members = json['members'].cast<int>();
-    lastMessageTime = json['last_message_time'].toString();
-    if (json['members_list'] != null) {
-      membersList = <MembersList>[];
-      json['members_list'].forEach((v) {
-        membersList!.add(MembersList.fromJson(v));
-      });
-    }
-    lastMessage = json['last_message'];
-    senderId = json['sender_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['last_msg'] = lastMsg;
-    data['image'] = image;
-    data['members'] = members;
-    data['last_message_time'] = lastMessageTime;
-    if (membersList != null) {
-      data['members_list'] = membersList!.map((v) => v.toJson()).toList();
-    }
-    data['last_message'] = lastMessage;
-    data['sender_id'] = senderId;
-    return data;
-  }
-
-  @override
-  String toString() {
-    return 'msg{lastMsg: $lastMsg, image: $image, members: $members, lastMessageTime: $lastMessageTime, membersList: $membersList, lastMessage: $lastMessage, senderId: $senderId}';
-  }
-}
-
-class MembersList {
-  String? image;
-  String? name;
-  String? id;
-
-  MembersList({this.image, this.name, this.id});
-
-  MembersList.fromJson(Map<String, dynamic> json) {
-    image = json['image'];
-    name = json['name'];
-    id = json['id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['image'] = image;
-    data['name'] = name;
-    data['id'] = id;
-    return data;
-  }
-
-  @override
-  String toString() {
-    return 'MembersList{image: $image, name: $name, id: $id}';
   }
 }

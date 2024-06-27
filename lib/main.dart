@@ -26,8 +26,6 @@ void main() async {
   final accessToken = await getAccessToken();
 
   debugPrint('>>>>Access Token:>>>>>>>>>>${accessToken}<<<<<<<<<<<<<<');
-  // await FirebaseAppCheck.instance.activate(
-  //   webRecaptchaSiteKey: 'recaptcha-v3-site-key',
 
   // );
   SystemChrome.setPreferredOrientations([
@@ -74,6 +72,7 @@ class _MyAppState extends State<MyApp> {
       child: UpgradeAlert(
         dialogStyle: UpgradeDialogStyle.cupertino,
         child: MaterialApp(
+          navigatorKey: navigatorKey,
           title: 'Fade Masterz',
           themeMode: ThemeMode.system,
           debugShowCheckedModeBanner: false,
@@ -100,9 +99,7 @@ class _MyAppState extends State<MyApp> {
   Future<String?> _getId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var deviceInfo = DeviceInfoPlugin();
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-    debugPrint("fcmtoken.....$fcmToken");
-    sharedPreferences.setString('fcmToken', fcmToken!);
+
     if (Platform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
       deviceType = 'ios';

@@ -33,4 +33,5 @@ class ApiService {
   static const String getCategories = '${baseUrl}get-categories';
   static const String deleteAccount = '${baseUrl}delete-account';
   static const String shopReviews = '${baseUrl}shop-reviews';
+  static const String notificationList = '${baseUrl}notification-list';
 }

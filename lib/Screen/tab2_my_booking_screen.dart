@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fademasterz/Modal/my_booking_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
@@ -18,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/api_service.dart';
 import '../Utils/app_assets.dart';
 import 'Booking/complete_booking_details.dart';
+import 'Booking/upcoming_booking_details.dart';
 
 class MyBookingScreen extends StatefulWidget {
   const MyBookingScreen({
@@ -32,8 +32,13 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   bool isVisible = true;
   int? bookingId;
   bool showLoader = false;
-  List<ConnectivityResult>? _connectionStatus;
+
   MyBookingResponse? myBookingResponse;
+  int currentPage = 1;
+  int totalPage = 1;
+  final ScrollController scrollController = ScrollController();
+  List<UpComing> upcomingList = [];
+  List<Completed> completedList = [];
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});
@@ -43,27 +48,25 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   void initState() {
     // TODO: implement initState
     // initConnectivity();
-
+    pagination();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      getBookingListApi(context);
+      getBookingListApi(context, 1);
     });
-    //internetConnected();
-    // var listener = InternetConnectionChecker().onStatusChange.listen((status) {
-    //   switch (status) {
-    //     case InternetConnectionStatus.connected:
-    //       // homeDetail(context: context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'Data connection is available.'}<<<<<<<<<<<<<<');
-    //
-    //       break;
-    //     case InternetConnectionStatus.disconnected:
-    //       Utility.showNoGetNetworkDialog(context);
-    //       debugPrint(
-    //           '>>>>>>>>>>>>>>${'You are disconnected from the internet.'}<<<<<<<<<<<<<<');
-    //       break;
-    //   }
-    // });
+
     super.initState();
+  }
+
+  pagination() {
+    scrollController.addListener(() {
+      debugPrint('Pagination started>>>');
+      if ((scrollController.position.maxScrollExtent ==
+              scrollController.position.pixels) &&
+          (currentPage < totalPage)) {
+        currentPage++;
+        getBookingListApi(context, currentPage);
+        setState(() {});
+      }
+    });
   }
 
   static Future<bool> internetConnected() async {
@@ -74,54 +77,24 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     return isConnected;
   }
 
-  void initConnectivity() async {
+  /* void initConnectivity() async {
     final List<ConnectivityResult> connectivityResult =
         await (Connectivity().checkConnectivity());
 
     if (connectivityResult.contains(ConnectivityResult.mobile)) {
-      getBookingListApi(context);
+      getBookingListApi(context,1);
       // Mobile network available.
     } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-      getBookingListApi(context);
-
-      // Wi-fi is available.
-      // Note for Android:
-      // When both mobile and Wi-Fi are turned on system will return Wi-Fi only as active network type
+      getBookingListApi(context,1);
     } else {
       // ignore: use_build_context_synchronously
       showNoNetworkMyBookingDialog(context);
       setState(() {});
     }
-
-    // final List<ConnectivityResult> connectivityResult =
-    //     await (Connectivity().checkConnectivity());
-    //
-    // setState(() {
-    //   _connectionStatus = connectivityResult;
-    // });
-    // if (_connectionStatus == ConnectivityResult.wifi) {
-    //   Future.delayed(Duration.zero, () async {
-    //     //  await WebServices.getMyBookingsApi(context, myBookingResponse);
-    //     getBookingListApi(context);
-    //     setState(() {});
-    //     //     setListData();
-    //   });
-    // } else if (_connectionStatus == ConnectivityResult.mobile) {
-    //   Future.delayed(Duration.zero, () async {
-    //     //   await WebServices.getMyBookingsApi(context, myBookingResponse);
-    //     getBookingListApi(context);
-    //     setState(() {});
-    //     //   setListData();
-    //   });
-    // } else {
-    //   // ignore: use_build_context_synchronously
-    //   showNoNetworkMyBookingDialog(context);
-    //   setState(() {});
-    // }
-  }
+  }*/
 
   ///NetworkDialog
-  void showNoNetworkMyBookingDialog(BuildContext context) {
+/*  void showNoNetworkMyBookingDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -138,7 +111,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   // geteBooking();
-                  getBookingListApi(context);
+                  getBookingListApi(context,1);
                   setState(() {});
                 },
               ),
@@ -147,7 +120,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
         );
       },
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +144,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      getBookingListApi(context);
+                      getBookingListApi(context, 1);
                       isVisible = true;
                       setState(() {});
                     },
@@ -208,7 +181,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                   child: InkWell(
                     onTap: () {
                       isVisible = false;
-                      getBookingListApi(context);
+                      getBookingListApi(context, 1);
 
                       setState(() {});
                     },
@@ -435,7 +408,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                       ),
                                     ),
                                   ).then((value) {
-                                    getBookingListApi(context);
+                                    getBookingListApi(context, 1);
                                   });
                                 },
                                 child: Align(
@@ -475,8 +448,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                     ),
                   ),
                   child: Visibility(
-                    visible: (myBookingResponse?.data?.upcoming?.isNotEmpty ??
-                        false),
+                    visible: (upcomingList.isNotEmpty ?? false),
                     replacement: const Center(
                       child: Text(
                         'No UpComing Booking',
@@ -485,11 +457,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                     ),
                     child: ListView.separated(
                       shrinkWrap: true,
-                      itemCount:
-                          (myBookingResponse?.data?.upcoming?.length ?? 0),
+                      itemCount: (upcomingList.length ?? 0),
                       itemBuilder: (BuildContext context, int index) {
-                        var myUpcomingBooking =
-                            myBookingResponse?.data?.upcoming?[index];
+                        var myUpcomingBooking = upcomingList[index];
 
                         return DecoratedBox(
                           decoration: BoxDecoration(
@@ -508,7 +478,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      '#${myUpcomingBooking?.bookingId ?? ''}',
+                                      '#${myUpcomingBooking.bookingId ?? ''}',
                                       style: AppFonts.yellowFont.copyWith(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -522,7 +492,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                       width: 5,
                                     ),
                                     Text(
-                                      (myUpcomingBooking?.startTime ?? ''),
+                                      (myUpcomingBooking.startTime ?? ''),
                                       style: AppFonts.yellowFont,
                                     ),
                                     const SizedBox(
@@ -536,7 +506,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                     ),
                                     Text(
                                       DateFormat('dd MMM yyyy').format(
-                                        (myUpcomingBooking?.date ??
+                                        (myUpcomingBooking.date ??
                                             DateTime.now()),
                                       ),
                                       style: AppFonts.yellowFont,
@@ -572,8 +542,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                       clipBehavior: Clip.antiAlias,
                                       child: Image.network(
                                         ApiService.imageUrl +
-                                            (myUpcomingBooking?.shopImage ??
-                                                ''),
+                                            (myUpcomingBooking.shopImage ?? ''),
                                         fit: BoxFit.fill,
                                       ),
                                     ),
@@ -588,7 +557,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            (myUpcomingBooking?.shopName ?? ''),
+                                            (myUpcomingBooking.shopName ?? ''),
                                             style: AppFonts.regular.copyWith(
                                               fontSize: 16,
                                             ),
@@ -610,7 +579,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   (myUpcomingBooking
-                                                          ?.shopAddress ??
+                                                          .shopAddress ??
                                                       ''),
                                                   style:
                                                       AppFonts.regular.copyWith(
@@ -625,7 +594,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                             height: 5,
                                           ),
                                           Text(
-                                            '£  ${myUpcomingBooking?.total ?? ''}',
+                                            '£  ${myUpcomingBooking.total ?? ''}',
                                             style: AppFonts.yellowFont,
                                           )
                                         ],
@@ -641,21 +610,18 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 onTap: () async {
                                   SharedPreferences sharedPreferences =
                                       await SharedPreferences.getInstance();
-                                  bookingId = myBookingResponse
-                                      ?.data?.upcoming?[index].id;
+                                  bookingId = upcomingList[index].id;
                                   sharedPreferences.setInt(
                                       'ubookingId', bookingId!);
                                   await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          CompleteBookingDetail(
+                                          UpcomingBookingDetail(
                                               bookingId: bookingId),
                                     ),
                                   ).then((value) {
-                                    getBookingListApi(
-                                      context,
-                                    );
+                                    getBookingListApi(context, 1);
                                   });
                                 },
                                 child: Align(
@@ -703,15 +669,17 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     );
   }
 
-  Future<void> getBookingListApi(BuildContext context) async {
+  Future<void> getBookingListApi(BuildContext context, int currentPage) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     // if (context.mounted) {
     //   Utility.progressLoadingDialog(context, true);
     // }
-
-    var request = {};
+    var request = {
+      'page': currentPage,
+    };
+    debugPrint('>>>>request>>>>currentPage>>>>>>${currentPage}<<<<<<<<<<<<<<');
     var response = await http.post(
         Uri.parse(
           ApiService.myBooking,
@@ -738,6 +706,13 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     // Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status'] == true) {
       myBookingResponse = MyBookingResponse.fromJson(jsonResponse);
+      totalPage = myBookingResponse?.data?.upcomingTotalPages ?? 1;
+      if (currentPage == 1) {
+        upcomingList.clear();
+        upcomingList.addAll(myBookingResponse?.data?.upcoming ?? []);
+      } else {
+        upcomingList.addAll(myBookingResponse?.data?.upcoming ?? []);
+      }
       setState(() {});
     }
   }

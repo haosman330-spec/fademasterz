@@ -26,6 +26,12 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
   bool showLoader = false;
   int? cancelBookingId;
   CancelledBookingResponse? cancelledBookingResponse;
+
+  final ScrollController scrollController = ScrollController();
+  List<CancelBooking> cancelledList = [];
+  int currentPage = 1;
+  int totalPage = 1;
+  bool isLoading = false;
   willPopScop() {
     Navigator.of(context).pop();
     // Navigator.pushAndRemoveUntil(
@@ -45,8 +51,26 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
 
   @override
   void initState() {
-    cancelBookingListApi(context);
     super.initState();
+    pagination();
+    Future.delayed(Duration.zero, () {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => cancelBookingListApi(context, 1),
+      );
+    });
+  }
+
+  pagination() {
+    scrollController.addListener(() {
+      debugPrint('Pagination started>>>');
+      if ((scrollController.position.maxScrollExtent ==
+              scrollController.position.pixels) &&
+          (currentPage < totalPage)) {
+        currentPage++;
+        cancelBookingListApi(context, currentPage);
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -77,15 +101,14 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
           ),
         ),
         child: SingleChildScrollView(
+          controller: scrollController,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 15,
               vertical: 15,
             ),
             child: Visibility(
-              visible:
-                  (cancelledBookingResponse?.data?.cancelBooking?.isNotEmpty ??
-                      false),
+              visible: (cancelledList.isNotEmpty),
               replacement: Container(
                 height: MediaQuery.of(context).size.height / 1.3,
                 alignment: Alignment.center,
@@ -97,12 +120,12 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
               child: ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount:
-                    (cancelledBookingResponse?.data?.cancelBooking?.length ??
-                        0),
+                itemCount: cancelledList.length,
+                scrollDirection: Axis.vertical,
                 itemBuilder: (BuildContext context, int index) {
-                  var cancelledBooking =
-                      cancelledBookingResponse?.data?.cancelBooking?[index];
+                  // var cancelledBooking =
+                  //     cancelledBookingResponse?.data?.cancelBooking?[index];
+                  var cancelledBooking = cancelledList[index];
 
                   return DecoratedBox(
                     decoration: BoxDecoration(
@@ -119,7 +142,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                           child: Row(
                             children: [
                               Text(
-                                '#${cancelledBooking?.bookingId ?? ''}',
+                                '#${cancelledBooking.bookingId ?? ''}',
                                 style: AppFonts.yellowFont.copyWith(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -131,7 +154,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                 width: 5,
                               ),
                               Text(
-                                (cancelledBooking?.startTime ?? ''),
+                                (cancelledBooking.startTime ?? ''),
                                 style: AppFonts.yellowFont,
                               ),
                               const SizedBox(
@@ -145,7 +168,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                               ),
                               Text(
                                 DateFormat('dd MMM yyyy').format(
-                                  (cancelledBooking?.date ?? DateTime.now()),
+                                  (cancelledBooking.date ?? DateTime.now()),
                                 ),
                                 style: AppFonts.yellowFont,
                               ),
@@ -180,7 +203,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                 clipBehavior: Clip.antiAlias,
                                 child: Image.network(
                                   ApiService.imageUrl +
-                                      (cancelledBooking?.shopImage ?? ''),
+                                      (cancelledBooking.shopImage ?? ''),
                                   // (cancelledBookingResponse?.data
                                   //         ?.cancelBooking?[index].shopImage
                                   //         .toString() ??
@@ -197,9 +220,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      (cancelledBookingResponse?.data
-                                              ?.cancelBooking?[index].shopName
-                                              .toString() ??
+                                      (cancelledBooking.shopName.toString() ??
                                           ''),
                                       style: AppFonts.regular.copyWith(
                                         fontSize: 16,
@@ -220,10 +241,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                           child: Text(
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            (cancelledBookingResponse
-                                                    ?.data
-                                                    ?.cancelBooking?[index]
-                                                    .shopAddress
+                                            (cancelledBooking.shopAddress
                                                     .toString() ??
                                                 ''),
                                             style: AppFonts.regular.copyWith(
@@ -238,7 +256,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                       height: 5,
                                     ),
                                     Text(
-                                      '£  ${cancelledBooking?.total ?? ''}',
+                                      '£  ${cancelledBooking.total ?? ''}',
                                       style: AppFonts.yellowFont,
                                     )
                                   ],
@@ -252,8 +270,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                         ),
                         InkWell(
                           onTap: () async {
-                            cancelBookingId = cancelledBookingResponse
-                                ?.data?.cancelBooking?[index].id;
+                            cancelBookingId = cancelledBooking.id;
 
                             await Navigator.push(
                               context,
@@ -306,7 +323,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
     );
   }
 
-  Future<void> cancelBookingListApi(BuildContext context) async {
+  Future<void> cancelBookingListApi(BuildContext context, int page) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -314,7 +331,9 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
     //   Utility.progressLoadingDialog(context, true);
     // }
 
-    var request = {};
+    var request = {
+      'page': currentPage,
+    };
     var response = await http.post(
         Uri.parse(
           ApiService.cancelBookingList,
@@ -335,6 +354,17 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
     if (jsonResponse['status']) {
       cancelledBookingResponse =
           CancelledBookingResponse.fromJson(jsonResponse);
+      totalPage = cancelledBookingResponse?.data?.upcomingTotalPages ?? 1;
+      debugPrint('>>>>>>totalPage>>>>>>>>${totalPage}<<<<<<<<<<<<<<');
+
+      if (currentPage == 1) {
+        cancelledList.clear();
+        cancelledList
+            .addAll(cancelledBookingResponse?.data?.cancelBooking ?? []);
+      } else {
+        cancelledList
+            .addAll(cancelledBookingResponse?.data?.cancelBooking ?? []);
+      }
 
       setState(() {});
     }

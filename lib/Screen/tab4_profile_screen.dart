@@ -780,10 +780,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              CircleAvatar()
             ],
           ),
         ),
@@ -822,6 +818,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status'] == true) {
+      debugPrint(
+          '>>>>>sssssssssss>>>>>>>>>${sharedPreferences.getString("access_Token")}<<<<<<<<<<<<<<');
       await sharedPreferences.setBool("profileSetUp", false);
       await sharedPreferences.setString("access_Token", '');
       setState(() {});

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fademasterz/Screen/Dashboard/dashboard.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
@@ -35,9 +36,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     // Navigator.pushAndRemoveUntil(
     //     context,
     //     MaterialPageRoute(
-    //       builder: (context) => const DashBoardScreen(
-    //         selectIndex: 1,
-    //       ),
+    //       builder: (context) => const CancelledBookingScreen(),
     //     ),
     //     (route) => false);
   }
@@ -62,15 +61,34 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     return Scaffold(
       backgroundColor: AppColor.bg,
       appBar: MyAppBar.myAppbar(
-        leading: IconButton(
-          icon: SvgPicture.asset(
-            AppIcon.backIcon,
-            height: 12,
-            width: 15,
-          ),
-          onPressed: () {
-            willPopScop();
+        leading: PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            if (didPop) {
+              return;
+            }
           },
+          child: IconButton(
+            icon: SvgPicture.asset(
+              AppIcon.backIcon,
+              height: 12,
+              width: 15,
+            ),
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+                //  return false; // Do not perform the default pop action
+              } else {
+                // If this is the first screen in the stack, navigate to home
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DashBoardScreen(selectIndex: 0),
+                    ));
+                //    return false; // Do not perform the default pop action
+              }
+            },
+          ),
         ),
         title: const Text(
           AppStrings.cancelledBookings,
@@ -496,6 +514,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
     // if (context.mounted) {
     //   Utility.progressLoadingDialog(context, true);
     // }
+
     var request = {};
     request["booking_id"] = widget.cancelBookingId;
     var response = await http.post(
@@ -509,7 +528,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
           'Authorization':
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
-
+    debugPrint('>>>>>>request>>>>>>>>${request}<<<<<<<<<<<<<<');
     setLoader(false);
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,

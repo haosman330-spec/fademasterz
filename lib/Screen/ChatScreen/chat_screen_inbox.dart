@@ -1,20 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fademasterz/Utils/app_assets.dart';
-import 'package:fademasterz/Utils/app_color.dart';
-import 'package:fademasterz/Utils/app_string.dart';
-import 'package:fademasterz/Utils/custom_app_bar.dart';
-import 'package:fademasterz/Utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../ApiService/api_service.dart';
-import '../Modal/messages_model.dart';
-import '../Utils/app_fonts.dart';
-import '../Utils/chat_service.dart';
-import '../Utils/custom_tex_field.dart';
+import '../../ApiService/api_service.dart';
+import '../../Utils/app_assets.dart';
+import '../../Utils/app_color.dart';
+import '../../Utils/app_fonts.dart';
+import '../../Utils/app_string.dart';
+import '../../Utils/custom_app_bar.dart';
+import '../../Utils/custom_tex_field.dart';
+import '../../Utils/helper.dart';
+import 'chat_service.dart';
+import 'messages_model.dart';
 
 class ChatScreenInBox extends StatefulWidget {
   final String? receiverName;
@@ -36,23 +36,19 @@ String? pushtoken12;
 dynamic datafirebase;
 
 class _ChatScreenInBoxState extends State<ChatScreenInBox> {
-  List<Msg1> listt = [];
+  List<GetMessage> listt = [];
   TextEditingController chatCn = TextEditingController();
   String? senderId;
-  String? receiverId;
-  ChatService chatService = ChatService();
-  // Message message = Message();
 
+  ChatService chatService = ChatService();
+  late Stream<QuerySnapshot> _messagesStream;
+  int unreadCount = 0;
   void onSendMessage() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (chatCn.text.isNotEmpty) {
       senderId = sharedPreferences.getInt('senderId').toString();
 
-      debugPrint(
-          '>>>>>>>>sharedPreferences.getInt(receiverId)>>>>>>$senderId<<<<<<<<<<<<<<');
-
       await chatService.sendMessage(
-        //receiverId: sharedPreferences.getInt('receiverId').toString(),
         receiverId: widget.receiverId.toString(),
         message: chatCn.text.toString(),
         receiverImage: widget.receiverImage,
@@ -65,20 +61,56 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     }
   }
 
-  Future<void> getID() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    senderId = sharedPreferences.getInt('senderId').toString();
-    receiverId = sharedPreferences.getString('receiverId');
-    debugPrint(
-        '>>>>>>receiverIdreceiverIdreceiverIdreceiverId>>>>>>>>$receiverId<<<<<<<<<<<<<<');
-    setState(() {});
-  }
-
-  static FirebaseFirestore firestore = FirebaseFirestore.instance;
   @override
   void initState() {
     getID();
     super.initState();
+  }
+
+  Future<void> getID() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    senderId = sharedPreferences.getInt('senderId').toString();
+
+    List<String> ids = [senderId.toString(), widget.receiverId.toString()];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+
+    _messagesStream = firestore
+        .collection('chat_rooms')
+        .doc(chatRoomId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+    if (await _messagesStream.isEmpty) {
+      _markMessagesAsRead();
+    }
+
+    setState(() {});
+  }
+
+  void _markMessagesAsRead() {
+    _messagesStream.listen((snapshot) {
+      for (var doc in snapshot.docs) {
+        if ((doc['readBy'] as List).contains(senderId)) {
+          doc.reference.update({
+            'readBy': FieldValue.arrayUnion([senderId]),
+          });
+
+          List<String> ids = [
+            senderId.toString(),
+            widget.receiverId.toString()
+          ];
+          ids.sort();
+          String chatRoomId = ids.join('_');
+          FirebaseFirestore.instance
+              .collection('chat_rooms')
+              .doc(chatRoomId)
+              .update({
+            'unreadCounts.${senderId}': unreadCount,
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -231,28 +263,16 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     );
   }
 
-  Msg1 msg = Msg1();
   Widget _buildMessages() {
     return StreamBuilder<QuerySnapshot>(
-      stream: chatService.getMessage(senderId ?? '', widget.receiverId
-          // sharedPreferences.getInt('receiverId').toString(),
-          ),
+      stream: chatService.getMessage(senderId ?? '', widget.receiverId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasError) {
           return const Text('Error');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.74,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ],
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         }
         if (snapshot.hasData) {
@@ -266,7 +286,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                     item.data() as Map<String, dynamic>?;
 
                 if (dataMap != null) {
-                  listt.add(Msg1.fromJson(dataMap));
+                  listt.add(GetMessage.fromJson(dataMap));
                 }
               }
             }
@@ -314,19 +334,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                   children: [
                     if (isLastMessageOfDay)
                       Text(
-                        DateFormat('MMMM d, yyyy').format(currentDateTime),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color.fromARGB(
-                            255,
-                            156,
-                            155,
-                            155,
-                          ),
-                          // overflow: TextOverflow.ellipsis,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w400,
-                        ),
+                        DateFormat('dd MMMM yyyy').format(currentDateTime),
+                        style: AppFonts.normalText,
                       ),
                     Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -336,7 +345,9 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                         child: Container(
-                          // height: 50,
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width / 1.6,
+                          ),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 10,
                             vertical: 10,
@@ -386,6 +397,16 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                         ),
                       ),
                     ),
+                    Align(
+                      alignment:
+                          snapshot.data!.docs[index]['senderId'] == senderId
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                      child: Text(
+                        DateFormat('hh:mm a').format(currentDateTime),
+                        style: AppFonts.normalText,
+                      ),
+                    ),
                   ],
                 );
               },
@@ -394,65 +415,5 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
         );
       },
     );
-  }
-}
-
-class msg {
-  String? image;
-  int? senderId;
-  int? receiverId;
-  String? senderEmail;
-  String? message;
-  Timestamp? timestamp;
-
-  msg(
-      {this.image,
-      this.senderId,
-      this.receiverId,
-      this.senderEmail,
-      this.message,
-      this.timestamp});
-
-  msg.fromJson(Map<String, dynamic> json) {
-    image = json['image'];
-    senderId = json['senderId'];
-    receiverId = json['receiverId'];
-    senderEmail = json['senderEmail'];
-    message = json['message'];
-    timestamp = json['timestamp'] != null
-        ? Timestamp.fromJson(json['timestamp'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['image'] = image;
-    data['senderId'] = senderId;
-    data['receiverId'] = receiverId;
-    data['senderEmail'] = senderEmail;
-    data['message'] = message;
-    if (timestamp != null) {
-      data['timestamp'] = timestamp!.toJson();
-    }
-    return data;
-  }
-}
-
-class Timestamp {
-  int? seconds;
-  int? nanoseconds;
-
-  Timestamp({this.seconds, this.nanoseconds});
-
-  Timestamp.fromJson(Map<String, dynamic> json) {
-    seconds = json['seconds'];
-    nanoseconds = json['nanoseconds'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['seconds'] = seconds;
-    data['nanoseconds'] = nanoseconds;
-    return data;
   }
 }

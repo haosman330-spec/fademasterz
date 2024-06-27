@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:country_code_picker/src/country_code.dart';
 import 'package:fademasterz/Modal/verify_otp_modal.dart';
@@ -8,6 +9,7 @@ import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
@@ -407,9 +409,11 @@ class _VerifyScreenState extends State<VerifyScreen> {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
 
-    var fcmToken = sharedPreferences.getString('fcmToken');
-    debugPrint('>>>>>>>>fcmToken>>>>>>$fcmToken<<<<<<<<<<<<<<');
+    sharedPreferences.setString('fcmToken', fcmToken!);
+
+    log('>>>>>>>>fcmToken>>>>>>$fcmToken<<<<<<<<<<<<<<');
     var request = {};
     request["country_code"] = widget.selectedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
@@ -446,7 +450,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
       sharedPreferences.setString(
           "access_Token", verifyOtpModal.data!.userDetail!.token.toString());
-
+      debugPrint(
+          '>>>>access_Token13>>>>>>>>>>${verifyOtpModal.data!.userDetail!.token}<<<<<<<access_Token<<<<<<<');
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
       debugPrint('>>>>>>>email>>>>>>>$email<<<<<<<<<<<<<<');
