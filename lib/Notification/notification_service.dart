@@ -512,18 +512,19 @@ void _handleMessage(data) async {
     debugPrint('>>>>>>>>>>>>>>${bookingId}<<<<<<<<<bookingId<<<<<');
     navigatorKey.currentState?.push(
       MaterialPageRoute(
-          builder: (context) => CancelledBookingDetail(
-                cancelBookingId: bookingId,
-              )),
+        builder: (context) => CancelledBookingDetail(
+          cancelBookingId: bookingId,
+        ),
+      ),
     );
   } else if (data['type'] == 'completed') {
     int bookingId = int.parse(data['booking_id']);
-    navigatorKey.currentState?.pushAndRemoveUntil(
+    navigatorKey.currentState?.push(
       MaterialPageRoute(
-          builder: (context) => CompleteBookingDetail(
-                bookingId: bookingId,
-              )),
-      (route) => false,
+        builder: (context) => CompleteBookingDetail(
+          bookingId: bookingId,
+        ),
+      ),
     );
   }
   // else {

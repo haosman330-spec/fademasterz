@@ -62,7 +62,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
       backgroundColor: AppColor.bg,
       appBar: MyAppBar.myAppbar(
         leading: PopScope(
-          canPop: false,
+          canPop: true,
           onPopInvoked: (bool didPop) async {
             if (didPop) {
               return;
@@ -81,10 +81,13 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
               } else {
                 // If this is the first screen in the stack, navigate to home
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DashBoardScreen(selectIndex: 0),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DashBoardScreen(
+                      selectIndex: 0,
+                    ),
+                  ),
+                );
                 //    return false; // Do not perform the default pop action
               }
             },

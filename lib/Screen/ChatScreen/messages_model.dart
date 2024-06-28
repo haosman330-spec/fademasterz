@@ -33,4 +33,9 @@ class GetMessage {
     data['timestamp'] = timestamp;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'GetMessage{image: $image, senderId: $senderId, receiverId: $receiverId, senderEmail: $senderEmail, message: $message, timestamp: $timestamp}';
+  }
 }

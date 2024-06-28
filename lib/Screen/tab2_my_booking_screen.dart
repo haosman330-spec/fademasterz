@@ -34,8 +34,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   bool showLoader = false;
 
   MyBookingResponse? myBookingResponse;
-  int currentPage = 1;
-  int totalPage = 1;
+  int upcomingCurrentPage = 1;
+  int completeCurrentPage = 1;
+  int upcomingTotalPage = 1;
+  int completeTotalPage = 1;
   final ScrollController scrollController = ScrollController();
   List<UpComing> upcomingList = [];
   List<Completed> completedList = [];
@@ -61,9 +63,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
       debugPrint('Pagination started>>>');
       if ((scrollController.position.maxScrollExtent ==
               scrollController.position.pixels) &&
-          (currentPage < totalPage)) {
-        currentPage++;
-        getBookingListApi(context, currentPage);
+          (upcomingCurrentPage < upcomingTotalPage)) {
+        upcomingCurrentPage++;
+        getBookingListApi(context, upcomingCurrentPage);
         setState(() {});
       }
     });
@@ -145,6 +147,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                   child: InkWell(
                     onTap: () {
                       getBookingListApi(context, 1);
+                      upcomingTotalPage =
+                          myBookingResponse?.data?.upcomingTotalPages ?? 1;
                       isVisible = true;
                       setState(() {});
                     },
@@ -182,7 +186,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                     onTap: () {
                       isVisible = false;
                       getBookingListApi(context, 1);
-
+                      upcomingTotalPage =
+                          myBookingResponse?.data?.completedTotalPages ?? 1;
                       setState(() {});
                     },
                     child: Container(
@@ -232,8 +237,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 child: Visibility(
                   visible: isVisible == true,
                   replacement: Visibility(
-                    visible: (myBookingResponse?.data?.completed?.isNotEmpty ??
-                        false),
+                    visible: (completedList.isNotEmpty ?? false),
                     replacement: const Center(
                       child: Text(
                         'No Completed Booking',
@@ -241,12 +245,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                       ),
                     ),
                     child: ListView.separated(
+                      controller: scrollController,
                       shrinkWrap: true,
-                      itemCount:
-                          (myBookingResponse?.data?.completed?.length ?? 0),
+                      itemCount: completedList.length ?? 0,
                       itemBuilder: (BuildContext context, int index) {
-                        var myCompleteBooking =
-                            myBookingResponse?.data?.completed?[index];
+                        var myCompleteBooking = completedList[index];
 
                         return DecoratedBox(
                           decoration: BoxDecoration(
@@ -265,7 +268,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      '#${myCompleteBooking?.bookingId ?? ''}',
+                                      '#${myCompleteBooking.bookingId ?? ''}',
                                       style: AppFonts.yellowFont.copyWith(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -279,7 +282,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                       width: 5,
                                     ),
                                     Text(
-                                      (myCompleteBooking?.startTime ?? ''),
+                                      (myCompleteBooking.startTime ?? ''),
                                       style: AppFonts.yellowFont,
                                     ),
                                     const SizedBox(
@@ -291,7 +294,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                     ),
                                     Text(
                                       DateFormat('dd MMM yyyy').format(
-                                        (myCompleteBooking?.date ??
+                                        (myCompleteBooking.date ??
                                             DateTime.now()),
                                       ),
                                       style: AppFonts.yellowFont,
@@ -327,8 +330,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                       clipBehavior: Clip.antiAlias,
                                       child: Image.network(
                                         ApiService.imageUrl +
-                                            (myCompleteBooking?.shopImage ??
-                                                ''),
+                                            (myCompleteBooking.shopImage ?? ''),
                                         fit: BoxFit.fill,
                                       ),
                                     ),
@@ -343,7 +345,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            (myCompleteBooking?.shopName ?? ''),
+                                            (myCompleteBooking.shopName ?? ''),
                                             style: AppFonts.regular.copyWith(
                                               fontSize: 16,
                                             ),
@@ -365,7 +367,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   (myCompleteBooking
-                                                          ?.shopAddress ??
+                                                          .shopAddress ??
                                                       ''),
                                                   style:
                                                       AppFonts.regular.copyWith(
@@ -380,7 +382,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                             height: 5,
                                           ),
                                           Text(
-                                            '£  ${myCompleteBooking?.total ?? ''}',
+                                            '£  ${myCompleteBooking.total ?? ''}',
                                             style: AppFonts.yellowFont,
                                           )
                                         ],
@@ -396,8 +398,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                 onTap: () async {
                                   final SharedPreferences shared =
                                       await SharedPreferences.getInstance();
-                                  bookingId = myBookingResponse
-                                      ?.data?.completed?[index].id;
+                                  bookingId = completedList[index].id;
                                   shared.setInt('cbookingId', bookingId!);
                                   Navigator.push(
                                     context,
@@ -456,6 +457,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                       ),
                     ),
                     child: ListView.separated(
+                      controller: scrollController,
                       shrinkWrap: true,
                       itemCount: (upcomingList.length ?? 0),
                       itemBuilder: (BuildContext context, int index) {
@@ -706,12 +708,18 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     // Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status'] == true) {
       myBookingResponse = MyBookingResponse.fromJson(jsonResponse);
-      totalPage = myBookingResponse?.data?.upcomingTotalPages ?? 1;
+      //  upcomingTotalPage = myBookingResponse?.data?.upcomingTotalPages ?? 1;
       if (currentPage == 1) {
         upcomingList.clear();
         upcomingList.addAll(myBookingResponse?.data?.upcoming ?? []);
       } else {
         upcomingList.addAll(myBookingResponse?.data?.upcoming ?? []);
+      }
+      if (currentPage == 1) {
+        completedList.clear();
+        completedList.addAll(myBookingResponse?.data?.completed ?? []);
+      } else {
+        completedList.addAll(myBookingResponse?.data?.completed ?? []);
       }
       setState(() {});
     }

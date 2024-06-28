@@ -1115,33 +1115,4 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
       },
     );
   }
-
-  ///NetworkDialog
-  void showNoNetworkMyBookingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // ignore: deprecated_member_use
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            title: const Text('No Network Connection'),
-            content:
-                const Text('Please check your internet and Wi-Fi connection.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // geteBooking();
-                  bookingDetailApi(context);
-                  setState(() {});
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 }

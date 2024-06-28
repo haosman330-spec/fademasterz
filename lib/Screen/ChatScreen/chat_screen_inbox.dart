@@ -11,7 +11,6 @@ import '../../Utils/app_color.dart';
 import '../../Utils/app_fonts.dart';
 import '../../Utils/app_string.dart';
 import '../../Utils/custom_app_bar.dart';
-import '../../Utils/custom_tex_field.dart';
 import '../../Utils/helper.dart';
 import 'chat_service.dart';
 import 'messages_model.dart';
@@ -39,7 +38,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   List<GetMessage> listt = [];
   TextEditingController chatCn = TextEditingController();
   String? senderId;
-
+  String? displayDate;
   ChatService chatService = ChatService();
   late Stream<QuerySnapshot> _messagesStream;
   int unreadCount = 0;
@@ -118,6 +117,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     return Scaffold(
       backgroundColor: AppColor.bg,
       appBar: MyAppBar.myAppbar(
+        color: AppColor.bg,
+        elevation: 1,
         title: Row(
           children: [
             InkWell(
@@ -188,232 +189,235 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 5,
-        ),
-        child: SingleChildScrollView(
-          // physics: NeverScrollableScrollPhysics(),
-          child: Stack(
-            children: [
-              // StreamBuilder(
-              //     stream: firestore
-              //         .collection("users")
-              //         .doc(widget.receiverId)
-              //         .snapshots(),
-              //     builder: (context, snapshot) {
-              //       datafirebase = snapshot.data?.data();
-              //       pushtoken12 = datafirebase['push_token'];
-              //       return Container();
-              //     }),
-              Column(
-                children: [
-                  const Divider(
-                    color: Color(
-                      0xff434343,
-                    ),
-                  ),
-                  _buildMessages(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: CustomTextField(
-                            controller: chatCn,
-                            hintText: AppStrings.typeAMessage,
-                            hintTextStyle: AppFonts.normalText.copyWith(
-                              fontSize: 17,
-                              color: AppColor.bg,
-                            ),
-                            radius: 4,
-                            isFilled: true,
-                            style: AppFonts.textFieldFont.copyWith(
-                              color: AppColor.black,
-                            ),
-                            fillColor: const Color(
-                              0xffF4F4F4,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            onSendMessage();
-                          },
-                          child: SvgPicture.asset(
-                            AppIcon.sendIcon,
-                            height: 60,
-                            width: 58,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMessages() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: chatService.getMessage(senderId ?? '', widget.receiverId),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Error');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (snapshot.hasData) {
-          final data = snapshot.data?.docs;
-
-          if (data != null) {
-            listt.clear();
-            for (var item in data) {
-              if (item.data() is Map<String, dynamic>?) {
-                Map<String, dynamic>? dataMap =
-                    item.data() as Map<String, dynamic>?;
-
-                if (dataMap != null) {
-                  listt.add(GetMessage.fromJson(dataMap));
+      body: Column(
+        children: [
+          // const Divider(
+          //   color: Color(
+          //     0xff434343,
+          //   ),
+          // ),
+          // _buildMessages(),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: chatService.getMessage(senderId ?? '', widget.receiverId),
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Error');
                 }
-              }
-            }
-          }
-        }
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.74,
-          // color: Colors.amber,
-          child: Padding(
-            padding: const EdgeInsets.all(
-              8.0,
-            ),
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              physics: const AlwaysScrollableScrollPhysics(),
-              shrinkWrap: true,
-              reverse: true,
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (context, index) {
-                var map = snapshot.data?.docs[index].data();
-                debugPrint('>>>>>>>>>>>>>>$map<<<<<<<<<<<<<<');
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasData) {
+                  final data = snapshot.data?.docs;
 
-                //
-                final currentMessage = listt[index];
-                final currentDateTime = DateTime.fromMillisecondsSinceEpoch(
-                  int.parse(
-                    currentMessage.timestamp!.toString(),
-                  ),
-                );
-                final nextMessageDateTime = index < listt.length - 1
-                    ? DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(
-                          listt[index + 1].timestamp!.toString(),
-                        ),
-                      )
-                    : null;
+                  if (data != null) {
+                    listt.clear();
+                    for (var item in data) {
+                      if (item.data() is Map<String, dynamic>?) {
+                        Map<String, dynamic>? dataMap =
+                            item.data() as Map<String, dynamic>?;
 
-                // Check if the current message is the last message of the day
-                final isLastMessageOfDay = nextMessageDateTime == null ||
-                    currentDateTime.day != nextMessageDateTime.day ||
-                    currentDateTime.month != nextMessageDateTime.month ||
-                    currentDateTime.year != nextMessageDateTime.year;
+                        if (dataMap != null) {
+                          listt.add(GetMessage.fromJson(dataMap));
+                        }
+                      }
+                    }
+                  }
+                }
+                return ListView.builder(
+                  // scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  reverse: true,
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (context, index) {
+                    var map = snapshot.data?.docs[index].data();
+                    debugPrint('>>>>>MAp>>>>>>>>>$map<<<<<<<<<<<<<<');
 
-                return Column(
-                  children: [
-                    if (isLastMessageOfDay)
-                      Text(
-                        DateFormat('dd MMMM yyyy').format(currentDateTime),
-                        style: AppFonts.normalText,
+                    //
+                    final currentMessage = listt[index];
+
+                    final currentDateTime = DateTime.fromMillisecondsSinceEpoch(
+                      int.parse(
+                        currentMessage.timestamp!.toString(),
                       ),
-                    Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Align(
-                        alignment:
-                            snapshot.data!.docs[index]['senderId'] == senderId
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width / 1.6,
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                              borderRadius: snapshot.data!.docs[index]
+                    );
+                    final nextMessageDateTime = index < listt.length - 1
+                        ? DateTime.fromMillisecondsSinceEpoch(
+                            int.parse(
+                              listt[index + 1].timestamp!.toString(),
+                            ),
+                          )
+                        : null;
+
+                    // Check if the current message is the last message of the day
+                    final isLastMessageOfDay = (nextMessageDateTime == null ||
+                        currentDateTime.day != nextMessageDateTime.day ||
+                        currentDateTime.month != nextMessageDateTime.month ||
+                        currentDateTime.year != nextMessageDateTime.year);
+
+                    if (DateFormat('dd MMMM yyyy').format(currentDateTime) ==
+                        DateFormat('dd MMMM yyyy').format(DateTime.now())) {
+                      displayDate = 'Today';
+                    } else if (DateFormat('dd MMMM yyyy')
+                            .format(currentDateTime) ==
+                        DateFormat('dd MMMM yyyy')
+                            .format(DateTime.now().subtract(
+                          const Duration(days: 1),
+                        ))) {
+                      displayDate = 'Yesterday';
+                    } else {
+                      displayDate =
+                          (DateFormat('dd MMMM yyyy').format(currentDateTime));
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      child: Column(
+                        children: [
+                          if (isLastMessageOfDay)
+                            Text(
+                              displayDate.toString(),
+                              style: AppFonts.normalText,
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Align(
+                              alignment: snapshot.data!.docs[index]
                                           ['senderId'] ==
                                       senderId
-                                  ? const BorderRadius.only(
-                                      topRight: Radius.circular(
-                                        8,
-                                      ),
-                                      topLeft: Radius.circular(
-                                        12,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        8,
-                                      ),
-                                      bottomRight: Radius.elliptical(
-                                        -20,
-                                        -10,
-                                      ),
-                                    )
-                                  : const BorderRadius.only(
-                                      topRight: Radius.circular(
-                                        8,
-                                      ),
-                                      topLeft: Radius.circular(
-                                        12,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        8,
-                                      ),
-                                      bottomRight: Radius.elliptical(
-                                        -20,
-                                        -10,
-                                      ),
-                                    ),
-                              color: Colors.green),
-                          child: Text(
-                            snapshot.data!.docs[index]['message'].toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width / 1.6,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: snapshot.data!.docs[index]
+                                                ['senderId'] ==
+                                            senderId
+                                        ? const BorderRadius.only(
+                                            topRight: Radius.circular(
+                                              8,
+                                            ),
+                                            topLeft: Radius.circular(
+                                              12,
+                                            ),
+                                            bottomLeft: Radius.circular(
+                                              8,
+                                            ),
+                                            bottomRight: Radius.elliptical(
+                                              -20,
+                                              -10,
+                                            ),
+                                          )
+                                        : const BorderRadius.only(
+                                            topRight: Radius.circular(
+                                              8,
+                                            ),
+                                            topLeft: Radius.circular(
+                                              12,
+                                            ),
+                                            bottomLeft: Radius.circular(
+                                              8,
+                                            ),
+                                            bottomRight: Radius.elliptical(
+                                              -20,
+                                              -10,
+                                            ),
+                                          ),
+                                    color: Colors.green),
+                                child: Text(
+                                  snapshot.data!.docs[index]['message']
+                                      .toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Align(
+                            alignment: snapshot.data!.docs[index]['senderId'] ==
+                                    senderId
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Text(
+                              DateFormat('hh:mm a').format(currentDateTime),
+                              style: AppFonts.normalText,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Align(
-                      alignment:
-                          snapshot.data!.docs[index]['senderId'] == senderId
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                      child: Text(
-                        DateFormat('hh:mm a').format(currentDateTime),
-                        style: AppFonts.normalText,
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 );
               },
             ),
           ),
-        );
-      },
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 50,
+                    child: TextFormField(
+                      controller: chatCn,
+                      onTapOutside: (event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            8,
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintText: AppStrings.typeAMessage,
+                        hintStyle: AppFonts.normalText.copyWith(
+                          fontSize: 17,
+                          color: AppColor.bg,
+                        ),
+                        fillColor: const Color(
+                          0xffF4F4F4,
+                        ),
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    onSendMessage();
+                  },
+                  child: SvgPicture.asset(
+                    AppIcon.sendIcon,
+                    height: 50,
+                    width: 58,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

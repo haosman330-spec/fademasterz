@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -147,8 +145,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 var chatData = documents?[index].data() as Map<String, dynamic>;
 
                 var i = ChatDataModal.fromJson(chatData);
-
-                log('>>>>>>dddddd>>>>>>>>${i}<<<<<<<<<<<<<<');
 
                 int indexx = 0;
 
