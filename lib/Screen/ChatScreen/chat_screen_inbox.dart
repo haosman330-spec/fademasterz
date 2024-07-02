@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,7 @@ import '../../Utils/app_string.dart';
 import '../../Utils/custom_app_bar.dart';
 import '../../Utils/helper.dart';
 import 'chat_service.dart';
-import 'messages_model.dart';
+import 'messages_modal.dart';
 
 class ChatScreenInBox extends StatefulWidget {
   final String? receiverName;
@@ -41,12 +43,12 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   String? displayDate;
   ChatService chatService = ChatService();
   late Stream<QuerySnapshot> _messagesStream;
-  int unreadCount = 0;
+  int? unreadCount;
+
   void onSendMessage() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (chatCn.text.isNotEmpty) {
       senderId = sharedPreferences.getInt('senderId').toString();
-
       await chatService.sendMessage(
         receiverId: widget.receiverId.toString(),
         message: chatCn.text.toString(),
@@ -80,9 +82,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .snapshots();
-    if (await _messagesStream.isEmpty) {
-      _markMessagesAsRead();
-    }
+    if (await _messagesStream.isEmpty) {}
+    _markMessagesAsRead();
 
     setState(() {});
   }
@@ -90,7 +91,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   void _markMessagesAsRead() {
     _messagesStream.listen((snapshot) {
       for (var doc in snapshot.docs) {
-        if ((doc['readBy'] as List).contains(senderId)) {
+        if (!(doc['readBy'] as List).contains(widget.receiverId)) {
+          unreadCount = 0;
           doc.reference.update({
             'readBy': FieldValue.arrayUnion([senderId]),
           });
@@ -100,12 +102,13 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             widget.receiverId.toString()
           ];
           ids.sort();
+
           String chatRoomId = ids.join('_');
           FirebaseFirestore.instance
               .collection('chat_rooms')
               .doc(chatRoomId)
               .update({
-            'unreadCounts.${senderId}': unreadCount,
+            'unreadCounts': unreadCount,
           });
         }
       }
@@ -233,9 +236,10 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                   itemCount: snapshot.data?.docs.length,
                   itemBuilder: (context, index) {
                     var map = snapshot.data?.docs[index].data();
-                    debugPrint('>>>>>MAp>>>>>>>>>$map<<<<<<<<<<<<<<');
 
-                    //
+                    debugPrint(
+                        '>>>>>MAp>>>>>>>>>${jsonEncode(map)}<<<<<<<<<<<<<<');
+
                     final currentMessage = listt[index];
 
                     final currentDateTime = DateTime.fromMillisecondsSinceEpoch(
@@ -279,7 +283,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                         children: [
                           if (isLastMessageOfDay)
                             Text(
-                              displayDate.toString(),
+                              '${displayDate.toString()} ',
                               style: AppFonts.normalText,
                             ),
                           Padding(

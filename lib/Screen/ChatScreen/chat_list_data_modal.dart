@@ -11,7 +11,8 @@ String chatDataModalToJson(ChatDataModal data) => json.encode(data.toJson());
 
 class ChatDataModal {
   String? image;
-  UnreadCounts? unreadCounts;
+  // UnreadCounts? unreadCounts;
+  int? unreadCounts;
   List<String>? members;
   int? lastMessageTime;
   List<MembersList>? membersList;
@@ -32,9 +33,10 @@ class ChatDataModal {
 
   factory ChatDataModal.fromJson(Map<String, dynamic> json) => ChatDataModal(
         image: json["image"],
-        unreadCounts: json["unreadCounts"] == null
-            ? null
-            : UnreadCounts.fromJson(json["unreadCounts"]),
+        unreadCounts: json["unreadCounts"],
+        // unreadCounts: json["unreadCounts"] == null
+        //     ? null
+        //     : UnreadCounts.fromJson(json["unreadCounts"]),
         members: json["members"] == null
             ? []
             : List<String>.from(json["members"]!.map((x) => x)),
@@ -50,7 +52,7 @@ class ChatDataModal {
 
   Map<String, dynamic> toJson() => {
         "image": image,
-        "unreadCounts": unreadCounts?.toJson(),
+        "unreadCounts": unreadCounts,
         "members":
             members == null ? [] : List<dynamic>.from(members!.map((x) => x)),
         "last_message_time": lastMessageTime,

@@ -531,7 +531,7 @@ class _CancelledBookingDetailState extends State<CancelledBookingDetail> {
           'Authorization':
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
-    debugPrint('>>>>>>request>>>>>>>>${request}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>request>>>>>>>>$request<<<<<<<<<<<<<<');
     setLoader(false);
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,

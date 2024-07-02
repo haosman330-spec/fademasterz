@@ -509,7 +509,7 @@ void _handleMessage(data) async {
             )));
   } else if (data['type'] == 'cancelled') {
     int bookingId = int.parse(data['booking_id']);
-    debugPrint('>>>>>>>>>>>>>>${bookingId}<<<<<<<<<bookingId<<<<<');
+    debugPrint('>>>>>>>>>>>>>>$bookingId<<<<<<<<<bookingId<<<<<');
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (context) => CancelledBookingDetail(

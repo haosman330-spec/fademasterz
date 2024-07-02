@@ -76,22 +76,22 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
             width: 15,
           ),
           onPressed: () {
-            // if (Navigator.of(context).canPop()) {
-            //   Navigator.of(context).pop();
-            //   //  return false; // Do not perform the default pop action
-            // } else {
-            //   // If this is the first screen in the stack, navigate to home
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => const DashBoardScreen(
-            //         selectIndex: 0,
-            //       ),
-            //     ),
-            //   );
-            //   //    return false; // Do not perform the default pop action
-            // }
-            willPopScop();
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+              //  return false; // Do not perform the default pop action
+            } else {
+              // If this is the first screen in the stack, navigate to home
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DashBoardScreen(
+                    selectIndex: 0,
+                  ),
+                ),
+              );
+              //    return false; // Do not perform the default pop action
+            }
+            //    willPopScop();
           },
         ),
         title: const Text(

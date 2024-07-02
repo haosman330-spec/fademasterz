@@ -23,7 +23,7 @@ class PrivacyPolicyScreen extends StatefulWidget {
 }
 
 class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
-  PrivacyPolicyModal privacyPolicyModal = PrivacyPolicyModal();
+  PrivacyPolicyModal? privacyPolicyModal;
   @override
   void initState() {
     super.initState();
@@ -59,7 +59,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: HtmlWidget(
-            (privacyPolicyModal.data?.privacyPolicy ?? ''),
+            (privacyPolicyModal?.data?.privacyPolicy ?? ''),
             customStylesBuilder: (element) {
               return {'color': 'white'};
             },

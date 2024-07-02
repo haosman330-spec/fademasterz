@@ -23,12 +23,14 @@ class TermsConditionScreen extends StatefulWidget {
 }
 
 class _TermsConditionScreen extends State<TermsConditionScreen> {
+  TermsConditionModal? termsConditionModal;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => _termsConditionScreen());
+        .addPostFrameCallback((_) => _termsConditionScreen(context));
   }
 
   @override
@@ -60,7 +62,7 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
             horizontal: 15,
           ),
           child: HtmlWidget(
-            (termsConditionModal.data?.terms ?? ''),
+            (termsConditionModal?.data?.terms ?? ''),
             customStylesBuilder: (element) {
               return {'color': 'white'};
             },
@@ -76,8 +78,7 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
     );
   }
 
-  TermsConditionModal termsConditionModal = TermsConditionModal();
-  void _termsConditionScreen() async {
+  void _termsConditionScreen(BuildContext context) async {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }

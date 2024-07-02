@@ -130,7 +130,9 @@ class _HelpScreenState extends State<HelpScreen> {
                       Text(
                         (helpCenterModal.data?.helpNumber.toString() ?? ''),
                         style: AppFonts.normalText.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                       )
                     ],
                   ),
@@ -155,7 +157,9 @@ class _HelpScreenState extends State<HelpScreen> {
                         child: Text(
                           (helpCenterModal.data?.helpWebsite.toString() ?? ''),
                           style: AppFonts.normalText.copyWith(
-                              fontWeight: FontWeight.w500, fontSize: 14),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
                         ),
                       )
                     ],
@@ -172,7 +176,8 @@ class _HelpScreenState extends State<HelpScreen> {
                 GestureDetector(
                   onTap: () {
                     launchUrlStart(
-                        url: socialLinkModal.data?.instaUrl.toString() ?? '');
+                      url: socialLinkModal.data?.instaUrl.toString() ?? '',
+                    );
                   },
                   child: Column(
                     children: [
@@ -194,7 +199,8 @@ class _HelpScreenState extends State<HelpScreen> {
                 GestureDetector(
                   onTap: () {
                     launchUrlStart(
-                        url: socialLinkModal.data?.twitterUrl.toString() ?? '');
+                      url: socialLinkModal.data?.twitterUrl.toString() ?? '',
+                    );
                   },
                   child: Column(
                     children: [
@@ -216,8 +222,8 @@ class _HelpScreenState extends State<HelpScreen> {
                 InkWell(
                   onTap: () {
                     launchUrlStart(
-                        url:
-                            socialLinkModal.data?.facebookUrl.toString() ?? '');
+                      url: socialLinkModal.data?.facebookUrl.toString() ?? '',
+                    );
                   },
                   child: Column(
                     children: [
@@ -239,7 +245,8 @@ class _HelpScreenState extends State<HelpScreen> {
                 InkWell(
                   onTap: () {
                     launchUrlStart(
-                        url: socialLinkModal.data?.whatsupUrl.toString() ?? '');
+                      url: socialLinkModal.data?.whatsupUrl.toString() ?? '',
+                    );
                   },
                   child: Column(
                     children: [

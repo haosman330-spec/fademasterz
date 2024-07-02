@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
-import 'package:fademasterz/Modal/choose_availiabilty_modal.dart';
+import 'package:fademasterz/Modal/choose_availability_modal.dart';
 import 'package:fademasterz/Modal/shop_service_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';

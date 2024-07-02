@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -51,28 +53,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
     debugPrint(
         '>>>>>sharedPreferences.getString("User_Id").receiverId>>>>>>>>>$receiverId<<<<<<<<<<<<<<');
     setState(() {});
-  }
-
-  Future<int> countUnreadMessages(String chatId, String userId) async {
-    List<String> ids = [senderId.toString(), userId];
-    ids.sort();
-    String chatRoomId = ids.join('_');
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .get();
-
-    int unreadCount = 0;
-    for (var doc in querySnapshot.docs) {
-      if (!doc['readBy'].contains(chatId)) {
-        unreadCount++;
-      }
-      debugPrint(
-          '>>>>>>>>>>unreadCountfdfdfsdfa>>>>${unreadCount}<<<<<<<<<<<<<<');
-    }
-
-    return unreadCount;
   }
 
   @override
@@ -143,7 +123,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 int index,
               ) {
                 var chatData = documents?[index].data() as Map<String, dynamic>;
-
+                log('.................${chatData.toString()}');
                 var i = ChatDataModal.fromJson(chatData);
 
                 int indexx = 0;
@@ -206,17 +186,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w300),
                                 ),
-                                // Text(
-                                //   chatData['unreadCounts'][i.senderId] > 0
-                                //       ? chatData['unreadCounts'][i.senderId]
-                                //           .toString()
-                                //       : 'null',
-                                //   maxLines: 1,
-                                //   style: AppFonts.normalText.copyWith(
-                                //       // overflow: TextOverflow.ellipsis,
-                                //       fontSize: 14,
-                                //       fontWeight: FontWeight.w300),
-                                // ),
+                                Text(
+                                  (i.unreadCounts != 0)
+                                      ? i.unreadCounts.toString()
+                                      : '0',
+                                  // chatData['unreadCounts'][i.senderId] > 0
+                                  //     ? chatData['unreadCounts'][i.senderId]
+                                  //         .toString()
+                                  //     : 'null',
+                                  maxLines: 1,
+                                  style: AppFonts.normalText.copyWith(
+                                      // overflow: TextOverflow.ellipsis,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
                               ],
                             ),
                           ),

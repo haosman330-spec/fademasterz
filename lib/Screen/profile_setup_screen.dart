@@ -18,8 +18,8 @@ import '../Utils/utility.dart';
 import 'Dashboard/dashboard.dart';
 
 class ProfileSetup extends StatefulWidget {
-  String phoneNo;
-  ProfileSetup({super.key, required this.phoneNo});
+  final String phoneNo;
+  const ProfileSetup({super.key, required this.phoneNo});
 
   @override
   State<ProfileSetup> createState() => _ProfileSetupState();
@@ -168,8 +168,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
 
   Future<void> profileSetupApi(BuildContext context) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    debugPrint(
-        '>>>>>>access_Token>>>>>>>>${sharedPreferences.getString("access_Token")}}<<<<<<<<<<<<<<');
+
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }

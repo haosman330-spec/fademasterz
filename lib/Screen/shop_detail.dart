@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fademasterz/Modal/shop_detail_modal.dart';
@@ -37,6 +38,7 @@ class _ShopDetailState extends State<ShopDetail> {
   int selectIndex1 = 0;
   bool isListVisible = false;
   bool isDataLoad = false;
+  String _shopStatus = 'Loading...';
   List<Widget> categories = [];
   void setLoader(bool value) {
     isDataLoad = value;
@@ -812,17 +814,13 @@ class _ShopDetailState extends State<ShopDetail> {
     );
   }
 
-  String _shopStatus = 'Loading...';
   String _updateShopStatus(String openTime, String closeTime) {
     // Get the current time
 
     DateTime ct = DateTime.now();
     // Format opening and closing times as DateTime objects
     DateTime openDateTime = DateFormat.Hm().parse(openTime);
-
     DateTime closeDateTime = DateFormat.Hm().parse(closeTime);
-    // debugPrint('>>>>>>>>>>>>>>${openDateTime}<<<<<<<<<<<<<<');
-    // debugPrint('>>>>>>>>>>>>>>${closeDateTime}<<<<<<<<<<<<<<');
     DateTime currentTime = DateTime(openDateTime.year, openDateTime.month,
         openDateTime.day, ct.hour, ct.minute, ct.second);
 
@@ -882,10 +880,16 @@ class _ShopDetailState extends State<ShopDetail> {
       openTime = shopDetailModal.data?.shopStartTime;
       closeTime = shopDetailModal.data?.shopEndTime;
       // var id = shopDetailModal.data?.id;
-      debugPrint(
-          '>>>>>jsonResponse>>>>>>>>>${jsonResponse['data'].toString()}<<<<<<<<<<<<<<');
+      log('>>>>>jsonResponse>>>>>>>>>${jsonResponse['data'].toString()}<<<<<<<<<<<<<<');
       _updateShopStatus(openTime!, closeTime!);
       setState(() {});
+    }
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
     }
   }
 }

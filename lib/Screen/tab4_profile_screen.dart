@@ -33,6 +33,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   ProfileModal profileModal = ProfileModal();
+  ProfileUserData profileUserData = ProfileUserData();
   String? name;
   String? image;
 
@@ -40,6 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     image = sharedPreferences.getString('image');
     name = sharedPreferences.getString('name');
+
     setState(() {});
   }
 
@@ -494,7 +496,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ConnectivityResult.wifi)) {
                                           userLogoutApi(context);
                                         } else {
-                                          Utility.showNoNetworkDialog(context);
+                                          if (context.mounted) {
+                                            Utility.showNoNetworkDialog(
+                                                context);
+                                          }
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'chat_user_sendmessage_modal.dart';
-import 'chat_usermodel.dart';
+import 'chat_userModal.dart';
+import 'chat_user_sendMessage_modal.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -106,6 +106,8 @@ class ChatService {
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
+        // .doc(sharedPreferences.getString('name'))
+        // .set(messages.toMap());
         .add(messages.toMap());
 
     await firestore.collection('chat_rooms').doc(chatRoomId).set({
@@ -120,14 +122,17 @@ class ChatService {
           "image": sharedPreferences.getString('image'),
           "name": sharedPreferences.getString('name'),
           "id": currentUserId,
+          //  "readMessage": true,
         },
         {
           "image": receiverImage,
           "name": receiverName,
           "id": receiverId,
+          //  "readMessage": true,
         },
       ]
     });
+
     countUnreadMessages(currentUserId, receiverId);
 
     // }
@@ -165,6 +170,7 @@ class ChatService {
     // }
   }
 
+  bool hasUnread = false;
   late Stream<QuerySnapshot> _messagesStream;
   Future<int> countUnreadMessages(String chatId, String userId) async {
     List<String> ids = [chatId.toString(), userId];
@@ -177,45 +183,25 @@ class ChatService {
         .get();
 
     for (var doc in querySnapshot.docs) {
-      if (!doc['readBy'].contains(chatId)) {
+      if (!doc['readBy'].contains(userId)) {
         unreadCount++;
+
+        debugPrint(
+            '>>>>>>>>>>unreadCountfdfdfsdfa>>>>${unreadCount}<<<<<<<<<<<<<<');
       }
-      debugPrint(
-          '>>>>>>>>>>unreadCountfdfdfsdfa>>>>${unreadCount}<<<<<<<<<<<<<<');
     }
+
     await firestore.collection('chat_rooms').doc(chatRoomId).update({
-      'unreadCounts.${chatId}': unreadCount,
+      'unreadCounts': unreadCount,
+      //  "readMessage": true,
     });
     return unreadCount;
-  }
-
-  void _markMessagesAsRead(String senderId, String receiverId) {
-    _messagesStream.listen((snapshot) {
-      for (var doc in snapshot.docs) {
-        if (!(doc['readBy'] as List).contains(senderId)) {
-          doc.reference.update({
-            'readBy': FieldValue.arrayUnion([receiverId]),
-          });
-
-          List<String> ids = [senderId.toString(), receiverId.toString()];
-          ids.sort();
-          String chatRoomId = ids.join('_');
-          FirebaseFirestore.instance
-              .collection('chat_rooms')
-              .doc(chatRoomId)
-              .update({
-            'unreadCounts.${senderId}': unreadCount,
-          });
-        }
-      }
-    });
   }
 
   Stream<QuerySnapshot> getMessage(String userId, otherUserId) {
     List<String> ids = [userId.toString(), otherUserId];
     ids.sort();
     String chatRoomId = ids.join('_');
-    // _markMessagesAsRead(userId,otherUserId);
     return firestore
         .collection('chat_rooms')
         .doc(chatRoomId)

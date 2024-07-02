@@ -220,8 +220,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      (cancelledBooking.shopName.toString() ??
-                                          ''),
+                                      (cancelledBooking.shopName.toString()),
                                       style: AppFonts.regular.copyWith(
                                         fontSize: 16,
                                       ),
@@ -355,7 +354,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
       cancelledBookingResponse =
           CancelledBookingResponse.fromJson(jsonResponse);
       totalPage = cancelledBookingResponse?.data?.upcomingTotalPages ?? 1;
-      debugPrint('>>>>>>totalPage>>>>>>>>${totalPage}<<<<<<<<<<<<<<');
+      debugPrint('>>>>>>totalPage>>>>>>>>$totalPage<<<<<<<<<<<<<<');
 
       if (currentPage == 1) {
         cancelledList.clear();

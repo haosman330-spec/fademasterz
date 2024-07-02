@@ -188,7 +188,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           AppIcon.homeIcon,
                           width: 21,
                           height: 22,
-                          color: AppColor.yellow,
+                          colorFilter: const ColorFilter.mode(
+                              AppColor.yellow, BlendMode.srcIn),
+                          // color: AppColor.yellow,
                         ),
                         const SizedBox(
                           height: 8,

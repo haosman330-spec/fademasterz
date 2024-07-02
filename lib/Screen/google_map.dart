@@ -89,7 +89,7 @@ class MyHomePageState extends State<MyHomePage> {
       setState(() {
         _initialPosition = LatLng(location.latitude, location.longitude);
         _markers[0] = Marker(
-          markerId: MarkerId('currentLocation'),
+          markerId: const MarkerId('currentLocation'),
           position: _initialPosition,
         );
       });
@@ -101,7 +101,7 @@ class MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Maps Current Location'),
+        title: const Text('Google Maps Current Location'),
       ),
       body: Column(
         children: [
@@ -123,7 +123,7 @@ class MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'Address: $_currentAddress',
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ),

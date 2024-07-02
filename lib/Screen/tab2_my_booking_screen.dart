@@ -237,7 +237,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 child: Visibility(
                   visible: isVisible == true,
                   replacement: Visibility(
-                    visible: (completedList.isNotEmpty ?? false),
+                    visible: (completedList.isNotEmpty),
                     replacement: const Center(
                       child: Text(
                         'No Completed Booking',
@@ -247,7 +247,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                     child: ListView.separated(
                       controller: scrollController,
                       shrinkWrap: true,
-                      itemCount: completedList.length ?? 0,
+                      itemCount: completedList.length,
                       itemBuilder: (BuildContext context, int index) {
                         var myCompleteBooking = completedList[index];
 
@@ -400,17 +400,19 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                       await SharedPreferences.getInstance();
                                   bookingId = completedList[index].id;
                                   shared.setInt('cbookingId', bookingId!);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          CompleteBookingDetail(
-                                        bookingId: bookingId,
+                                  if (context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CompleteBookingDetail(
+                                          bookingId: bookingId,
+                                        ),
                                       ),
-                                    ),
-                                  ).then((value) {
-                                    getBookingListApi(context, 1);
-                                  });
+                                    ).then((value) {
+                                      getBookingListApi(context, 1);
+                                    });
+                                  }
                                 },
                                 child: Align(
                                   alignment: Alignment.bottomCenter,
@@ -459,7 +461,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                     child: ListView.separated(
                       controller: scrollController,
                       shrinkWrap: true,
-                      itemCount: (upcomingList.length ?? 0),
+                      itemCount: (upcomingList.length),
                       itemBuilder: (BuildContext context, int index) {
                         var myUpcomingBooking = upcomingList[index];
 

@@ -22,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
 import '../Modal/booking_summary_argument_modal.dart';
-import '../Utils/bottam_sheet.dart';
+import '../Utils/bottom_sheet.dart';
 import '../Utils/custom_app_button.dart';
 import '../Utils/utility.dart';
 
@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double? latitude;
   double? longitude;
   late LocationPermission permission;
+  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late StreamSubscription<InternetStatus> listener;
   HomePageModal homePageModal = HomePageModal();
@@ -57,9 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool hasMore = true;
   final ScrollController scrollController = ScrollController();
   List<Shop> shopList = [];
-
   int totalPage = 1;
-
   void setLoader(bool value) {
     isDataLoading = value;
     setState(() {});
@@ -191,17 +190,6 @@ class _HomeScreenState extends State<HomeScreen> {
     longitude = position.longitude;
     latitude = position.latitude;
   }
-  /* InternetStatus? _connectionStatus;
-  final ScrollController _scrollController = ScrollController();
-  static Future<bool> internetConnected() async {
-    bool internetConnection = await InternetConnectionChecker().hasConnection;
-
-    if (!internetConnection) {
-      debugPrint('>>>>>>>>>>>>>>No Internet Connection<<<<<<<<<<<<<<');
-      Helper().showToast("No Internet Connection");
-    }
-    return internetConnection;
-  }*/
 
   @override
   void initState() {
@@ -439,8 +427,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView.separated(
                       controller: scrollController,
                       shrinkWrap: true,
-                      itemCount: (shopList.length ??
-                          0), //(homePageModal.data?.shops?.length ?? 0),
+                      itemCount: (shopList
+                          .length), //(homePageModal.data?.shops?.length ?? 0),
                       padding: const EdgeInsets.only(top: 15, bottom: 15),
                       itemBuilder: (context, index) {
                         //  var item = homePageModal.data?.shops?[index];
@@ -614,21 +602,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Container(
                       height: MediaQuery.of(context).size.height / 3,
                       alignment: Alignment.center,
-                      child: const Text(
-                        'No Shop Available',
+                      child: Text(
+                        AppStrings.noShopAvailable,
                         style: AppFonts.normalText,
                       ),
                     ),
                   ),
                   child: Expanded(
                     child: ListView.separated(
-                      physics: const NeverScrollableScrollPhysics(),
+                      controller: scrollController,
                       shrinkWrap: true,
-                      itemCount:
-                          (searchHomePageModal?.data?.shops?.length ?? 1),
+                      itemCount: shopList.length,
                       padding: const EdgeInsets.only(top: 15),
                       itemBuilder: (context, index) {
-                        var item = searchHomePageModal?.data?.shops?[index];
+                        var item = shopList[index];
 
                         return InkWell(
                           onTap: () async {
@@ -636,7 +623,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 await SharedPreferences.getInstance();
                             sharedPreferences.setInt(
                               'shop_id',
-                              item!.id!.toInt(),
+                              item.id!.toInt(),
                             );
 
                             Navigator.push(
@@ -668,9 +655,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   child: Visibility(
-                                    visible: (item?.image?.isNotEmpty ?? false),
+                                    visible: (item.image?.isNotEmpty ?? false),
                                     child: Image.network(
-                                      ApiService.imageUrl + (item?.image ?? ''),
+                                      ApiService.imageUrl + (item.image ?? ''),
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -685,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        (item?.name ?? ''),
+                                        (item.name ?? ''),
                                         style: AppFonts.regular
                                             .copyWith(fontSize: 16),
                                       ),
@@ -701,9 +688,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             width: 10,
                                           ),
                                           Text(
-                                            (item?.avgRating) == '0'
-                                                ? 'No Rating Yet'
-                                                : (item?.avgRating ?? ''),
+                                            (item.avgRating) == '0'
+                                                ? AppStrings.noRatingYet
+                                                : (item.avgRating ?? ''),
                                             style: AppFonts.regular.copyWith(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500),
@@ -720,7 +707,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width: 10,
                                               ),
                                               Text(
-                                                '${item?.distance ?? ' '} km',
+                                                '${item.distance ?? ' '} km',
                                                 style: AppFonts.regular
                                                     .copyWith(
                                                         fontSize: 14,
@@ -746,7 +733,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Text(
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              (item?.address ?? ''),
+                                              (item.address ?? ''),
                                               style: AppFonts.regular.copyWith(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w500),
@@ -835,6 +822,14 @@ class _HomeScreenState extends State<HomeScreen> {
     if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {
         searchHomePageModal = HomePageModal.fromJson(jsonResponse);
+        totalPage = searchHomePageModal?.data?.totalPages ?? 1;
+        if (currentPage == 1) {
+          shopList.clear();
+          shopList.addAll(searchHomePageModal?.data?.shops ?? []);
+        } else {
+          shopList.addAll(searchHomePageModal?.data?.shops ?? []);
+        }
+
         setState(() {});
       } else {
         homePageModal = HomePageModal.fromJson(jsonResponse);

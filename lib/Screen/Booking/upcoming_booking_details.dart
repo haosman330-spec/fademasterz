@@ -20,7 +20,7 @@ import '../../Utils/custom_app_button.dart';
 import '../../Utils/helper.dart';
 import '../ChatScreen/chat_screen_inbox.dart';
 import '../Dashboard/dashboard.dart';
-import '../choose_availability_barber_resheduale.dart';
+import '../choose_availability_barber_reschedule.dart';
 
 class UpcomingBookingDetail extends StatefulWidget {
   final int? bookingId;
