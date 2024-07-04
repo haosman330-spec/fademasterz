@@ -34,10 +34,10 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   bool showLoader = false;
 
   MyBookingResponse? myBookingResponse;
-  int upcomingCurrentPage = 1;
-  int completeCurrentPage = 1;
+  int currentPage = 1;
+
   int upcomingTotalPage = 1;
-  int completeTotalPage = 1;
+
   final ScrollController scrollController = ScrollController();
   List<UpComing> upcomingList = [];
   List<Completed> completedList = [];
@@ -61,11 +61,13 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   pagination() {
     scrollController.addListener(() {
       debugPrint('Pagination started>>>');
+
       if ((scrollController.position.maxScrollExtent ==
               scrollController.position.pixels) &&
-          (upcomingCurrentPage < upcomingTotalPage)) {
-        upcomingCurrentPage++;
-        getBookingListApi(context, upcomingCurrentPage);
+          (currentPage < upcomingTotalPage)) {
+        currentPage++;
+
+        getBookingListApi(context, currentPage);
         setState(() {});
       }
     });
@@ -112,7 +114,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // geteBooking();
+                  // getBooking();
                   getBookingListApi(context,1);
                   setState(() {});
                 },
@@ -146,10 +148,11 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      getBookingListApi(context, 1);
-                      upcomingTotalPage =
-                          myBookingResponse?.data?.upcomingTotalPages ?? 1;
+                      currentPage = 1;
+
                       isVisible = true;
+
+                      getBookingListApi(context, 1);
                       setState(() {});
                     },
                     child: Container(
@@ -184,10 +187,12 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
+                      currentPage = 1;
+
                       isVisible = false;
-                      getBookingListApi(context, 1);
                       upcomingTotalPage =
                           myBookingResponse?.data?.completedTotalPages ?? 1;
+                      getBookingListApi(context, 1);
                       setState(() {});
                     },
                     child: Container(
@@ -410,6 +415,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                         ),
                                       ),
                                     ).then((value) {
+                                      currentPage = 1;
                                       getBookingListApi(context, 1);
                                     });
                                   }
@@ -451,7 +457,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                     ),
                   ),
                   child: Visibility(
-                    visible: (upcomingList.isNotEmpty ?? false),
+                    visible: (upcomingList.isNotEmpty),
                     replacement: const Center(
                       child: Text(
                         'No UpComing Booking',
@@ -464,7 +470,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                       itemCount: (upcomingList.length),
                       itemBuilder: (BuildContext context, int index) {
                         var myUpcomingBooking = upcomingList[index];
-
+                        upcomingTotalPage =
+                            myBookingResponse?.data?.upcomingTotalPages ?? 1;
                         return DecoratedBox(
                           decoration: BoxDecoration(
                             color: AppColor.black,
@@ -625,6 +632,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                                               bookingId: bookingId),
                                     ),
                                   ).then((value) {
+                                    currentPage = 1;
                                     getBookingListApi(context, 1);
                                   });
                                 },
@@ -683,7 +691,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     var request = {
       'page': currentPage,
     };
-    debugPrint('>>>>request>>>>currentPage>>>>>>${currentPage}<<<<<<<<<<<<<<');
+    debugPrint('>>>>request>>>>currentPage>>>>>>$currentPage<<<<<<<<<<<<<<');
     var response = await http.post(
         Uri.parse(
           ApiService.myBooking,
@@ -710,7 +718,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     // Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status'] == true) {
       myBookingResponse = MyBookingResponse.fromJson(jsonResponse);
-      //  upcomingTotalPage = myBookingResponse?.data?.upcomingTotalPages ?? 1;
+
       if (currentPage == 1) {
         upcomingList.clear();
         upcomingList.addAll(myBookingResponse?.data?.upcoming ?? []);

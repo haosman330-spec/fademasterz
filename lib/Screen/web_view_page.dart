@@ -21,7 +21,7 @@ class _WebViewPageState extends State<WebViewPage> {
   var urls;
   var initialContent = "";
 
-  String jsondata = "";
+  String jsonData = "";
   String message = "";
   String status = "";
 
@@ -84,7 +84,7 @@ class _WebViewPageState extends State<WebViewPage> {
             "https://sandbox.web.squarecdn.com/v1/square.js") {}
         if (src.toString() ==
             "https://checkout.stripe.com/c/pay/cs_test_a1oZhGAhe6iBMJlTAJo6TICrH2juanD5QYtrfvbCvIehdMZQqiy33"
-                "Moqgr#fidkdWxOYHwnPyd1blpxYHZxWjA0TmBNMzVPS1dUZGE8NVxzNmxDX0JENkR1Rl9uPGFKYnEzVW90cDZ3TFFrPUxcc0tMQFJ"
+                "MOQ#fidkdWxOYHwnPyd1blp xYHZxWjA0TmBNMzVPS1dUZGE8NVxzNmxDX0JENkR1Rl9uPGFKYnEzVW90cDZ3TFFrPUxcc0tMQFJ"
                 "qf2N2SX9nT0lha3V2STB3UjB2bVBkUWxHf2ozVVdLbE92cGJ9NTVgfzVkbUI8RCcpJ2N3amhWYHdz"
                 "YHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl") {}
       },
@@ -147,20 +147,20 @@ class _WebViewPageState extends State<WebViewPage> {
         "window.document.getElementsByTagName('body')[0].innerHTML;");
     print("html......${html}");
     print(
-        "htmldata.. ${html.substring(1, html.toString().length - 1).replaceAll("\\", "")}");
-    jsondata =
+        "htmlData.. ${html.substring(1, html.toString().length - 1).replaceAll("\\", "")}");
+    jsonData =
         "${html.substring(1, html.toString().length - 1).replaceAll("\\", "")}";
-    print("object?????????????????????  ${jsondata}");
+    print("object?????????????????????  ${jsonData}");
 
-    settingsFromJson(jsondata);
-    print("map...${jsondata}");
-    print("{" + jsondata + "}");
+    settingsFromJson(jsonData);
+    print("map...${jsonData}");
+    print("{" + jsonData + "}");
     parse(html);
-    print("data ${jsondata.toString()}");
+    print("data ${jsonData.toString()}");
   }
 
   Future<WebViewModel> settingsFromJson(String str) async {
-    print("fnjgjkh${"{" + jsondata + "}"}");
+    print("jsonData{"{" + jsonData + "}"}");
     var jsonData;
     if (Platform.isAndroid) {
       jsonData = convert.jsonDecode(str);
@@ -168,7 +168,7 @@ class _WebViewPageState extends State<WebViewPage> {
       jsonData = convert.jsonDecode("{" + str + "}");
     }
     // var jsonData = convert.jsonDecode("{"+str+"}");
-    print("jsondata ${jsonData['status']}");
+    print("jsonData ${jsonData['status']}");
     if (jsonData['status'] == true) {
       Helper().showToast(jsonData['message']);
 

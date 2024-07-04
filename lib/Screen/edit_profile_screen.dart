@@ -142,24 +142,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: WillPopScope(
         onWillPop: () async => onCallback(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 20,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(70),
-                      child: _imageFile == null
-                          ? Visibility(
-                              visible: (image?.isNotEmpty ?? false),
-                              child: CachedNetworkImage(
+        child: Visibility(
+          visible: (profileModal?.data?.name?.isNotEmpty ?? false),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 20,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(70),
+                        child: _imageFile == null
+                            ? CachedNetworkImage(
                                 imageUrl: ApiService.imageUrl + (image ?? ''),
                                 height: 103,
                                 width: 103,
@@ -170,101 +170,103 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             value: downloadProgress.progress),
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.error),
+                              )
+                            : Image.file(
+                                _imageFile ?? File('path'),
+                                height: 103,
+                                width: 103,
+                                fit: BoxFit.fill,
                               ),
-
-                              // Image.network(
-                              //   ApiService.imageUrl + (image ?? ''),
-                              //   height: 103,
-                              //   width: 103,
-                              //   fit: BoxFit.fill,
-                              // ),
-                            )
-                          : Image.file(
-                              _imageFile ?? File('path'),
-                              height: 103,
-                              width: 103,
-                              fit: BoxFit.fill,
-                            ),
+                      ),
+                      Positioned(
+                        bottom: -3,
+                        right: 2,
+                        child: InkWell(
+                            onTap: () {
+                              showOptions();
+                            },
+                            child: SvgPicture.asset(AppIcon.cameraIcon)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CustomTextField(
+                  controller: nameCn,
+                  hintText: AppStrings.name,
+                  textInputType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  hintTextStyle: AppFonts.textFieldFont,
+                  prefixIcon: Align(
+                    heightFactor: 2,
+                    widthFactor: 2,
+                    child: SvgPicture.asset(
+                      AppIcon.parsonIcon,
+                      height: 17,
+                      width: 17,
                     ),
-                    Positioned(
-                      bottom: -3,
-                      right: 2,
-                      child: InkWell(
-                          onTap: () {
-                            showOptions();
-                          },
-                          child: SvgPicture.asset(AppIcon.cameraIcon)),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextField(
+                  controller: emailCn,
+                  hintText: AppStrings.email,
+                  textInputType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  hintTextStyle: AppFonts.textFieldFont,
+                  prefixIcon: Align(
+                    heightFactor: 2,
+                    widthFactor: 2,
+                    child: SvgPicture.asset(
+                      AppIcon.gmailIcon,
+                      height: 17,
+                      width: 17,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CustomTextField(
-                controller: nameCn,
-                hintText: AppStrings.name,
-                textInputType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                hintTextStyle: AppFonts.textFieldFont,
-                prefixIcon: Align(
-                  heightFactor: 2,
-                  widthFactor: 2,
-                  child: SvgPicture.asset(
-                    AppIcon.parsonIcon,
-                    height: 17,
-                    width: 17,
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              CustomTextField(
-                controller: emailCn,
-                hintText: AppStrings.email,
-                textInputType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                hintTextStyle: AppFonts.textFieldFont,
-                prefixIcon: Align(
-                  heightFactor: 2,
-                  widthFactor: 2,
-                  child: SvgPicture.asset(
-                    AppIcon.gmailIcon,
-                    height: 17,
-                    width: 17,
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextField(
+                  controller: phoneCn,
+                  readonly: true,
+                  hintText: AppStrings.mobileNo,
+                  textInputType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  // inputFormatters: [
+                  //   FilteringTextInputFormatter.allow(
+                  //     RegExp(
+                  //       r'^\d+?\d*',
+                  //     ),
+                  //   ),
+                  // ],
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Not Update Mobile No'),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                    // Helper().showToast('Not Update in Mobile No');
+                  },
+                  maxLength: 11,
+                  hintTextStyle: AppFonts.textFieldFont,
+                  prefixIcon: Align(
+                    heightFactor: 2,
+                    widthFactor: 2,
+                    child: SvgPicture.asset(
+                      AppIcon.phoneIcon,
+                      height: 17,
+                      width: 17,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              CustomTextField(
-                controller: phoneCn,
-                readonly: true,
-                hintText: AppStrings.mobileNo,
-                textInputType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                // inputFormatters: [
-                //   FilteringTextInputFormatter.allow(
-                //     RegExp(
-                //       r'^\d+?\d*',
-                //     ),
-                //   ),
-                // ],
-                maxLength: 11,
-                hintTextStyle: AppFonts.textFieldFont,
-                prefixIcon: Align(
-                  heightFactor: 2,
-                  widthFactor: 2,
-                  child: SvgPicture.asset(
-                    AppIcon.phoneIcon,
-                    height: 17,
-                    width: 17,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -280,11 +282,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               await (Connectivity().checkConnectivity());
 
           if (connectivityResult.contains(ConnectivityResult.mobile)) {
-            userUpdateProfile(context);
+            if (context.mounted) userUpdateProfile(context);
           } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-            userUpdateProfile(context);
+            if (context.mounted) {
+              userUpdateProfile(context);
+            }
           } else {
-            Utility.showNoNetworkDialog(context);
+            if (context.mounted) {
+              Utility.showNoNetworkDialog(context);
+            }
           }
         },
       ),
@@ -357,7 +363,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     if (finalResult["status"] == true) {
-      profileDetail(context);
+      if (context.mounted) {
+        profileDetail(context);
+      }
       setState(() {});
     }
   }
@@ -401,21 +409,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       nameCn.text = (profileModal?.data?.name ?? '');
       phoneCn.text =
           ('+${profileModal?.data?.countryCode}${profileModal?.data?.phone}');
-      // ('${(profileModal?.data?.countryCode ?? '')
-      // ${(profileModal?.data?.phone ?? '');}');
 
       sharedPreferences.setString('image', profileModal?.data?.image ?? '');
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');
       sharedPreferences.setString('email', profileModal?.data?.email ?? '');
 
-      sharedPreferences.setString(
-          'User_Id', profileModal?.data?.id.toString() ?? '');
+      // sharedPreferences.setString(
+      //     'User_Id', profileModal?.data?.id.toString() ?? '');
       sharedPreferences
           .setInt(
               'senderId', int.parse(profileModal?.data!.id?.toString() ?? ''))
           .toString();
-      debugPrint(
-          '>>>>>>>>>>>User_Id>>>>>${sharedPreferences.getString('User_Id')}<<<<<<<<<<<<<<');
 
       setState(() {});
     }

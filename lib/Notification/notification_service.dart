@@ -16,7 +16,7 @@ class FirebaseServices {
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
   static const AndroidInitializationSettings androidInitializationSettings =
       AndroidInitializationSettings('@mipmap/ic_launcher');
-  static bool titleeeee = false;
+  static bool title = false;
 
   static const DarwinInitializationSettings initializationSettingsDarwin =
       DarwinInitializationSettings(
@@ -29,7 +29,7 @@ class FirebaseServices {
           onDidReceiveLocalNotification: onDidReceiveLocalNotification);
 
   ///.....FCM Token........................
-  static Future<String?> getfcm() async {
+  static Future<String?> getFcm() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     String? token = await FirebaseMessaging.instance.getToken();
@@ -38,10 +38,10 @@ class FirebaseServices {
   }
 
   static void initialNotification() async {
-    var initialzationSettingsAndroid = androidInitializationSettings;
+    var initializationSettingsAndroid = androidInitializationSettings;
 
     var initializationSettings = InitializationSettings(
-        android: initialzationSettingsAndroid,
+        android: initializationSettingsAndroid,
         iOS: initializationSettingsDarwin);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -139,7 +139,7 @@ class FirebaseServices {
 
     ///When App is Open
     FirebaseMessaging.onMessage.listen((message) {
-      titleeeee = true;
+      title = true;
       if (kDebugMode) {
         debugPrint("title<><><>${message.notification!.title}");
         debugPrint("body<><><>${message.notification!.body}");
@@ -331,7 +331,7 @@ class NotificationService {
       fcmToken = await FirebaseMessaging.instance.getToken();
 
       if (fcmToken?.isNotEmpty ?? false) {
-        //    prefs.setString("fcm_tokenff", fcmToken.toString());
+        //    prefs.setString("fcm_token", fcmToken.toString());
         //     debugPrint('fcm token is>>${fcmToken.toString()}');
       }
       // ignore: empty_catches
@@ -503,10 +503,13 @@ void _handleMessage(data) async {
   // steps
 
   if (data['type'] == null) {
-    navigatorKey.currentState?.push(MaterialPageRoute(
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
         builder: (context) => const DashBoardScreen(
-              selectIndex: 0,
-            )));
+          selectIndex: 0,
+        ),
+      ),
+    );
   } else if (data['type'] == 'cancelled') {
     int bookingId = int.parse(data['booking_id']);
     debugPrint('>>>>>>>>>>>>>>$bookingId<<<<<<<<<bookingId<<<<<');

@@ -91,7 +91,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   void _markMessagesAsRead() {
     _messagesStream.listen((snapshot) {
       for (var doc in snapshot.docs) {
-        if (!(doc['readBy'] as List).contains(widget.receiverId)) {
+        if ((doc['readBy'] as List).contains(widget.receiverId)) {
           unreadCount = 0;
           doc.reference.update({
             'readBy': FieldValue.arrayUnion([senderId]),

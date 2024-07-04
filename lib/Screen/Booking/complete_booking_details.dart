@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
@@ -41,7 +40,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
   String? image;
   String? date;
   String? specialistId;
-  List<ConnectivityResult>? _connectionStatus;
+
   BookingDetailResponse? bookingDetailResponse;
   void setLoader(bool value) {
     showLoader = value;
@@ -592,154 +591,7 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
                   vertical: 15,
                 ),
                 onPress: () {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            17,
-                          ),
-                        ),
-                        insetPadding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 16,
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: SizedBox(
-                                    height: 21,
-                                    width: 21,
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: SvgPicture.asset(
-                                        AppIcon.cancelIcon,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    AppStrings.rating,
-                                    style: AppFonts.blackFont.copyWith(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 9,
-                                ),
-                                SvgPicture.asset(
-                                  AppIcon.ratingDialogIcon,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 10,
-                                  ),
-                                  child: Text(
-                                    textAlign: TextAlign.center,
-                                    'You have done using Barber/Salon Service ',
-                                    style: AppFonts.blackFont.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  child: Text(
-                                    textAlign: TextAlign.center,
-                                    'Please leave your review so others people can know your opinion.',
-                                    style: AppFonts.text.copyWith(
-                                      color: const Color(
-                                        0xff5F5F5F,
-                                      ).withOpacity(
-                                        .90,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 17,
-                                ),
-                                RatingBar.builder(
-                                  initialRating: 0,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemPadding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  itemBuilder: (context, _) => const Icon(
-                                    Icons.star,
-                                    color: AppColor.yellow,
-                                  ),
-                                  onRatingUpdate: (rating) {
-                                    rating1 = rating.toString();
-                                    setState(() {});
-                                    //  print(rating);
-                                  },
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 15,
-                                    right: 15,
-                                    top: 15,
-                                    bottom: 15,
-                                  ),
-                                  child: CustomTextField(
-                                    controller: reviewCn,
-                                    textInputAction: TextInputAction.done,
-                                    radius: 6,
-                                    hintText: AppStrings.reviews,
-                                    maxLines: 4,
-                                    style: AppFonts.blackFont.copyWith(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500),
-                                    borderSide: BorderSide.none,
-                                    isFilled: true,
-                                    fillColor: const Color(
-                                      0xffEDEDED,
-                                    ),
-                                  ),
-                                ),
-                                MyAppButton(
-                                  onPress: () async {
-                                    await rateNowApi(context).then((value) {
-                                      bookingDetailApi(context);
-                                    });
-                                  },
-                                  height: 48,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                  ),
-                                  title: AppStrings.submit,
-                                  style: AppFonts.blackFont.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  radius: 6,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  showRatingDialog();
                 },
               )
             : const SizedBox.shrink(),
@@ -835,282 +687,148 @@ class _CompleteBookingDetailState extends State<CompleteBookingDetail> {
     }
   }
 
-  /* Future<void> cancelBookingApi(BuildContext context) async {
-    setLoader(true);
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var request = {};
-
-    request["booking_id"] = widget.bookingId;
-
-    var response = await http.post(
-        Uri.parse(
-          ApiService.cancelBooking,
-        ),
-        body: jsonEncode(request),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer ${sharedPreferences.getString("access_Token")}'
-        });
-
-    setLoader(false);
-    Map<String, dynamic> jsonResponse = jsonDecode(
-      response.body,
-    );
-    //  Helper().showToast(jsonResponse['message']);
-    if (jsonResponse['status']) {
-      if (context.mounted) {
-        bookingDetailApi(context);
-      }
-    }
-
-    // _showBottomSheet(
-    //   context: context,
-    //   description: jsonResponse["message"],
-    //   isSuccess: jsonResponse['status'],
-    // );
-  }*/
-
-/*  Future showBottomSheet() async {
-    return await showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
+  Future showRatingDialog() async {
+    return await showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
-        return PopScope(
-          canPop: false,
-          child: Container(
-            height: 220,
-            decoration: const BoxDecoration(
-              color: AppColor.bg,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(
-                  20,
-                ),
-                topRight: Radius.circular(
-                  20,
-                ),
-              ),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              17,
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 16,
+            ),
+            child: SingleChildScrollView(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox.shrink(),
-                      Text(
-                        textAlign: TextAlign.center,
-                        AppStrings.alert,
-                        style: AppFonts.redFont,
-                      ),
-                      SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.cancel,
-                            color: AppColor.yellow,
-                          ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: SizedBox(
+                      height: 21,
+                      width: 21,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: SvgPicture.asset(
+                          AppIcon.cancelIcon,
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  const Text(
-                    AppStrings.rescheduleBooking,
-                    style: AppFonts.appText,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                  Center(
                     child: Text(
-                      textAlign: TextAlign.center,
-                      'You can only Reschedule before 2 hrs of booking time',
-                      style: AppFonts.normalText.copyWith(fontSize: 14),
+                      AppStrings.rating,
+                      style: AppFonts.blackFont.copyWith(
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                   const SizedBox(
-                    height: 14,
+                    height: 9,
                   ),
-                  const Divider(
-                    color: AppColor.dividerColor,
+                  SvgPicture.asset(
+                    AppIcon.ratingDialogIcon,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      'You have done using Barber/Salon Service ',
+                      style: AppFonts.blackFont.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      'Please leave your review so others people can know your opinion.',
+                      style: AppFonts.text.copyWith(
+                        color: const Color(
+                          0xff5F5F5F,
+                        ).withOpacity(
+                          .90,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 17,
+                  ),
+                  RatingBar.builder(
+                    initialRating: 0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: AppColor.yellow,
+                    ),
+                    onRatingUpdate: (rating) {
+                      rating1 = rating.toString();
+                      setState(() {});
+                      //  print(rating);
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      right: 15,
+                      top: 15,
+                      bottom: 15,
+                    ),
+                    child: CustomTextField(
+                      controller: reviewCn,
+                      textInputAction: TextInputAction.done,
+                      radius: 6,
+                      hintText: AppStrings.reviews,
+                      maxLines: 4,
+                      style: AppFonts.blackFont
+                          .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
+                      borderSide: BorderSide.none,
+                      isFilled: true,
+                      fillColor: const Color(
+                        0xffEDEDED,
+                      ),
+                    ),
                   ),
                   MyAppButton(
-                    onPress: () {
-                      Navigator.of(context).pop();
+                    onPress: () async {
+                      await rateNowApi(context).then((value) {
+                        bookingDetailApi(context);
+                      });
                     },
-                    title: AppStrings.gotIt,
+                    height: 48,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                    ),
+                    title: AppStrings.submit,
                     style: AppFonts.blackFont.copyWith(
-                      color: AppColor.bg,
                       fontWeight: FontWeight.w500,
                     ),
-                    radius: 7,
-                    height: 50,
-                    width: 128,
-                  )
+                    radius: 6,
+                  ),
                 ],
               ),
             ),
-          ),
-        );
-      },
-    );
-  }*/
-
-  Future _showBottomSheet({
-    required BuildContext context,
-    required String description,
-    required bool isSuccess,
-  }) async {
-    return await showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      context: context,
-      builder: (ctx) {
-        // debugPrint('>>>isSuccess>>>>>>>>>>>${isSuccess}<<<<<<<<<<<<<<');
-        // debugPrint('>>>>>>>description>>>>>>>${description}<<<<<<<<<<<<<<');
-        return PopScope(
-          canPop: false,
-          child: Container(
-            height: 230,
-            decoration: const BoxDecoration(
-              color: AppColor.bg,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(
-                  20,
-                ),
-                topRight: Radius.circular(
-                  20,
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(
-                        height: 21,
-                        width: 21,
-                      ),
-                      Visibility(
-                        visible: !isSuccess,
-                        child: Text(
-                          AppStrings.alert,
-                          style: AppFonts.redFont,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: InkWell(
-                          onTap: () {
-                            isSuccess
-                                ? Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DashBoardScreen(selectIndex: 1),
-                                    ),
-                                    (route) => false)
-                                : Navigator.pop(ctx);
-                          },
-                          child: const Icon(
-                            Icons.cancel,
-                            color: AppColor.yellow,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    isSuccess
-                        ? AppStrings.cancelledSuccessfully
-                        : AppStrings.cancelBooking,
-                    style: AppFonts.appText,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      description,
-                      style: AppFonts.normalText.copyWith(fontSize: 15),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  const Divider(
-                    color: AppColor.dividerColor,
-                  ),
-                  MyAppButton(
-                    onPress: () {
-                      isSuccess
-                          ? Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const DashBoardScreen(selectIndex: 1),
-                              ),
-                              (route) => false)
-                          : Navigator.of(ctx).pop();
-                    },
-                    title: AppStrings.gotIt,
-                    style: AppFonts.blackFont.copyWith(
-                        color: AppColor.bg, fontWeight: FontWeight.w500),
-                    radius: 7,
-                    height: 50,
-                    width: 128,
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  ///NetworkDialog
-  void showNoNetworkMyBookingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // ignore: deprecated_member_use
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            title: const Text('No Network Connection'),
-            content:
-                const Text('Please check your internet and Wi-Fi connection.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // geteBooking();
-                  bookingDetailApi(context);
-                  setState(() {});
-                },
-              ),
-            ],
           ),
         );
       },

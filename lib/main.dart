@@ -25,7 +25,7 @@ void main() async {
   NotificationService.initialize();
   final accessToken = await getAccessToken();
 
-  debugPrint('>>>>Access Token:>>>>>>>>>>${accessToken}<<<<<<<<<<<<<<');
+  debugPrint('>>>>Access Token:>>>>>>>>>>$accessToken<<<<<<<<<<<<<<');
 
   // );
   SystemChrome.setPreferredOrientations([

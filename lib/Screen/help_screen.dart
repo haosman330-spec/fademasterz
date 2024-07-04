@@ -103,15 +103,24 @@ class _HelpScreenState extends State<HelpScreen> {
                     children: [
                       SvgPicture.asset(
                         AppIcon.gmailIcon,
-                        color: AppColor.white,
+                        colorFilter: const ColorFilter.mode(
+                            AppColor.white, BlendMode.srcIn),
                       ),
                       const SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        (helpCenterModal.data?.helpEmail.toString() ?? ''),
-                        style: AppFonts.normalText.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 14),
+                      InkWell(
+                        onTap: () {
+                          launchUrl(Uri(
+                              scheme: 'mailto',
+                              path:
+                                  helpCenterModal.data?.helpEmail.toString()));
+                        },
+                        child: Text(
+                          (helpCenterModal.data?.helpEmail.toString() ?? ''),
+                          style: AppFonts.normalText.copyWith(
+                              fontWeight: FontWeight.w500, fontSize: 14),
+                        ),
                       )
                     ],
                   ),
@@ -122,16 +131,26 @@ class _HelpScreenState extends State<HelpScreen> {
                     children: [
                       SvgPicture.asset(
                         AppIcon.phoneIcon,
-                        color: AppColor.white,
+                        colorFilter: const ColorFilter.mode(
+                            AppColor.white, BlendMode.srcIn),
+                        //   color: AppColor.white,
                       ),
                       const SizedBox(
                         width: 12,
                       ),
-                      Text(
-                        (helpCenterModal.data?.helpNumber.toString() ?? ''),
-                        style: AppFonts.normalText.copyWith(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
+                      InkWell(
+                        onTap: () {
+                          dialLauncher(
+                              phoneNo:
+                                  helpCenterModal.data?.helpNumber.toString() ??
+                                      '');
+                        },
+                        child: Text(
+                          (helpCenterModal.data?.helpNumber.toString() ?? ''),
+                          style: AppFonts.normalText.copyWith(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
                         ),
                       )
                     ],
@@ -277,6 +296,11 @@ class _HelpScreenState extends State<HelpScreen> {
     if (!await launchUrl(Uri.parse(url))) {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<void> dialLauncher({required String phoneNo}) async {
+    final Uri launcher = Uri(path: phoneNo, scheme: 'tel');
+    await launchUrl(launcher);
   }
 
   Future<void> helpCenterApi(BuildContext context) async {

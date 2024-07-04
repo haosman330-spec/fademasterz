@@ -27,8 +27,8 @@ class Utility {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return WillPopScope(
-            onWillPop: () async => false,
+        return PopScope(
+            canPop: false,
             child: AlertDialog(
               title: const Text('No Network Connection'),
               content: const Text(
@@ -51,9 +51,9 @@ class Utility {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return WillPopScope(
-            onWillPop: () async => false,
-            child: const AlertDialog(
+        return const PopScope(
+            canPop: false,
+            child: AlertDialog(
               title: Text('No Network Connection'),
               content: Text(
                 'No Internet Please check your internet connection',

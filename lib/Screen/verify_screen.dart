@@ -418,7 +418,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     request["country_code"] = widget.selectedCountry?.dialCode;
     request['mobile_number'] = widget.phoneNo.toString();
     request["otp"] = otpTextFieldCn.text.trim();
-    request["fcm_token"] = fcmToken ?? 'fcmToken';
+    request["fcm_token"] = fcmToken;
     request["device_id"] = sharedPreferences.getString('deviceId');
     request["device"] = sharedPreferences.getString('deviceType');
 
@@ -877,7 +877,7 @@ class _VerifyScreenState extends State<VerifyScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppStrings.dontRecive,
+                          AppStrings.don'tReceive,
                           style: AppFonts.text1.copyWith(
                             color: AppColor.white,
                           ),

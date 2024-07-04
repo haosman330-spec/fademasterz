@@ -418,7 +418,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                         serviceId = [];
                         for (var element in categoryService) {
                           if (element.isSelected ?? false) {
-                            serviceId.add(element.id.toString() ?? '0');
+                            serviceId.add(element.id.toString());
                           }
                         }
                       }

@@ -241,8 +241,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             (cancelledBooking.shopAddress
-                                                    .toString() ??
-                                                ''),
+                                                .toString()),
                                             style: AppFonts.regular.copyWith(
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,

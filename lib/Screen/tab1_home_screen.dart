@@ -48,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
   double? latitude;
   double? longitude;
   late LocationPermission permission;
-  static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late StreamSubscription<InternetStatus> listener;
   HomePageModal homePageModal = HomePageModal();

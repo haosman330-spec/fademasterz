@@ -36,7 +36,7 @@ class ChatService {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
     var fcm = sharedPreferences.getString('fcmToken');
     String? currentUserId = sharedPreferences.getInt('senderId').toString();
-    final chatuser = ChatUser(
+    final chatUser = ChatUser(
       id: currentUserId,
       pushToken: fcm.toString(),
       lastmessage: '',
@@ -52,7 +52,7 @@ class ChatService {
     await firestore
         .collection('users')
         .doc(currentUserId)
-        .set(chatuser.toJson());
+        .set(chatUser.toJson());
   }
 
   static Future<void> updateUserInfo() async {
@@ -141,11 +141,11 @@ class ChatService {
     //
     // var data3 = {
     //   "message": {
-    //     "token": pushtoken12
+    //     "token": pushToken12
     //         .toString(), // You can customize the topic as per your application logic
     //     "notification": {
-    //       "title": "nameuser"
-    //           .toString(), // Assuming nameuser is a variable holding the title
+    //       "title": "nameUser"
+    //           .toString(), // Assuming nameUser is a variable holding the title
     //       "body":
     //           "msg2.toString()" // Assuming msg2 is a variable holding the body
     //     },
@@ -155,7 +155,7 @@ class ChatService {
     //
     // var headers = {
     //   "Content-Type": "application/json",
-    //   "Authorization": "Bearer $tokenFcmchat",
+    //   "Authorization": "Bearer $tokenFcmChat",
     // };
     //
     // var response =
@@ -186,8 +186,7 @@ class ChatService {
       if (!doc['readBy'].contains(userId)) {
         unreadCount++;
 
-        debugPrint(
-            '>>>>>>>>>>unreadCountfdfdfsdfa>>>>${unreadCount}<<<<<<<<<<<<<<');
+        debugPrint('>>>>>>>>>>unreadCount>>>>$unreadCount<<<<<<<<<<<<<<');
       }
     }
 

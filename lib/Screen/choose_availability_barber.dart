@@ -687,7 +687,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       }
       shopId ??= sharedPreferences.getInt('shop_id');
       debugPrint(
-          '>>>>>>>sharedPreferences.getIntshopId>>>>>>>$shopId<<<<<<<<<<<<<<');
+          '>>>>>>>sharedPreferences.getInt-shopId>>>>>>>$shopId<<<<<<<<<<<<<<');
 
       var request = {};
       request["shop_id"] = shopId;

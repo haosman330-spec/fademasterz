@@ -6,7 +6,7 @@ import 'package:fademasterz/Modal/profile_modal.dart';
 import 'package:fademasterz/Screen/edit_profile_screen.dart';
 import 'package:fademasterz/Screen/help_screen.dart';
 import 'package:fademasterz/Screen/privacy_policy_screen.dart';
-import 'package:fademasterz/Screen/terms_condition_Screen.dart';
+import 'package:fademasterz/Screen/terms_condition_screen.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_string.dart';
@@ -57,6 +57,118 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     setState(() {});
     super.initState();
+  }
+
+  Future<void> userLogoutApi(BuildContext context) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, true);
+    }
+
+    var request = {};
+    var response = await http.post(
+        Uri.parse(
+          ApiService.logout,
+        ),
+        body: jsonEncode(request),
+        headers: {
+          "content-type": "application/json",
+          'Accept': 'application/json',
+          'Authorization':
+              'Bearer ${sharedPreferences.getString("access_Token")}'
+        });
+    Map<String, dynamic> jsonResponse = jsonDecode(
+      response.body,
+    );
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(
+        context,
+        false,
+      );
+    }
+    Helper().showToast(jsonResponse['message']);
+    if (jsonResponse['status'] == true) {
+      await sharedPreferences.setBool("profileSetUp", false);
+      await sharedPreferences.setString("access_Token", '');
+      setState(() {});
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EnterYourNo(),
+            ),
+            (route) => false);
+      }
+    } else if (jsonResponse['message'] == 'Unauthenticated.') {
+      await sharedPreferences.setBool("profileSetUp", false);
+      await sharedPreferences.setString("access_Token", '');
+      setState(() {});
+      if (context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const EnterYourNo(),
+            ),
+            (Route<dynamic> route) => false);
+      }
+    }
+  }
+
+  Future<void> deleteAccountApi(BuildContext context) async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, true);
+    }
+
+    var request = {};
+    var response = await http.post(
+        Uri.parse(
+          ApiService.deleteAccount,
+        ),
+        body: jsonEncode(request),
+        headers: {
+          "content-type": "application/json",
+          'Accept': 'application/json',
+          'Authorization':
+              'Bearer ${sharedPreferences.getString("access_Token")} '
+        });
+    Map<String, dynamic> jsonResponse = jsonDecode(
+      response.body,
+    );
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(
+        context,
+        false,
+      );
+    }
+    Helper().showToast(jsonResponse['message']);
+    if (jsonResponse['status'] == true) {
+      await sharedPreferences.setBool("profileSetUp", false);
+      await sharedPreferences.setString("access_Token", '');
+      setState(() {});
+      if (context.mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EnterYourNo(),
+            ),
+            (route) => false);
+      }
+    } else if (jsonResponse['message'] == 'Unauthenticated.') {
+      await sharedPreferences.setBool("profileSetUp", false);
+      await sharedPreferences.setString("access_Token", '');
+      setState(() {});
+      if (context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const EnterYourNo(),
+            ),
+            (Route<dynamic> route) => false);
+      }
+    }
   }
 
   @override
@@ -176,7 +288,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       SvgPicture.asset(
                         AppIcon.parsonIcon,
-                        color: AppColor.white,
+                        colorFilter: const ColorFilter.mode(
+                          AppColor.white,
+                          BlendMode.srcIn,
+                        ),
+                        //   color: AppColor.white,
                         height: 20,
                         width: 20,
                       ),
@@ -211,15 +327,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black),
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
                         AppIcon.bookingIcon,
-                        color: AppColor.white,
+                        colorFilter: const ColorFilter.mode(
+                          AppColor.white,
+                          BlendMode.srcIn,
+                        ),
+                        //    color: AppColor.white,
                         height: 20,
                         width: 20,
                       ),
@@ -308,10 +429,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     vertical: 14,
                   ),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black),
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
                   child: Row(
                     children: [
                       SvgPicture.asset(
@@ -390,6 +512,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               InkWell(
                 onTap: () async {
+                  // Navigator.push(
+                  //   context,
+                  //   PageRouteBuilder(
+                  //     transitionsBuilder:
+                  //         (context, animation, secondaryAnimation, child) {
+                  //       return ScaleTransition(
+                  //         alignment: Alignment.center,
+                  //         scale: Tween<double>(begin: 0.7, end: 1).animate(
+                  //           CurvedAnimation(
+                  //             parent: animation,
+                  //             curve: Curves.bounceIn,
+                  //           ),
+                  //         ),
+                  //         child: child,
+                  //       );
+                  //     },
+                  //     transitionDuration: Duration(seconds: 2),
+                  //     pageBuilder: (BuildContext context,
+                  //         Animation<double> animation,
+                  //         Animation<double> secondaryAnimation) {
+                  //       return HelpScreen();
+                  //     },
+                  //   ),
+                  // );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -438,149 +584,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               InkWell(
                 onTap: () async {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            17,
-                          ),
-                        ),
-                        insetPadding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 38,
-                            vertical: 16,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(AppIcon.logout),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: Text(
-                                    textAlign: TextAlign.center,
-                                    AppStrings.accountLogout,
-                                    style: AppFonts.appText.copyWith(
-                                      fontSize: 20,
-                                      color: const Color(0xff181725),
-                                    )),
-                              ),
-                              const SizedBox(
-                                height: 52,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        final List<ConnectivityResult>
-                                            connectivityResult =
-                                            await (Connectivity()
-                                                .checkConnectivity());
-
-                                        if (connectivityResult.contains(
-                                            ConnectivityResult.mobile)) {
-                                          userLogoutApi(context);
-                                        } else if (connectivityResult.contains(
-                                            ConnectivityResult.wifi)) {
-                                          userLogoutApi(context);
-                                        } else {
-                                          if (context.mounted) {
-                                            Utility.showNoNetworkDialog(
-                                                context);
-                                          }
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 30,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            17,
-                                          ),
-                                        ),
-                                        backgroundColor: AppColor.yellow,
-                                      ),
-                                      child: const Text(
-                                        AppStrings.yes,
-                                        style: AppFonts.blackFont,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-
-                                        /*  final connectivityResult =
-                                            await (Connectivity()
-                                                .checkConnectivity());
-                                        setState(() {
-                                          _connectionStatus = connectivityResult;
-                                        });
-                                        if (_connectionStatus ==
-                                            ConnectivityResult.wifi) {
-                                          if (context.mounted) {
-                                            userLogout(context);
-                                          }
-                                        } else if (_connectionStatus ==
-                                            ConnectivityResult.mobile) {
-                                          if (context.mounted) {
-                                            userLogout(context);
-                                          }
-                                        } else {
-                                          if (context.mounted) {
-                                            Utility.showNoNetworkDialog(
-                                              context,
-                                            );
-                                          }
-                                        }*/
-                                        setState(() {});
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 30,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            17,
-                                          ),
-                                        ),
-                                        backgroundColor: const Color(
-                                          0xffA4A4A4,
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        AppStrings.no,
-                                        style: AppFonts.blackFont,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  showLogoutDialog();
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -623,131 +627,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               InkWell(
                 onTap: () async {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) {
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            17,
-                          ),
-                        ),
-                        insetPadding: const EdgeInsets.symmetric(
-                          horizontal: 18,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 38,
-                            vertical: 16,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                AppIcon.logout,
-                              ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                ),
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  AppStrings.accountDelete,
-                                  style: AppFonts.appText.copyWith(
-                                    fontSize: 20,
-                                    color: const Color(
-                                      0xff181725,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 52,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        final List<ConnectivityResult>
-                                            connectivityResult =
-                                            await (Connectivity()
-                                                .checkConnectivity());
-
-                                        if (connectivityResult.contains(
-                                            ConnectivityResult.mobile)) {
-                                          deleteAccountApi(context);
-                                        } else if (connectivityResult.contains(
-                                            ConnectivityResult.wifi)) {
-                                          deleteAccountApi(context);
-                                        } else {
-                                          Utility.showNoNetworkDialog(context);
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 30,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            17,
-                                          ),
-                                        ),
-                                        backgroundColor: AppColor.yellow,
-                                      ),
-                                      child: const Text(
-                                        AppStrings.yes,
-                                        style: AppFonts.blackFont,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () async {
-                                        Navigator.of(context).pop();
-
-                                        setState(() {});
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 30,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            17,
-                                          ),
-                                        ),
-                                        backgroundColor: const Color(
-                                          0xffA4A4A4,
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        AppStrings.no,
-                                        style: AppFonts.blackFont,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  showDeleteDialog(context);
                 },
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -792,117 +672,248 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Future<void> userLogoutApi(BuildContext context) async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
+  Future showLogoutDialog() async {
+    return await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              17,
+            ),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 38,
+              vertical: 16,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(AppIcon.logout),
+                const SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  child: Text(
+                      textAlign: TextAlign.center,
+                      AppStrings.accountLogout,
+                      style: AppFonts.appText.copyWith(
+                        fontSize: 20,
+                        color: const Color(0xff181725),
+                      )),
+                ),
+                const SizedBox(
+                  height: 52,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final List<ConnectivityResult> connectivityResult =
+                              await (Connectivity().checkConnectivity());
 
-    var request = {};
-    var response = await http.post(
-        Uri.parse(
-          ApiService.logout,
-        ),
-        body: jsonEncode(request),
-        headers: {
-          "content-type": "application/json",
-          'Accept': 'application/json',
-          'Authorization':
-              'Bearer ${sharedPreferences.getString("access_Token")}'
-        });
-    Map<String, dynamic> jsonResponse = jsonDecode(
-      response.body,
+                          if (connectivityResult
+                              .contains(ConnectivityResult.mobile)) {
+                            userLogoutApi(context);
+                          } else if (connectivityResult
+                              .contains(ConnectivityResult.wifi)) {
+                            userLogoutApi(context);
+                          } else {
+                            if (context.mounted) {
+                              Utility.showNoNetworkDialog(context);
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              17,
+                            ),
+                          ),
+                          backgroundColor: AppColor.yellow,
+                        ),
+                        child: const Text(
+                          AppStrings.yes,
+                          style: AppFonts.blackFont,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              17,
+                            ),
+                          ),
+                          backgroundColor: const Color(
+                            0xffA4A4A4,
+                          ),
+                        ),
+                        child: const Text(
+                          AppStrings.no,
+                          style: AppFonts.blackFont,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(
-        context,
-        false,
-      );
-    }
-    Helper().showToast(jsonResponse['message']);
-    if (jsonResponse['status'] == true) {
-      debugPrint(
-          '>>>>>sssssssssss>>>>>>>>>${sharedPreferences.getString("access_Token")}<<<<<<<<<<<<<<');
-      await sharedPreferences.setBool("profileSetUp", false);
-      await sharedPreferences.setString("access_Token", '');
-      setState(() {});
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EnterYourNo(),
-            ),
-            (route) => false);
-      }
-    } else if (jsonResponse['message'] == 'Unauthenticated.') {
-      await sharedPreferences.setBool("profileSetUp", false);
-      await sharedPreferences.setString("access_Token", '');
-      setState(() {});
-      if (context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const EnterYourNo(),
-            ),
-            (Route<dynamic> route) => false);
-      }
-    }
   }
 
-  Future<void> deleteAccountApi(BuildContext context) async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
+  Future showDeleteDialog(BuildContext context) async {
+    return await showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              17,
+            ),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 38,
+              vertical: 16,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  AppIcon.logout,
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    AppStrings.accountDelete,
+                    style: AppFonts.appText.copyWith(
+                      fontSize: 20,
+                      color: const Color(
+                        0xff181725,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 52,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final List<ConnectivityResult> connectivityResult =
+                              await (Connectivity().checkConnectivity());
 
-    var request = {};
-    var response = await http.post(
-        Uri.parse(
-          ApiService.deleteAccount,
-        ),
-        body: jsonEncode(request),
-        headers: {
-          "content-type": "application/json",
-          'Accept': 'application/json',
-          'Authorization':
-              'Bearer ${sharedPreferences.getString("access_Token")} '
-        });
-    Map<String, dynamic> jsonResponse = jsonDecode(
-      response.body,
+                          if (connectivityResult
+                              .contains(ConnectivityResult.mobile)) {
+                            deleteAccountApi(context);
+                          } else if (connectivityResult
+                              .contains(ConnectivityResult.wifi)) {
+                            deleteAccountApi(context);
+                          } else {
+                            Utility.showNoNetworkDialog(context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              17,
+                            ),
+                          ),
+                          backgroundColor: AppColor.yellow,
+                        ),
+                        child: const Text(
+                          AppStrings.yes,
+                          style: AppFonts.blackFont,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+
+                          setState(() {});
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              17,
+                            ),
+                          ),
+                          backgroundColor: const Color(
+                            0xffA4A4A4,
+                          ),
+                        ),
+                        child: const Text(
+                          AppStrings.no,
+                          style: AppFonts.blackFont,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(
-        context,
-        false,
-      );
-    }
-    Helper().showToast(jsonResponse['message']);
-    if (jsonResponse['status'] == true) {
-      await sharedPreferences.setBool("profileSetUp", false);
-      await sharedPreferences.setString("access_Token", '');
-      setState(() {});
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EnterYourNo(),
-            ),
-            (route) => false);
-      }
-    } else if (jsonResponse['message'] == 'Unauthenticated.') {
-      await sharedPreferences.setBool("profileSetUp", false);
-      await sharedPreferences.setString("access_Token", '');
-      setState(() {});
-      if (context.mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => const EnterYourNo(),
-            ),
-            (Route<dynamic> route) => false);
-      }
-    }
   }
 }
