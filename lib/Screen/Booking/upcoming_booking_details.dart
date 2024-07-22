@@ -592,19 +592,25 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
                                 ''));
 
                         if (context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatScreenInBox(
-                                receiverId: bookingDetailResponse?.data?.shopId
-                                    .toString(),
-                                receiverImage:
-                                    bookingDetailResponse?.data?.shopImage,
-                                receiverName:
-                                    bookingDetailResponse?.data?.shopName,
+                          if (bookingDetailResponse?.data?.bookingStatus ==
+                              'Cancelled') {
+                            Helper().showToast('Booking already Cancelled');
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatScreenInBox(
+                                  receiverId: bookingDetailResponse
+                                      ?.data?.shopId
+                                      .toString(),
+                                  receiverImage:
+                                      bookingDetailResponse?.data?.shopImage,
+                                  receiverName:
+                                      bookingDetailResponse?.data?.shopName,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         }
                       },
                       title: AppStrings.chatNow,
@@ -670,138 +676,136 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
               ),
               TextButton(
                 onPressed: () {
-                  // if ((bookingDetailResponse?.data?.bookingStatus ==
-                  //     "Cancelled")) {
-                  //   Helper().showToast('Booking already Cancelled');
-                  // }
-
-                  //  else {
-                  showModalBottomSheet(
-                    isDismissible: false,
-                    backgroundColor: Colors.transparent,
-                    context: context,
-                    builder: (ctx) {
-                      return Container(
-                        height: 230,
-                        decoration: const BoxDecoration(
-                          color: AppColor.bg,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(
-                              20,
-                            ),
-                            topRight: Radius.circular(
-                              20,
+                  if (bookingDetailResponse?.data?.bookingStatus ==
+                      'Cancelled') {
+                    Helper().showToast('Booking already Cancelled');
+                  } else {
+                    showModalBottomSheet(
+                      isDismissible: false,
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (ctx) {
+                        return Container(
+                          height: 230,
+                          decoration: const BoxDecoration(
+                            color: AppColor.bg,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                20,
+                              ),
+                              topRight: Radius.circular(
+                                20,
+                              ),
                             ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          child: Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: SizedBox(
-                                  height: 21,
-                                  width: 21,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.pop(ctx);
-                                    },
-                                    child: const Icon(
-                                      Icons.cancel,
-                                      color: AppColor.yellow,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                AppStrings.cancelBooking,
-                                style: AppFonts.appText,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 35,
-                                ),
-                                child: Text(
-                                  textAlign: TextAlign.center,
-                                  AppStrings.conformCancel,
-                                  style: AppFonts.normalText.copyWith(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              const Divider(
-                                color: AppColor.dividerColor,
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: MyAppButton(
-                                      onPress: () {
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: SizedBox(
+                                    height: 21,
+                                    width: 21,
+                                    child: InkWell(
+                                      onTap: () {
                                         Navigator.pop(ctx);
                                       },
-                                      border: Border.all(
+                                      child: const Icon(
+                                        Icons.cancel,
                                         color: AppColor.yellow,
                                       ),
-                                      title: AppStrings.no,
-                                      style: AppFonts.yellowFont.copyWith(
-                                          fontWeight: FontWeight.w500),
-                                      height: 50,
-                                      color: Colors.transparent,
-                                      radius: 6,
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 21,
+                                ),
+                                const Text(
+                                  AppStrings.cancelBooking,
+                                  style: AppFonts.appText,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 35,
                                   ),
-                                  Expanded(
-                                    child: MyAppButton(
-                                      onPress: () {
-                                        Navigator.pop(ctx);
-                                        /* var currentTime = DateTime.now()
+                                  child: Text(
+                                    textAlign: TextAlign.center,
+                                    AppStrings.conformCancel,
+                                    style: AppFonts.normalText.copyWith(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 14,
+                                ),
+                                const Divider(
+                                  color: AppColor.dividerColor,
+                                ),
+                                const SizedBox(
+                                  height: 14,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: MyAppButton(
+                                        onPress: () {
+                                          Navigator.pop(ctx);
+                                        },
+                                        border: Border.all(
+                                          color: AppColor.yellow,
+                                        ),
+                                        title: AppStrings.no,
+                                        style: AppFonts.yellowFont.copyWith(
+                                            fontWeight: FontWeight.w500),
+                                        height: 50,
+                                        color: Colors.transparent,
+                                        radius: 6,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 21,
+                                    ),
+                                    Expanded(
+                                      child: MyAppButton(
+                                        onPress: () {
+                                          Navigator.pop(ctx);
+                                          /* var currentTime = DateTime.now()
                                             .subtract(const Duration(hours: 2));
                                         var scheduleTime =
                                             DateTime.parse('$date $time');*/
-                                        // .isBefore(scheduleTime)) {
-                                        cancelBookingApi(context);
-                                        /*     }
+                                          // .isBefore(scheduleTime)) {
+                                          cancelBookingApi(context);
+                                          /*     }
                                         else {
                                           showBottomSheet();
                                         }
                                         Navigator.popUntil(
                                             context, (route) => false);*/
-                                      },
-                                      radius: 6,
-                                      height: 50,
-                                      title: AppStrings.yesCancelBooking,
-                                      style: AppFonts.blackFont.copyWith(
-                                        color: AppColor.bg,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
+                                        },
+                                        radius: 6,
+                                        height: 50,
+                                        title: AppStrings.yesCancelBooking,
+                                        style: AppFonts.blackFont.copyWith(
+                                          color: AppColor.bg,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                  //   }
+                        );
+                      },
+                    );
+                  }
                 },
                 child: Text(
                   AppStrings.cancelBooking,

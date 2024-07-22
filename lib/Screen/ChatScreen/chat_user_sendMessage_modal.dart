@@ -5,9 +5,7 @@ class Messages {
   String receiverId;
   String message;
   int timestamp;
-  int? fromMessage;
-  int? toMessage;
-  bool? readMessage;
+
   List? readBy;
   String? fcmToken;
   Messages({
@@ -17,11 +15,7 @@ class Messages {
     required this.receiverId,
     required this.message,
     required this.timestamp,
-    this.readMessage,
     this.fcmToken,
-    this.fromMessage,
-    this.readBy,
-    this.toMessage,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,10 +26,6 @@ class Messages {
       'receiverId': receiverId,
       'message': message,
       'timestamp': timestamp,
-      'fromMessage': fromMessage,
-      'toMessage': toMessage,
-      'readMessage': readMessage,
-      'readBy': readBy,
       'fcmToken': fcmToken,
     };
   }
@@ -48,10 +38,6 @@ class Messages {
       receiverId: map['receiverId'],
       message: map['message'],
       timestamp: map['timestamp'],
-      fromMessage: map['fromMessage'],
-      toMessage: map['toMessage'],
-      readMessage: map['readMessage'],
-      readBy: map['readBy'],
       fcmToken: map['fcmToken'],
     );
   }

@@ -83,6 +83,9 @@ class _EnterYourNoState extends State<EnterYourNo> {
                     ),
                   ),
                 ],
+                onTapOutside: (event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 decoration: InputDecoration(
                   enabledBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(
@@ -101,17 +104,14 @@ class _EnterYourNoState extends State<EnterYourNo> {
                     ),
                   ),
                   prefixIcon: CountryCodePicker(
+                    hideSearch: true,
+                    dialogSize: const Size.fromHeight(200),
+                    barrierColor: Colors.transparent,
                     onChanged: (data) {
                       _selectedCountry = data;
                       setState(() {});
-                      // debugPrint(
-                      //     '>>>>>>>>>>>>>>${data.name}<<name<<<<<<<<<<<<');
-                      // debugPrint(
-                      //     '>>>>>>>>>>>>>>${data.code}<<code<<<<<<<<<<<<');
                       debugPrint(
                           '>>>>>>>>>>>>>>${data.dialCode}<<dial code<<<<<<<<<<<<');
-                      // debugPrint(
-                      //     '>>>>>>>>>>>>>>${data.flagUri}<<flag<<<<<<<<<<<<');
                     },
                     initialSelection: 'GB',
                     favorite: const ['GB'],
@@ -119,6 +119,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
                       'GB',
                       'IN',
                     ],
+                    padding: EdgeInsets.zero,
                     // countryFilter: ['In', 'FR'],
                     textStyle: const TextStyle(
                       color: Color(
@@ -312,6 +313,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         );
       },
       timeout: const Duration(seconds: 60),
+      forceResendingToken: 1,
     );
   }
 

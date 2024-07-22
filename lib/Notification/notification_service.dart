@@ -270,8 +270,9 @@ class NotificationService {
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static void notificationTapBackground(message) {
-    //_handleMessage(message);
+    // _handleMessage(message);
   }
+
   static void initialize() async {
     var messaging = FirebaseMessaging.instance;
     const InitializationSettings initializationSettings =
@@ -323,7 +324,7 @@ class NotificationService {
       sound: true,
     );
 
-    try {
+    /* try {
       await FirebaseMessaging.instance.setAutoInitEnabled(true);
       String? fcmToken;
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -335,7 +336,7 @@ class NotificationService {
         //     debugPrint('fcm token is>>${fcmToken.toString()}');
       }
       // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {}*/
 
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) async {
@@ -345,45 +346,34 @@ class NotificationService {
             'kill state >>> FirebaseMessaging.instance.getInitialMessage');
         if (message != null) {
           // var notificationData = NotificationDataModel.fromJson(message.data);
-          // _handleMessage(notificationData);
+          _handleMessage(message.data);
           debugPrint('New Notification');
         }
       },
     );
 
-    // FirebaseMessaging.onBackgroundMessage((message) async {
-    //   var notificationData = NotificationDataModel.fromJson(message.data);
-    //   _handleMessage(notificationData);
-    // });
+    FirebaseMessaging.onBackgroundMessage((message) async {
+      // var notificationData = NotificationDataModel.fromJson(message.data);
+      _handleMessage(message.data);
+    });
 
     FirebaseMessaging.onMessage.listen(
       (message) async {
         /// This function is for foreground state
         debugPrint('foreground >>> FirebaseMessaging.onMessage.listen');
-        debugPrint('data foreground is>>> ${message.data['booking_id']}');
+
         debugPrint('data foreground is>>> ${message.data.toString()}');
         debugPrint('>>>>>>>>>>>>>>${message.data['type']}<<<<<<<<<<<<<<');
         if (message.notification != null) {
           debugPrint(
               'Message notification is>>> ${message.notification.toString()}');
           display(message);
-          debugPrint('>>>>>>>>>>>>>>${message.data['type']}<<<<<<<<<<<<<<');
-          //await updateFirestoreCount();
+
+          await updateFirestoreCount();
           _flutterLocalNotificationsPlugin.initialize(initializationSettings,
               onDidReceiveBackgroundNotificationResponse:
                   notificationTapBackground,
               onDidReceiveNotificationResponse: (msg) {
-            debugPrint('>>>>>>>>>>>>>>${message.data['type']}<<<<<<<<<<<<<<');
-            // var notificationData = NotificationDataModel.fromJson(message.data);
-            // if (message.data['type'] == 'cancelled') {
-            //   navigatorKey.currentState?.pushAndRemoveUntil(
-            //     MaterialPageRoute(
-            //         builder: (context) => CancelledBookingDetail(
-            //             cancelBookingId:  message.data['booking_id'],
-            //             )),
-            //     (route) => false,
-            //   );
-            // }
             _handleMessage(message.data);
           });
         }
@@ -394,8 +384,6 @@ class NotificationService {
       (message) async {
         /// This function is for background state
 
-        debugPrint(
-            'background >>>> FirebaseMessaging.onMessageOpenedApp.listen');
         debugPrint('data background is ${message.data.toString()}');
         //   var notificationData = NotificationDataModel.fromJson(message.data);
         if (message.notification != null) {
@@ -403,8 +391,7 @@ class NotificationService {
               'message title on background is ${message.notification!.title}');
           debugPrint(
               'message body on background is ${message.notification!.body}');
-          //  _handleMessage(notificationData);
-          debugPrint("message.data22 ${message.data['booking_id']}");
+          _handleMessage(message.data);
         }
       },
     );
@@ -439,6 +426,46 @@ class NotificationService {
       debugPrint('Error>>>$e');
     }
   }
+}
+
+void _handleMessage(data) async {
+  debugPrint('data is>>> ${data.toString()}');
+
+  if (data['type'] == null) {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => const DashBoardScreen(
+          selectIndex: 0,
+        ),
+      ),
+    );
+  } else if (data['type'] == 'cancelled') {
+    int bookingId = int.parse(data['booking_id']);
+
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => CancelledBookingDetail(
+          cancelBookingId: bookingId,
+        ),
+      ),
+    );
+  } else if (data['type'] == 'completed') {
+    int bookingId = int.parse(data['booking_id']);
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => CompleteBookingDetail(
+          bookingId: bookingId,
+        ),
+      ),
+    );
+  }
+  // else {
+  //   navigatorKey.currentState?.push(MaterialPageRoute(
+  //       builder: (context) => DashboardScreen(selectedIndex: 0)));
+  // }
+  //ISSUE BELOW
+  /// If using pushReplacement, myOrderScreen is visible perfect.
+  /// ISSUE If using push, myOrderScreen is visible for some seconds and then navigating to Dashboard(0) for some reason
 }
 
 List<String> scopes = ['https://www.googleapis.com/auth/cloud-platform'];
@@ -485,56 +512,4 @@ Future<void> updateFirestoreCount() async {
     SetOptions(merge: true),
   );
   debugPrint('Increment success>>>>');
-}
-
-/// Notification Payload Response
-// {
-// "sound": "default",
-// "body": "Please reset the step count for today by clicking this notification or by opening app!",
-// "type": "steps",
-// "title": "A reminder for steps reset!",
-// "click_action": "FLUTTER_NOTIFICATION_CLICK"
-// }
-
-void _handleMessage(data) async {
-  debugPrint('data is>>> ${data.toString()}');
-  // debugPrint('clickAction>>> is ${data.clickAction.toString()}');
-  // debugPrint('body>>> is ${data.body.toString()}');
-  // steps
-
-  if (data['type'] == null) {
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) => const DashBoardScreen(
-          selectIndex: 0,
-        ),
-      ),
-    );
-  } else if (data['type'] == 'cancelled') {
-    int bookingId = int.parse(data['booking_id']);
-    debugPrint('>>>>>>>>>>>>>>$bookingId<<<<<<<<<bookingId<<<<<');
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) => CancelledBookingDetail(
-          cancelBookingId: bookingId,
-        ),
-      ),
-    );
-  } else if (data['type'] == 'completed') {
-    int bookingId = int.parse(data['booking_id']);
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) => CompleteBookingDetail(
-          bookingId: bookingId,
-        ),
-      ),
-    );
-  }
-  // else {
-  //   navigatorKey.currentState?.push(MaterialPageRoute(
-  //       builder: (context) => DashboardScreen(selectedIndex: 0)));
-  // }
-  //ISSUE BELOW
-  /// If using pushReplacement, myOrderScreen is visible perfect.
-  /// ISSUE If using push, myOrderScreen is visible for some seconds and then navigating to Dashboard(0) for some reason
 }

@@ -95,7 +95,6 @@ class ChatService {
       receiverId: receiverId,
       message: message,
       image: sharedPreferences.getString('image'),
-      readBy: [],
       timestamp: int.parse(time),
       fcmToken: sharedPreferences.getString('fcmToken'),
     );
@@ -133,7 +132,7 @@ class ChatService {
       ]
     });
 
-    countUnreadMessages(currentUserId, receiverId);
+    //  countUnreadMessages(currentUserId, receiverId);
 
     // }
     // var apiUrl = Uri.parse(

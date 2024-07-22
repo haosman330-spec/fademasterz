@@ -214,14 +214,23 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                         ),
                         MyAppButton(
                           onPress: () async {
-                            await Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const DashBoardScreen(
                                   selectIndex: 1,
                                 ),
                               ),
+                              (route) => false,
                             );
+                            // await Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => const DashBoardScreen(
+                            //       selectIndex: 1,
+                            //     ),
+                            //   ),
+                            // );
                           },
                           height: 48,
                           title: AppStrings.viewBookingSummary,

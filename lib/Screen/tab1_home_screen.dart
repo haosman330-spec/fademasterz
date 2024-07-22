@@ -19,12 +19,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../ApiService/api_service.dart';
 import '../Modal/booking_summary_argument_modal.dart';
 import '../Utils/bottom_sheet.dart';
 import '../Utils/custom_app_button.dart';
-import '../Utils/utility.dart';
 
 class HomeScreen extends StatefulWidget {
   // final String? startYr;
@@ -40,6 +40,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchCn = TextEditingController();
   bool isDataLoading = false;
+  bool shimmerEffect = true;
   String? startYr;
   String? endYr;
   String? availability;
@@ -60,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int totalPage = 1;
   void setLoader(bool value) {
     isDataLoading = value;
+    shimmerEffect = value;
     setState(() {});
   }
 
@@ -199,6 +201,13 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  // WidgetsBinding.instance.addPostFrameCallback((_) {
+  // scrollController.animateTo(
+  // selectedIndex * 65.0, // 80 for item width + 5 for separator width
+  // duration: const Duration(milliseconds: 500),
+  // curve: Curves.easeInOut,
+  // );
+  // });
   pagination() {
     scrollController.addListener(() {
       debugPrint('Pagination started>>>');
@@ -227,44 +236,57 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: Visibility(
-                      visible:
-                          (homePageModal.data?.userDetail?.image?.isNotEmpty ??
-                              false),
-                      child: CachedNetworkImage(
-                        imageUrl: ApiService.imageUrl +
-                            (homePageModal.data?.userDetail?.image ?? ''),
-                        height: 36,
-                        width: 36,
-                        fit: BoxFit.cover,
-                        placeholder: (
-                          context,
-                          url,
-                        ) =>
-                            const Center(
-                          child: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: AppColor.yellow,
-                            ),
+                  shimmerEffect
+                      ? Shimmer.fromColors(
+                          baseColor: AppColor.black,
+                          highlightColor: AppColor.bg,
+                          //  enabled: shimmerEffect,
+                          child: Container(
+                            height: 38,
+                            width: 38,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.white),
                           ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(26),
+                          child: Visibility(
+                              visible: (homePageModal
+                                      .data?.userDetail?.image?.isNotEmpty ??
+                                  false),
+                              child: Image.network(
+                                ApiService.imageUrl +
+                                    (homePageModal.data?.userDetail?.image ??
+                                        ''),
+                                height: 40,
+                                width: 40,
+                                fit: BoxFit.cover,
+                              )
 
-                      // Image.network(
-                      //   ApiService.imageUrl +
-                      //       (homePageModal.data?.userDetail?.image ?? ''),
-                      //   height: 36,
-                      //   width: 36,
-                      //   fit: BoxFit.cover,
-                      // ),
-                    ),
-                  ),
+                              // CachedNetworkImage(
+                              //   imageUrl: ApiService.imageUrl +
+                              //       (homePageModal.data?.userDetail?.image ?? ''),
+                              //   height: 36,
+                              //   width: 36,
+                              //   fit: BoxFit.cover,
+                              //   placeholder: (
+                              //     context,
+                              //     url,
+                              //   ) =>
+                              //       const Center(
+                              //     child: SizedBox(
+                              //       height: 20,
+                              //       width: 20,
+                              //       child: CircularProgressIndicator(
+                              //         color: AppColor.yellow,
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   errorWidget: (context, url, error) =>
+                              //       const Icon(Icons.error),
+                              // ),
+                              ),
+                        ),
                   const SizedBox(
                     width: 10,
                   ),
@@ -407,355 +429,442 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: AppColor.yellow,
                 ),
               ),
-              Visibility(
-                visible: (searchCn.text.trim().isNotEmpty),
-                replacement: Visibility(
-                  visible: (homePageModal.data?.shops?.isNotEmpty ?? false),
-                  replacement: Visibility(
-                    visible: !isDataLoading,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      alignment: Alignment.center,
-                      child: Text(
-                        AppStrings.noShopAvailable,
-                        style: AppFonts.normalText,
-                      ),
-                    ),
-                  ),
-                  child: Expanded(
-                    child: ListView.separated(
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      itemCount: (shopList
-                          .length), //(homePageModal.data?.shops?.length ?? 0),
-                      padding: const EdgeInsets.only(top: 15, bottom: 15),
-                      itemBuilder: (context, index) {
-                        //  var item = homePageModal.data?.shops?[index];
-                        var item = shopList[index];
-
-                        return InkWell(
-                          onTap: () async {
-                            SharedPreferences sharedPreferences =
-                                await SharedPreferences.getInstance();
-                            sharedPreferences.setInt(
-                              'shop_id',
-                              item.id!.toInt(),
-                            );
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ShopDetail(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColor.black,
-                              borderRadius: BorderRadius.circular(
-                                15,
-                              ),
-                            ),
-                            child: Row(
+              shimmerEffect
+                  ? Expanded(
+                      child: Shimmer.fromColors(
+                        baseColor: AppColor.black,
+                        highlightColor: AppColor.bg,
+                        //  enabled: shimmerEffect,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: 6,
+                          padding: const EdgeInsets.only(top: 15, bottom: 15),
+                          itemBuilder: (context, index) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  height: 77,
-                                  width: 76,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        10,
+                                  width: 50.0,
+                                  height: 50.0,
+                                  color: Colors.white,
+                                ),
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        width: double.infinity,
+                                        height: 10.0,
+                                        color: Colors.white,
                                       ),
+                                      const SizedBox(
+                                        height: 6,
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 10.0,
+                                        color: Colors.white,
+                                      ),
+                                      const SizedBox(
+                                        height: 6,
+                                      ),
+                                      Container(
+                                        width: 40.0,
+                                        height: 10.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const SizedBox(
+                            height: 10,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Visibility(
+                      visible: (searchCn.text.trim().isNotEmpty),
+                      replacement: Visibility(
+                        visible:
+                            (homePageModal.data?.shops?.isNotEmpty ?? false),
+                        replacement: Visibility(
+                          visible: !isDataLoading,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppStrings.noShopAvailable,
+                              style: AppFonts.normalText,
+                            ),
+                          ),
+                        ),
+                        child: Expanded(
+                          child: ListView.separated(
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            itemCount: (shopList
+                                .length), //(homePageModal.data?.shops?.length ?? 0),
+                            padding: const EdgeInsets.only(top: 15, bottom: 15),
+                            itemBuilder: (context, index) {
+                              //  var item = homePageModal.data?.shops?[index];
+                              var item = shopList[index];
+
+                              return InkWell(
+                                onTap: () async {
+                                  SharedPreferences sharedPreferences =
+                                      await SharedPreferences.getInstance();
+                                  sharedPreferences.setInt(
+                                    'shop_id',
+                                    item.id!.toInt(),
+                                  );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ShopDetail(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.black,
+                                    borderRadius: BorderRadius.circular(
+                                      15,
                                     ),
                                   ),
-                                  child: Visibility(
-                                    visible: (item.image?.isNotEmpty ?? false),
-                                    child: CachedNetworkImage(
-                                      imageUrl: ApiService.imageUrl +
-                                          (item.image ?? ''),
-                                      fit: BoxFit.fill,
-                                      placeholder: (
-                                        context,
-                                        url,
-                                      ) =>
-                                          const Center(
-                                        child: SizedBox(
-                                          height: 30,
-                                          width: 30,
-                                          child: CircularProgressIndicator(
-                                            color: AppColor.yellow,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 77,
+                                        width: 76,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Visibility(
+                                          visible:
+                                              (item.image?.isNotEmpty ?? false),
+                                          child: CachedNetworkImage(
+                                            imageUrl: ApiService.imageUrl +
+                                                (item.image ?? ''),
+                                            fit: BoxFit.fill,
+                                            placeholder: (
+                                              context,
+                                              url,
+                                            ) =>
+                                                const Center(
+                                              child: SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: AppColor.yellow,
+                                                ),
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                          ),
+
+                                          // Image.network(
+                                          //   ApiService.imageUrl + (item?.image ?? ''),
+                                          //   fit: BoxFit.fill,
+                                          // ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              (item.name ?? ''),
+                                              style: AppFonts.regular
+                                                  .copyWith(fontSize: 16),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppIcon.ratingIcon,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  (item.avgRating) == '0'
+                                                      ? AppStrings.noRatingYet
+                                                      : (item.avgRating ?? ''),
+                                                  style: AppFonts.regular
+                                                      .copyWith(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                ),
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppIcon.locationIcon,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      '${item.distance ?? ' '} km',
+                                                      style: AppFonts.regular
+                                                          .copyWith(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppIcon.locationIcon,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    (item.address ?? ''),
+                                                    style: AppFonts.regular
+                                                        .copyWith(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const SizedBox(
+                              height: 10,
+                            ),
+                          ),
+                        ),
+                      ),
+                      child: Visibility(
+                        visible:
+                            (searchHomePageModal?.data?.shops?.isNotEmpty ??
+                                false),
+                        replacement: Visibility(
+                          visible: !isDataLoading,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppStrings.noShopAvailable,
+                              style: AppFonts.normalText,
+                            ),
+                          ),
+                        ),
+                        child: Expanded(
+                          child: ListView.separated(
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            itemCount: shopList.length,
+                            padding: const EdgeInsets.only(top: 15),
+                            itemBuilder: (context, index) {
+                              var item = shopList[index];
+
+                              return InkWell(
+                                onTap: () async {
+                                  SharedPreferences sharedPreferences =
+                                      await SharedPreferences.getInstance();
+                                  sharedPreferences.setInt(
+                                    'shop_id',
+                                    item.id!.toInt(),
+                                  );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ShopDetail(),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.black,
+                                    borderRadius: BorderRadius.circular(
+                                      15,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 75,
+                                        width: 76,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Visibility(
+                                          visible:
+                                              (item.image?.isNotEmpty ?? false),
+                                          child: Image.network(
+                                            ApiService.imageUrl +
+                                                (item.image ?? ''),
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error),
-                                    ),
-
-                                    // Image.network(
-                                    //   ApiService.imageUrl + (item?.image ?? ''),
-                                    //   fit: BoxFit.fill,
-                                    // ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (item.name ?? ''),
-                                        style: AppFonts.regular
-                                            .copyWith(fontSize: 16),
-                                      ),
                                       const SizedBox(
-                                        height: 5,
+                                        width: 10,
                                       ),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppIcon.ratingIcon,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            (item.avgRating) == '0'
-                                                ? AppStrings.noRatingYet
-                                                : (item.avgRating ?? ''),
-                                            style: AppFonts.regular.copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppIcon.locationIcon,
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                '${item.distance ?? ' '} km',
-                                                style: AppFonts.regular
-                                                    .copyWith(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppIcon.locationIcon,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              (item.address ?? ''),
-                                              style: AppFonts.regular.copyWith(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              (item.name ?? ''),
+                                              style: AppFonts.regular
+                                                  .copyWith(fontSize: 16),
                                             ),
-                                          )
-                                        ],
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppIcon.ratingIcon,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  (item.avgRating) == '0'
+                                                      ? AppStrings.noRatingYet
+                                                      : (item.avgRating ?? ''),
+                                                  style: AppFonts.regular
+                                                      .copyWith(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                ),
+                                                const SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppIcon.locationIcon,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      '${item.distance ?? ' '} km',
+                                                      style: AppFonts.regular
+                                                          .copyWith(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppIcon.locationIcon,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    (item.address ?? ''),
+                                                    style: AppFonts.regular
+                                                        .copyWith(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),
-                                )
-                              ],
+                                ),
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const SizedBox(
+                              height: 10,
                             ),
                           ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const SizedBox(
-                        height: 10,
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                child: Visibility(
-                  visible:
-                      (searchHomePageModal?.data?.shops?.isNotEmpty ?? false),
-                  replacement: Visibility(
-                    visible: !isDataLoading,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      alignment: Alignment.center,
-                      child: Text(
-                        AppStrings.noShopAvailable,
-                        style: AppFonts.normalText,
-                      ),
-                    ),
-                  ),
-                  child: Expanded(
-                    child: ListView.separated(
-                      controller: scrollController,
-                      shrinkWrap: true,
-                      itemCount: shopList.length,
-                      padding: const EdgeInsets.only(top: 15),
-                      itemBuilder: (context, index) {
-                        var item = shopList[index];
-
-                        return InkWell(
-                          onTap: () async {
-                            SharedPreferences sharedPreferences =
-                                await SharedPreferences.getInstance();
-                            sharedPreferences.setInt(
-                              'shop_id',
-                              item.id!.toInt(),
-                            );
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ShopDetail(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: AppColor.black,
-                              borderRadius: BorderRadius.circular(
-                                15,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 75,
-                                  width: 76,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        10,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Visibility(
-                                    visible: (item.image?.isNotEmpty ?? false),
-                                    child: Image.network(
-                                      ApiService.imageUrl + (item.image ?? ''),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        (item.name ?? ''),
-                                        style: AppFonts.regular
-                                            .copyWith(fontSize: 16),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppIcon.ratingIcon,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            (item.avgRating) == '0'
-                                                ? AppStrings.noRatingYet
-                                                : (item.avgRating ?? ''),
-                                            style: AppFonts.regular.copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppIcon.locationIcon,
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                '${item.distance ?? ' '} km',
-                                                style: AppFonts.regular
-                                                    .copyWith(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppIcon.locationIcon,
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              (item.address ?? ''),
-                                              style: AppFonts.regular.copyWith(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const SizedBox(
-                        height: 10,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -769,16 +878,17 @@ class _HomeScreenState extends State<HomeScreen> {
     int? currentPage,
   }) async {
     // try {
-    if (searchValue?.isEmpty ?? true) {
-      Utility.progressLoadingDialog(context, true);
-    }
+    // if (searchValue?.isEmpty ?? true) {
+    //   Utility.progressLoadingDialog(context, true);
+    // }
     setLoader(true);
+
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     if (latitude == null || longitude == null) {
       await getLetLongPosition();
     }
-    log('>>>>>>>>>>>>>>${sharedPreferences.getString("access_Token")}<<<<<<<<<<<<<<');
+
     var request = {};
     request['page'] = currentPage;
     request["latitude"] = latitude.toString();
@@ -806,9 +916,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
 
     if (context.mounted) {
-      if (searchValue?.isEmpty ?? true) {
-        Utility.progressLoadingDialog(context, false);
-      }
+      // if (searchValue?.isEmpty ?? true) {
+      //   Utility.progressLoadingDialog(context, false);
+      // }
     }
     setLoader(false);
 

@@ -186,20 +186,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.w300),
                                 ),
-                                Text(
-                                  (i.unreadCounts != 0)
-                                      ? i.unreadCounts.toString()
-                                      : '0',
-                                  // chatData['unreadCounts'][i.senderId] > 0
-                                  //     ? chatData['unreadCounts'][i.senderId]
-                                  //         .toString()
-                                  //     : 'null',
-                                  maxLines: 1,
-                                  style: AppFonts.normalText.copyWith(
-                                      // overflow: TextOverflow.ellipsis,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
-                                ),
+                                // Text(
+                                //   (i.unreadCounts != 0)
+                                //       ? i.unreadCounts.toString()
+                                //       : '0',
+                                //   // chatData['unreadCounts'][i.senderId] > 0
+                                //   //     ? chatData['unreadCounts'][i.senderId]
+                                //   //         .toString()
+                                //   //     : 'null',
+                                //   maxLines: 1,
+                                //   style: AppFonts.normalText.copyWith(
+                                //       // overflow: TextOverflow.ellipsis,
+                                //       fontSize: 14,
+                                //       fontWeight: FontWeight.w300),
+                                // ),
                               ],
                             ),
                           ),

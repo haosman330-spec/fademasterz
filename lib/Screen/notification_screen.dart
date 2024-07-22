@@ -14,6 +14,7 @@ import '../Notification/notification_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/utility.dart';
+import 'Booking/cancelled_booking_details.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -24,19 +25,41 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   NotificationResponseModal? notificationResponseModal;
-
+  ScrollController scrollController = ScrollController();
+  int currentPage = 1;
+  int totalPage = 1;
+  List<ListElement> listNotification = [];
   @override
   void initState() {
     super.initState();
-    notificationList(context);
+    pagination();
+    notificationList(context: context, currentPage: 1);
   }
 
-  Future<void> notificationList(BuildContext context) async {
+  pagination() {
+    scrollController.addListener(() {
+      debugPrint('Pagination started>>>');
+      if ((scrollController.position.maxScrollExtent ==
+              scrollController.position.pixels) &&
+          (currentPage < totalPage)) {
+        currentPage++;
+        notificationList(context: context, currentPage: currentPage);
+        setState(() {});
+      }
+    });
+  }
+
+  Future<void> notificationList({
+    required BuildContext context,
+    int? currentPage,
+  }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
-
+    debugPrint('>>>>>>>>>>>>>>${currentPage}<<<<<<<<<<<<<<');
+    var request = {};
+    request['page'] = currentPage;
     var response = await http.post(
         Uri.parse(
           ApiService.notificationList,
@@ -61,6 +84,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
     if (jsonResponse['status'] == true) {
       notificationResponseModal =
           NotificationResponseModal.fromJson(jsonResponse);
+      totalPage = notificationResponseModal?.data?.totalPage ?? 1;
+      if (currentPage == 1) {
+        listNotification.clear();
+        listNotification.addAll(notificationResponseModal?.data?.list ?? []);
+      } else {
+        listNotification.addAll(notificationResponseModal?.data?.list ?? []);
+      }
       setState(() {});
     }
   }
@@ -103,52 +133,68 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shrinkWrap: true,
-                itemCount: notificationResponseModal?.data?.list?.length,
-                itemBuilder: (context, index) {
-                  var notification =
-                      notificationResponseModal?.data?.list?[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Divider(
-                        color: AppColor.white.withOpacity(
-                          .5,
-                        ),
-                        height: 25,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            notification?.title ?? '',
-                            style: AppFonts.regular.copyWith(
-                              fontSize: 16,
+              child: Visibility(
+                visible:
+                    notificationResponseModal?.data?.list?.isNotEmpty ?? false,
+                child: ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shrinkWrap: true,
+                  itemCount: listNotification.length,
+                  itemBuilder: (context, index) {
+                    var notification = listNotification[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CancelledBookingDetail(
+                              cancelBookingId: notification.bookingId,
                             ),
                           ),
-                          const Spacer(),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(
+                            color: AppColor.white.withOpacity(
+                              .5,
+                            ),
+                            height: 25,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                notification.title ?? '',
+                                style: AppFonts.regular.copyWith(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const Spacer(),
+                              Text(
+                                DateFormat('dd MM yyyy hh:mm a').format(
+                                    notification.createdAt ?? DateTime.now()),
+                                style: AppFonts.regular.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
                           Text(
-                            DateFormat('dd MM yyyy hh:mm a').format(
-                                notification?.createdAt ?? DateTime.now()),
-                            style: AppFonts.regular.copyWith(
-                              fontSize: 12,
+                            notification.description ?? '',
+                            style: AppFonts.normalText.copyWith(
+                              fontSize: 11,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        notification?.description ?? '',
-                        style: AppFonts.normalText.copyWith(
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ],
