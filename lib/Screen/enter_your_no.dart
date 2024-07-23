@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:fademasterz/Screen/verify_screen.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
@@ -9,9 +7,7 @@ import 'package:fademasterz/Utils/app_string.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 
-import '../ApiService/api_service.dart';
 import '../Utils/custom_app_button.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';
@@ -199,6 +195,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         ),
         onPress: () async {
           if (isValidate()) {
+            // _signInWithMobileNumber();
             signUpOtpAuth();
 
             // verifyPhoneNumber(phoneCn.text);
@@ -233,7 +230,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
     }
   }
 
-  Future<void> enterNumberApi(BuildContext context) async {
+/*  Future<void> enterNumberApi(BuildContext context) async {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
@@ -275,6 +272,41 @@ class _EnterYourNoState extends State<EnterYourNo> {
       //   );
       // }
     }
+  }*/
+
+  _signInWithMobileNumber() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    UserCredential credential;
+    User user;
+    try {
+      await auth.verifyPhoneNumber(
+          phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text.trim()}',
+          verificationCompleted: (PhoneAuthCredential authCredential) async {
+            await auth.signInWithCredential(authCredential).then((value) {});
+          },
+          verificationFailed: ((error) {
+            debugPrint('>>>>>>>Otp failed>>>>>>>$error<<<<<<<<<<<<<<');
+          }),
+          codeSent: (String verificationId, [int? forceResendingToken]) {
+            _verificationId = verificationId;
+            debugPrint(
+                '>>>>>>>>_verificationId>>>>>>$_verificationId<<<<<<<<<<<<<<');
+            Utility.progressLoadingDialog(context, false);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VerifyScreen(
+                    phoneNo: phoneCn.text.toString(),
+                    verificationId: _verificationId,
+                    selectedCountry: _selectedCountry),
+              ),
+            );
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            _verificationId = verificationId;
+          },
+          timeout: const Duration(seconds: 45));
+    } catch (e) {}
   }
 
   Future<void> signUpOtpAuth() {
@@ -287,7 +319,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         Utility.progressLoadingDialog(context, false);
         Helper().showToast(e.toString());
         debugPrint(
-            '>>>>>>>>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
+            '>>>>>>>ffffffff>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
       },
       verificationFailed: (e) {
         Helper().showToast('Otp failed $e');

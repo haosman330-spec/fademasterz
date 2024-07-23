@@ -19,6 +19,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // await FirebaseAppCheck.instance.activate(
+  //     androidProvider: AndroidProvider.playIntegrity,
+  //     appleProvider: AppleProvider.debug);
   await Upgrader.clearSavedSettings();
 
   FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
@@ -27,7 +31,6 @@ void main() async {
 
   debugPrint('>>>>Access Token:>>>>>>>>>>$accessToken<<<<<<<<<<<<<<');
 
-  // );
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then(

@@ -76,6 +76,14 @@ class ChatService {
     });
   }
 
+  String getChatRoomId(String userId1, String userId2) {
+    if (userId1.compareTo(userId2) < 0) {
+      return '${userId1}_$userId2';
+    } else {
+      return '${userId2}_$userId1';
+    }
+  }
+
   Future<void> sendMessage({
     required String receiverId,
     required String message,
@@ -98,9 +106,11 @@ class ChatService {
       timestamp: int.parse(time),
       fcmToken: sharedPreferences.getString('fcmToken'),
     );
-    List<String> ids = [currentUserId.toString(), receiverId];
-    ids.sort();
-    String chatRoomId = ids.join('_');
+
+    // List<String> ids = [currentUserId.toString(), receiverId];
+    // ids.sort();
+    // String chatRoomId = ids.join('_');
+    String chatRoomId = getChatRoomId(currentUserId.toString(), receiverId);
     await firestore
         .collection('chat_rooms')
         .doc(chatRoomId)
@@ -115,6 +125,7 @@ class ChatService {
       "last_message": message,
       "sender_id": currentUserId,
       "image": sharedPreferences.getString('image'),
+      "count": unreadCount,
       "members": [currentUserId, receiverId],
       "members_list": [
         {
@@ -131,7 +142,10 @@ class ChatService {
         },
       ]
     });
-
+    // await firestore.collection('chat_rooms').doc(chatRoomId).update({
+    //   'count': unreadCount,
+    //   //  "readMessage": true,
+    // });
     //  countUnreadMessages(currentUserId, receiverId);
 
     // }
@@ -175,6 +189,7 @@ class ChatService {
     List<String> ids = [chatId.toString(), userId];
     ids.sort();
     String chatRoomId = ids.join('_');
+
     final querySnapshot = await FirebaseFirestore.instance
         .collection('chat_rooms')
         .doc(chatRoomId)
@@ -199,7 +214,12 @@ class ChatService {
   Stream<QuerySnapshot> getMessage(String userId, otherUserId) {
     List<String> ids = [userId.toString(), otherUserId];
     ids.sort();
-    String chatRoomId = ids.join('_');
+    //   String chatRoomId = ids.join('_');
+    String chatRoomId = getChatRoomId(userId.toString(), otherUserId);
+
+    firestore.collection('chat_rooms').doc(chatRoomId).update({
+      'count': unreadCount,
+    });
     return firestore
         .collection('chat_rooms')
         .doc(chatRoomId)

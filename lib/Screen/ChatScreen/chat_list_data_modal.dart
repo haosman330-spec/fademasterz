@@ -12,7 +12,7 @@ String chatDataModalToJson(ChatDataModal data) => json.encode(data.toJson());
 class ChatDataModal {
   String? image;
   // UnreadCounts? unreadCounts;
-  int? unreadCounts;
+  int? count;
   List<String>? members;
   int? lastMessageTime;
   List<MembersList>? membersList;
@@ -22,7 +22,7 @@ class ChatDataModal {
 
   ChatDataModal({
     this.image,
-    this.unreadCounts,
+    this.count,
     this.members,
     this.lastMessageTime,
     this.membersList,
@@ -33,7 +33,7 @@ class ChatDataModal {
 
   factory ChatDataModal.fromJson(Map<String, dynamic> json) => ChatDataModal(
         image: json["image"],
-        unreadCounts: json["unreadCounts"],
+        count: json["count"],
         // unreadCounts: json["unreadCounts"] == null
         //     ? null
         //     : UnreadCounts.fromJson(json["unreadCounts"]),
@@ -52,7 +52,7 @@ class ChatDataModal {
 
   Map<String, dynamic> toJson() => {
         "image": image,
-        "unreadCounts": unreadCounts,
+        "count": count,
         "members":
             members == null ? [] : List<dynamic>.from(members!.map((x) => x)),
         "last_message_time": lastMessageTime,
@@ -66,7 +66,7 @@ class ChatDataModal {
 
   @override
   String toString() {
-    return 'ChatDataModal{image: $image, unreadCounts: $unreadCounts, members: $members, lastMessageTime: $lastMessageTime, membersList: $membersList, lastMessage: $lastMessage, senderId: $senderId, chatId: $chatId}';
+    return 'ChatDataModal{image: $image, count: $count, members: $members, lastMessageTime: $lastMessageTime, membersList: $membersList, lastMessage: $lastMessage, senderId: $senderId, chatId: $chatId}';
   }
 }
 

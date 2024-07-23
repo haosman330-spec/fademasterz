@@ -125,7 +125,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 var chatData = documents?[index].data() as Map<String, dynamic>;
                 log('.................${chatData.toString()}');
                 var i = ChatDataModal.fromJson(chatData);
-
+                debugPrint('>>>>>count>>>>>>>>>${i.count}<<<<<<<<<<<<<<');
                 int indexx = 0;
 
                 if (i.membersList!.first.id.toString() == senderId.toString()) {
@@ -187,7 +187,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                       fontWeight: FontWeight.w300),
                                 ),
                                 // Text(
-                                //   (i.unreadCounts != 0)
+                                //   (i.count == 0)
                                 //       ? i.unreadCounts.toString()
                                 //       : '0',
                                 //   // chatData['unreadCounts'][i.senderId] > 0
@@ -205,18 +205,31 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           ),
                           // const Spacer(),
 
-                          Text(
-                            textAlign: TextAlign.left,
-                            DateFormat('hh:mm a').format(
-                              DateTime.parse(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                  int.parse(
-                                    i.lastMessageTime.toString(),
+                          Column(
+                            children: [
+                              Text(
+                                textAlign: TextAlign.left,
+                                DateFormat('hh:mm a').format(
+                                  DateTime.parse(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(
+                                        i.lastMessageTime.toString(),
+                                      ),
+                                    ).toString(),
                                   ),
-                                ).toString(),
+                                ),
+                                style: AppFonts.yellowFont,
                               ),
-                            ),
-                            style: AppFonts.yellowFont,
+                              (i.count == 1)
+                                  ? Container(
+                                      height: 15,
+                                      width: 15,
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColor.yellow),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
                           )
                         ],
                       ),

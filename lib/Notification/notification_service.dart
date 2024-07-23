@@ -251,7 +251,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fademasterz/Screen/Dashboard/dashboard.dart';
+import 'package:fademasterz/Screen/ChatScreen/chat_screen_inbox.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -261,6 +261,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Screen/Booking/cancelled_booking_details.dart';
 import '../Screen/Booking/complete_booking_details.dart';
+import '../Screen/Dashboard/dashboard.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 String? tokenFcmChat;
@@ -369,7 +370,7 @@ class NotificationService {
               'Message notification is>>> ${message.notification.toString()}');
           display(message);
 
-          await updateFirestoreCount();
+          //await updateFirestoreCount();
           _flutterLocalNotificationsPlugin.initialize(initializationSettings,
               onDidReceiveBackgroundNotificationResponse:
                   notificationTapBackground,
@@ -431,7 +432,7 @@ class NotificationService {
 void _handleMessage(data) async {
   debugPrint('data is>>> ${data.toString()}');
 
-  if (data['type'] == null) {
+  if (data['type'] == 'cancelled') {
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (context) => const DashBoardScreen(
@@ -439,13 +440,28 @@ void _handleMessage(data) async {
         ),
       ),
     );
-  } else if (data['type'] == 'cancelled') {
+  } else if (data['type'] == 'null') {
     int bookingId = int.parse(data['booking_id']);
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (context) => CancelledBookingDetail(
           cancelBookingId: bookingId,
+        ),
+      ),
+    );
+  } else if (data['type'] == 'new_message') {
+    //int bookingId = int.parse(data['receiver_id']);
+    String receiverId = data['receiver_id'];
+    String receiver_name = data['receiver_name'];
+    String receiver_image = data['receiver_image'];
+
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (context) => ChatScreenInBox(
+          receiverId: receiverId,
+          receiverName: receiver_name,
+          receiverImage: receiver_image,
         ),
       ),
     );

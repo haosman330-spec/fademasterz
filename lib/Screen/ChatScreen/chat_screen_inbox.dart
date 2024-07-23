@@ -77,14 +77,16 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     ids.sort();
     String chatRoomId = ids.join('_');
 
-    _messagesStream = firestore
-        .collection('chat_rooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .orderBy('timestamp', descending: true)
-        .snapshots();
-    // if (await _messagesStream.isEmpty) {}
-    // _markMessagesAsRead();
+    // _messagesStream = FirebaseFirestore.instance
+    //     .collection("chat_rooms")
+    //     .where(
+    //       "members",
+    //       arrayContains: senderId,
+    //     )
+    //     .orderBy('last_message_time', descending: true)
+    //     .snapshots();
+
+    //  _markMessagesAsRead();
 
     setState(() {});
   }
@@ -92,12 +94,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   void _markMessagesAsRead() {
     _messagesStream.listen((snapshot) {
       for (var doc in snapshot.docs) {
-        if ((doc['readBy'] as List).contains(widget.receiverId)) {
-          unreadCount = 0;
-          doc.reference.update({
-            'readBy': FieldValue.arrayUnion([senderId]),
-          });
-
+        debugPrint('>>>>>dggfhgfh>>>>>>>>>${doc['count']}<<<<<<<<<<<<<<');
+        if (doc['count'] == 1) {
           List<String> ids = [
             senderId.toString(),
             widget.receiverId.toString()
@@ -109,7 +107,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
               .collection('chat_rooms')
               .doc(chatRoomId)
               .update({
-            'unreadCounts': unreadCount,
+            'count': 0,
           });
         }
       }
