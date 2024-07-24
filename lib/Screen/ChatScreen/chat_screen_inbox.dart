@@ -81,12 +81,12 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
     //     .collection("chat_rooms")
     //     .where(
     //       "members",
-    //       arrayContains: senderId,
+    //       arrayContains: widget.receiverId,
     //     )
     //     .orderBy('last_message_time', descending: true)
     //     .snapshots();
 
-    //  _markMessagesAsRead();
+    //   _markMessagesAsRead();
 
     setState(() {});
   }
@@ -94,7 +94,7 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   void _markMessagesAsRead() {
     _messagesStream.listen((snapshot) {
       for (var doc in snapshot.docs) {
-        debugPrint('>>>>>dggfhgfh>>>>>>>>>${doc['count']}<<<<<<<<<<<<<<');
+        debugPrint('>>>>>sachin>>>>>>>>>${doc['count']}<<<<<<<<<<<<<<');
         if (doc['count'] == 1) {
           List<String> ids = [
             senderId.toString(),

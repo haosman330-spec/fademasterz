@@ -57,13 +57,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
-    debugPrint('>>>>>>>>>>>>>>${currentPage}<<<<<<<<<<<<<<');
+
     var request = {};
     request['page'] = currentPage;
     var response = await http.post(
         Uri.parse(
           ApiService.notificationList,
         ),
+        body: jsonEncode(request),
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -85,6 +86,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       notificationResponseModal =
           NotificationResponseModal.fromJson(jsonResponse);
       totalPage = notificationResponseModal?.data?.totalPage ?? 1;
+
       if (currentPage == 1) {
         listNotification.clear();
         listNotification.addAll(notificationResponseModal?.data?.list ?? []);
@@ -143,16 +145,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   itemCount: listNotification.length,
                   itemBuilder: (context, index) {
                     var notification = listNotification[index];
-                    return GestureDetector(
+
+                    return InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CancelledBookingDetail(
-                              cancelBookingId: notification.bookingId,
-                            ),
-                          ),
-                        );
+                        // notificationResponseModal?.data?.list?.clear();
+                        debugPrint(
+                            '>>>>>>>>>>>>>>${notification.type}<<<<<<<<<<<<<<');
+                        notification.type == 'cancelled'
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CancelledBookingDetail(
+                                    cancelBookingId: notification.bookingId,
+                                  ),
+                                ),
+                              )
+                            : '';
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

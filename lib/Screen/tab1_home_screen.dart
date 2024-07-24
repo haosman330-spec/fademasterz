@@ -168,6 +168,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      Geolocator.openLocationSettings();
+
       return Future.error('Location services are disabled.');
     }
 
@@ -177,12 +179,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (permission == LocationPermission.denied) {
         Geolocator.openAppSettings();
+
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       Geolocator.openAppSettings();
+
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }

@@ -149,9 +149,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                   child: InkWell(
                     onTap: () {
                       currentPage = 1;
-
                       isVisible = true;
-
                       getBookingListApi(context, 1);
                       setState(() {});
                     },

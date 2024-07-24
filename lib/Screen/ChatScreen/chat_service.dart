@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'chat_userModal.dart';
+import 'chat_use_modal.dart';
 import 'chat_user_sendMessage_modal.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -110,7 +110,11 @@ class ChatService {
     // List<String> ids = [currentUserId.toString(), receiverId];
     // ids.sort();
     // String chatRoomId = ids.join('_');
-    String chatRoomId = getChatRoomId(currentUserId.toString(), receiverId);
+    //  String chatRoomId = getChatRoomId(currentUserId.toString(), receiverId);
+    String chatRoomId = int.parse(currentUserId) < int.parse(receiverId)
+        ? "${currentUserId}_${receiverId}"
+        : "${receiverId}_${currentUserId}";
+    //String chatRoomId = ids.join('_');
     await firestore
         .collection('chat_rooms')
         .doc(chatRoomId)
@@ -215,8 +219,11 @@ class ChatService {
     List<String> ids = [userId.toString(), otherUserId];
     ids.sort();
     //   String chatRoomId = ids.join('_');
-    String chatRoomId = getChatRoomId(userId.toString(), otherUserId);
+    //String chatRoomId = getChatRoomId(userId.toString(), otherUserId);
 
+    String chatRoomId = int.parse(userId) < int.parse(otherUserId)
+        ? "${userId}_${otherUserId}"
+        : "${otherUserId}_${userId}";
     firestore.collection('chat_rooms').doc(chatRoomId).update({
       'count': unreadCount,
     });

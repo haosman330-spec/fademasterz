@@ -1,6 +1,6 @@
 // To parse this JSON data, do
 //
-//     final notificationResponsemodal = notificationResponsemodalFromJson(jsonString);
+//     final notificationResponseModal = notificationResponseModalFromJson(jsonString);
 
 import 'dart:convert';
 
@@ -114,4 +114,9 @@ class ListElement {
         "updated_at": updatedAt?.toIso8601String(),
         "deleted_at": deletedAt,
       };
+
+  @override
+  String toString() {
+    return 'ListElement{id: $id, title: $title, description: $description, bookingId: $bookingId, userId: $userId, type: $type, ownerId: $ownerId, createdAt: $createdAt, updatedAt: $updatedAt, deletedAt: $deletedAt}';
+  }
 }
