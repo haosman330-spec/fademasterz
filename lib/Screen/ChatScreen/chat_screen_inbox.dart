@@ -33,8 +33,8 @@ class ChatScreenInBox extends StatefulWidget {
   State<ChatScreenInBox> createState() => _ChatScreenInBoxState();
 }
 
-String? pushtoken12;
-dynamic datafirebase;
+// String? pushtoken12;
+// dynamic datafirebase;
 
 class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   List<GetMessage> listt = [];
@@ -203,6 +203,13 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             child: StreamBuilder<QuerySnapshot>(
               stream: chatService.getMessage(senderId ?? '', widget.receiverId),
               builder: (BuildContext context, snapshot) {
+                String chatRoomId = int.parse(senderId ?? '') <
+                        int.parse(widget.receiverId ?? '')
+                    ? "${senderId}_${widget.receiverId}"
+                    : "${widget.receiverId}_${senderId}";
+                firestore.collection('chat_rooms').doc(chatRoomId).update({
+                  'count': 0,
+                });
                 if (snapshot.hasError) {
                   return const Text('Error');
                 }

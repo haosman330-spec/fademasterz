@@ -443,8 +443,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     Helper().showToast(
       jsonResponse['message'],
     );
-    debugPrint(
-        '>>>>jsonResponse>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
+    log('>>>>jsonResponse>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       verifyOtpModal = VerifyOtpModal.fromJson(jsonResponse);
 
@@ -454,8 +453,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
           '>>>>access_Token13>>>>>>>>>>${verifyOtpModal.data!.userDetail!.token}<<<<<<<access_Token<<<<<<<');
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
-      debugPrint('>>>>>>>email>>>>>>>$email<<<<<<<<<<<<<<');
-      debugPrint('>>>>>senderId>>>>>>>>>$senderId<<<<<<<<<<<<<<');
+
       sharedPreferences.setInt("senderId", senderId!);
       sharedPreferences.setString("email", email.toString());
 

@@ -69,6 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.always ||
         permission == LocationPermission.whileInUse) {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      longitude = position.longitude;
+      latitude = position.latitude;
+
       homeDetailApi(context: context, currentPage: 1);
 
       // return;
@@ -191,7 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+      desiredAccuracy: LocationAccuracy.high,
+    );
     longitude = position.longitude;
     latitude = position.latitude;
   }
@@ -249,7 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 38,
                             width: 38,
                             decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.white),
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
                           ),
                         )
                       : ClipRRect(

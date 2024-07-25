@@ -13,7 +13,6 @@ import '../ApiService/api_service.dart';
 import '../Notification/notification_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_fonts.dart';
-import '../Utils/utility.dart';
 import 'Booking/cancelled_booking_details.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -28,6 +27,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
   ScrollController scrollController = ScrollController();
   int currentPage = 1;
   int totalPage = 1;
+  bool showLoader = false;
+  void setLoader(bool value) {
+    showLoader = value;
+    setState(() {});
+  }
+
   List<ListElement> listNotification = [];
   @override
   void initState() {
@@ -54,10 +59,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
     int? currentPage,
   }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
-
+    // if (context.mounted) {
+    //   Utility.progressLoadingDialog(context, true);
+    // }
+    setLoader(true);
     var request = {};
     request['page'] = currentPage;
     var response = await http.post(
@@ -72,9 +77,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
 
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, false);
-    }
+    // if (context.mounted) {
+    //   Utility.progressLoadingDialog(context, false);
+    // }
+    setLoader(false);
 
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
@@ -127,81 +133,96 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Align(
-              alignment: Alignment.topRight,
-              child: Text(
-                AppStrings.clearAll,
-                style: AppFonts.yellowFont,
-              ),
-            ),
+            // const Align(
+            //   alignment: Alignment.topRight,
+            //   child: Text(
+            //     AppStrings.clearAll,
+            //     style: AppFonts.yellowFont,
+            //   ),
+            // ),
             Expanded(
               child: Visibility(
-                visible:
-                    notificationResponseModal?.data?.list?.isNotEmpty ?? false,
-                child: ListView.builder(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shrinkWrap: true,
-                  itemCount: listNotification.length,
-                  itemBuilder: (context, index) {
-                    var notification = listNotification[index];
+                visible: !showLoader,
+                replacement: const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColor.yellow,
+                  ),
+                ),
+                child: Visibility(
+                  visible: notificationResponseModal?.data?.list?.isNotEmpty ??
+                      false,
+                  replacement: const Center(
+                    child: Text(
+                      'No Found Notification',
+                      style: AppFonts.normalText,
+                    ),
+                  ),
+                  child: ListView.builder(
+                    controller: scrollController,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shrinkWrap: true,
+                    itemCount: listNotification.length,
+                    itemBuilder: (context, index) {
+                      var notification = listNotification[index];
 
-                    return InkWell(
-                      onTap: () {
-                        // notificationResponseModal?.data?.list?.clear();
-                        debugPrint(
-                            '>>>>>>>>>>>>>>${notification.type}<<<<<<<<<<<<<<');
-                        notification.type == 'cancelled'
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CancelledBookingDetail(
-                                    cancelBookingId: notification.bookingId,
+                      return InkWell(
+                        onTap: () {
+                          // notificationResponseModal?.data?.list?.clear();
+                          debugPrint(
+                              '>>>>>>>>>>>>>>${notification.type}<<<<<<<<<<<<<<');
+                          notification.type == 'cancelled'
+                              ? Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CancelledBookingDetail(
+                                      cancelBookingId: notification.bookingId,
+                                    ),
+                                  ),
+                                )
+                              : '';
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(
+                              color: AppColor.white.withOpacity(
+                                .5,
+                              ),
+                              height: 25,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  notification.title ?? '',
+                                  style: AppFonts.regular.copyWith(
+                                    fontSize: 16,
                                   ),
                                 ),
-                              )
-                            : '';
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Divider(
-                            color: AppColor.white.withOpacity(
-                              .5,
-                            ),
-                            height: 25,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                notification.title ?? '',
-                                style: AppFonts.regular.copyWith(
-                                  fontSize: 16,
+                                const Spacer(),
+                                Text(
+                                  DateFormat('dd MM yyyy hh:mm a').format(
+                                      notification.createdAt ?? DateTime.now()),
+                                  style: AppFonts.regular.copyWith(
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                DateFormat('dd MM yyyy hh:mm a').format(
-                                    notification.createdAt ?? DateTime.now()),
-                                style: AppFonts.regular.copyWith(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            notification.description ?? '',
-                            style: AppFonts.normalText.copyWith(
-                              fontSize: 11,
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              notification.description ?? '',
+                              style: AppFonts.normalText.copyWith(
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

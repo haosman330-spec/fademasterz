@@ -221,12 +221,13 @@ class ChatService {
     //   String chatRoomId = ids.join('_');
     //String chatRoomId = getChatRoomId(userId.toString(), otherUserId);
 
-    String chatRoomId = int.parse(userId) < int.parse(otherUserId)
-        ? "${userId}_${otherUserId}"
-        : "${otherUserId}_${userId}";
-    firestore.collection('chat_rooms').doc(chatRoomId).update({
-      'count': unreadCount,
-    });
+    String chatRoomId =
+        int.parse(userId.toString()) < int.parse(otherUserId.toString())
+            ? "${userId}_${otherUserId}"
+            : "${otherUserId}_${userId}";
+    // firestore.collection('chat_rooms').doc(chatRoomId).update({
+    //   'count': 0,
+    // });
     return firestore
         .collection('chat_rooms')
         .doc(chatRoomId)

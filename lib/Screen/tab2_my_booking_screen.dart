@@ -41,6 +41,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   final ScrollController scrollController = ScrollController();
   List<UpComing> upcomingList = [];
   List<Completed> completedList = [];
+
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});

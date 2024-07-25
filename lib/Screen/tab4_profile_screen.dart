@@ -160,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else if (jsonResponse['message'] == 'Unauthenticated.') {
       await sharedPreferences.setBool("profileSetUp", false);
       await sharedPreferences.setString("access_Token", '');
+
       setState(() {});
       if (context.mounted) {
         Navigator.of(context).pushAndRemoveUntil(
@@ -915,5 +916,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+}
+
+class Data {
+  static String fcm = 'fcm';
+  static String token = 'token';
+
+  Future<void> saveData(String key, dynamic data) async {
+    final SharedPreferences prefe = await SharedPreferences.getInstance();
+
+    if (data == String) {
+      prefe.setString(key, data);
+    } else if (data == int) {
+      prefe.setInt(key, data);
+    } else if (data == bool) {
+      prefe.setBool(key, data);
+    }
   }
 }

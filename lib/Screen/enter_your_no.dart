@@ -118,6 +118,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
                     padding: EdgeInsets.zero,
                     // countryFilter: ['In', 'FR'],
                     textStyle: const TextStyle(
+                      fontSize: 15,
                       color: Color(
                         0xffFFFFFF,
                       ),
