@@ -331,8 +331,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       try {
         await auth.signInWithCredential(credential).then((value) {
           debugPrint('>>>>>value>>>>>>>>>${value.credential}<<<<<<<<<<<<<<');
-        });
-        // .timeout(Duration(seconds: 60));
+        }).timeout(Duration(seconds: 60));
 
         verifyOtp(context);
 
@@ -422,7 +421,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     request["device_id"] = sharedPreferences.getString('deviceId');
     request["device"] = sharedPreferences.getString('deviceType');
 
-    debugPrint('>>>>request>>>>>>>>>>${request.toString()}<<<<<<<<<<<<<<');
+    log('>>>>request>>>>>>>>>>${request.toString()}<<<<<<<<<<<<<<');
     var response = await http.post(
       Uri.parse(
         ApiService.verifyOtp,
@@ -449,8 +448,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
       sharedPreferences.setString(
           "access_Token", verifyOtpModal.data!.userDetail!.token.toString());
-      debugPrint(
-          '>>>>access_Token13>>>>>>>>>>${verifyOtpModal.data!.userDetail!.token}<<<<<<<access_Token<<<<<<<');
+
       var senderId = verifyOtpModal.data!.userDetail!.id;
       var email = verifyOtpModal.data!.userDetail!.email;
 

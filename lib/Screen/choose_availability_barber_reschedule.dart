@@ -178,44 +178,52 @@ class _ChooseAvailabilityBarberRescheduleState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SfDateRangePicker(
-                //    view: DateRangePickerView.month,
-                onSubmit: (p0) => _onSelectionChanged,
-                onSelectionChanged: _onSelectionChanged,
-                selectionMode: DateRangePickerSelectionMode.single,
-                backgroundColor: AppColor.black,
-                enablePastDates: false,
-                initialDisplayDate: DateTime.now(),
-                monthViewSettings: const DateRangePickerMonthViewSettings(
-                  dayFormat: 'EEE',
-                  weekNumberStyle: DateRangePickerWeekNumberStyle(
-                    textStyle: AppFonts.appText,
-                  ),
-                  viewHeaderStyle: DateRangePickerViewHeaderStyle(
-                    textStyle: AppFonts.normalText,
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(
+                    9,
                   ),
                 ),
-                monthCellStyle: DateRangePickerMonthCellStyle(
-                    textStyle: AppFonts.normalText,
-                    todayTextStyle: AppFonts.appText,
-                    weekendTextStyle: AppFonts.yellowFont,
-                    blackoutDatesDecoration: const BoxDecoration(),
-                    leadingDatesTextStyle: AppFonts.normalText,
-                    disabledDatesTextStyle:
-                        AppFonts.normalText.copyWith(color: AppColor.gray),
-                    trailingDatesTextStyle: AppFonts.appText),
-                showNavigationArrow: true,
-                yearCellStyle: const DateRangePickerYearCellStyle(
-                  disabledDatesTextStyle: AppFonts.appText,
-                  leadingDatesTextStyle: AppFonts.appText,
+                clipBehavior: Clip.antiAlias,
+                child: SfDateRangePicker(
+                  //    view: DateRangePickerView.month,
+                  onSubmit: (p0) => _onSelectionChanged,
+                  onSelectionChanged: _onSelectionChanged,
+                  selectionMode: DateRangePickerSelectionMode.single,
+                  backgroundColor: AppColor.black,
+                  enablePastDates: false,
+                  initialDisplayDate: DateTime.now(),
+                  monthViewSettings: const DateRangePickerMonthViewSettings(
+                    dayFormat: 'EEE',
+                    weekNumberStyle: DateRangePickerWeekNumberStyle(
+                      textStyle: AppFonts.appText,
+                    ),
+                    viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                      textStyle: AppFonts.normalText,
+                    ),
+                  ),
+                  monthCellStyle: DateRangePickerMonthCellStyle(
+                      textStyle: AppFonts.normalText,
+                      todayTextStyle: AppFonts.appText,
+                      weekendTextStyle: AppFonts.yellowFont,
+                      blackoutDatesDecoration: const BoxDecoration(),
+                      leadingDatesTextStyle: AppFonts.normalText,
+                      disabledDatesTextStyle:
+                          AppFonts.normalText.copyWith(color: AppColor.gray),
+                      trailingDatesTextStyle: AppFonts.appText),
+                  showNavigationArrow: true,
+                  yearCellStyle: const DateRangePickerYearCellStyle(
+                    disabledDatesTextStyle: AppFonts.appText,
+                    leadingDatesTextStyle: AppFonts.appText,
+                  ),
+                  todayHighlightColor: AppColor.yellow,
+                  headerStyle: const DateRangePickerHeaderStyle(
+                    backgroundColor: AppColor.yellow,
+                    textStyle: AppFonts.blackFont,
+                  ),
+                  selectionColor: AppColor.yellow,
+                  initialSelectedDate: DateTime.now(),
                 ),
-                todayHighlightColor: AppColor.yellow,
-                headerStyle: const DateRangePickerHeaderStyle(
-                  backgroundColor: AppColor.yellow,
-                  textStyle: AppFonts.blackFont,
-                ),
-                selectionColor: AppColor.yellow,
-                initialSelectedDate: DateTime.now(),
               ),
               const SizedBox(
                 height: 10,

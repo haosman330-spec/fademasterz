@@ -63,6 +63,11 @@ class ServiceData {
             : List<dynamic>.from(services!.map((x) => x.toJson())),
         "total_pages": totalPages,
       };
+
+  @override
+  String toString() {
+    return 'ServiceData{services: $services, totalPages: $totalPages}';
+  }
 }
 
 class Service1 {

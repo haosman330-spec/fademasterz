@@ -40,8 +40,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     listener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
       debugPrint('>>>>InternetStatus status>>>>>>>>>>$status<<<<<<<<<<<<<<');
-      debugPrint(
-          '>>>>_connectionStatus>>>>>>>>>>$_connectionStatus<<<<<<<<<<<<<<');
+
       if (status == InternetStatus.disconnected) {
         debugPrint('>>>>InSide<<<<<<<<<<<<<<');
         showDialog(
@@ -168,7 +167,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             width: 21,
                             height: 22,
                             colorFilter: const ColorFilter.mode(
-                                AppColor.lightGray, BlendMode.srcIn),
+                              AppColor.lightGray,
+                              BlendMode.srcIn,
+                            ),
                             // color: AppColor.lightGray,
                           ),
                           const SizedBox(
@@ -189,7 +190,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           width: 21,
                           height: 22,
                           colorFilter: const ColorFilter.mode(
-                              AppColor.yellow, BlendMode.srcIn),
+                            AppColor.yellow,
+                            BlendMode.srcIn,
+                          ),
                           // color: AppColor.yellow,
                         ),
                         const SizedBox(

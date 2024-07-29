@@ -13,7 +13,6 @@ import '../ApiService/api_service.dart';
 import '../Notification/notification_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_fonts.dart';
-import 'Booking/cancelled_booking_details.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -166,22 +165,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       var notification = listNotification[index];
 
                       return InkWell(
-                        onTap: () {
-                          // notificationResponseModal?.data?.list?.clear();
-                          debugPrint(
-                              '>>>>>>>>>>>>>>${notification.type}<<<<<<<<<<<<<<');
-                          notification.type == 'cancelled'
-                              ? Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CancelledBookingDetail(
-                                      cancelBookingId: notification.bookingId,
-                                    ),
-                                  ),
-                                )
-                              : '';
-                        },
+                        // onTap: () {
+                        //   // notificationResponseModal?.data?.list?.clear();
+                        //   debugPrint(
+                        //       '>>>>>>>>>>>>>>${notification.type}<<<<<<<<<<<<<<');
+                        //   notification.type == 'cancelled'
+                        //       ? Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //             builder: (context) =>
+                        //                 CancelledBookingDetail(
+                        //               cancelBookingId: notification.bookingId,
+                        //             ),
+                        //           ),
+                        //         )
+                        //       : '';
+                        //  },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -201,8 +200,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  DateFormat('dd MM yyyy hh:mm a').format(
-                                      notification.createdAt ?? DateTime.now()),
+                                  DateFormat('dd-MM-yyyy' //hh:mm a',
+                                          )
+                                      .format(notification.createdAt ??
+                                          DateTime.now()),
                                   style: AppFonts.regular.copyWith(
                                     fontSize: 12,
                                   ),
@@ -213,9 +214,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               height: 5,
                             ),
                             Text(
-                              notification.description ?? '',
-                              style: AppFonts.normalText.copyWith(
-                                fontSize: 11,
+                              ('${notification.description}' ?? ''),
+                              style: AppFonts.yellowFont.copyWith(
+                                fontSize: 12,
                               ),
                             ),
                           ],

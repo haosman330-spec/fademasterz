@@ -100,7 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(AppIcon.locationDialogIcon),
+                    SvgPicture.asset(
+                      AppIcon.locationDialogIcon,
+                    ),
                     const SizedBox(
                       height: 12,
                     ),
@@ -309,11 +311,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           'Welcome, ${homePageModal.data?.userDetail?.name ?? ''}',
-                          style: AppFonts.text
-                              .copyWith(fontSize: 16, color: AppColor.yellow),
+                          style: AppFonts.text.copyWith(
+                            fontSize: 16,
+                            color: AppColor.yellow,
+                          ),
                         ),
-                        const Text(AppStrings.helpToday,
-                            style: AppFonts.normalText),
+                        const Text(
+                          AppStrings.helpToday,
+                          style: AppFonts.normalText,
+                        ),
                       ],
                     ),
                   ),
@@ -445,55 +451,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? Expanded(
                       child: Shimmer.fromColors(
                         baseColor: AppColor.black,
-                        highlightColor: AppColor.bg,
+                        highlightColor: AppColor.gray.withOpacity(0.6),
                         //  enabled: shimmerEffect,
                         child: ListView.separated(
                           shrinkWrap: true,
                           itemCount: 6,
                           padding: const EdgeInsets.only(top: 15, bottom: 15),
                           itemBuilder: (context, index) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  color: Colors.white,
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 70.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  15,
                                 ),
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        width: double.infinity,
-                                        height: 10.0,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(
-                                        height: 6,
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 10.0,
-                                        color: Colors.white,
-                                      ),
-                                      const SizedBox(
-                                        height: 6,
-                                      ),
-                                      Container(
-                                        width: 40.0,
-                                        height: 10.0,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                color: Colors.white,
+                              ),
                             );
                           },
                           separatorBuilder: (BuildContext context, int index) =>

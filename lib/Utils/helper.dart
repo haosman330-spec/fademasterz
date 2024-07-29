@@ -22,4 +22,6 @@ class Helper {
       textColor: AppColor.black,
     );
   }
+
+  void isValidate() {}
 }

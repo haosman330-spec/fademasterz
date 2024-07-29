@@ -31,6 +31,11 @@ class VerifyOtpModal {
         "message": message,
         "data": data?.toJson(),
       };
+
+  @override
+  String toString() {
+    return 'VerifyOtpModal{status: $status, message: $message, data: $data}';
+  }
 }
 
 class Data {
@@ -53,6 +58,11 @@ class Data {
         "user_detail": userDetail?.toJson(),
         "is_setup": isSetup,
       };
+
+  @override
+  String toString() {
+    return 'Data{userDetail: $userDetail, isSetup: $isSetup}';
+  }
 }
 
 class UserDetail {

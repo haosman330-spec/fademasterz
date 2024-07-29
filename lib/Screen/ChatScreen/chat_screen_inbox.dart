@@ -201,7 +201,8 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
           // _buildMessages(),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: chatService.getMessage(senderId ?? '', widget.receiverId),
+              stream: chatService.getMessage(
+                  senderId.toString(), widget.receiverId.toString()),
               builder: (BuildContext context, snapshot) {
                 String chatRoomId = int.parse(senderId ?? '') <
                         int.parse(widget.receiverId ?? '')
@@ -309,46 +310,49 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
                                   horizontal: 10,
                                   vertical: 10,
                                 ),
-                                decoration: BoxDecoration(
-                                    borderRadius: snapshot.data!.docs[index]
-                                                ['senderId'] ==
-                                            senderId
-                                        ? const BorderRadius.only(
-                                            topRight: Radius.circular(
-                                              8,
-                                            ),
-                                            topLeft: Radius.circular(
-                                              12,
-                                            ),
-                                            bottomLeft: Radius.circular(
-                                              8,
-                                            ),
-                                            bottomRight: Radius.elliptical(
-                                              -20,
-                                              -10,
-                                            ),
-                                          )
-                                        : const BorderRadius.only(
-                                            topRight: Radius.circular(
-                                              8,
-                                            ),
-                                            topLeft: Radius.circular(
-                                              12,
-                                            ),
-                                            bottomLeft: Radius.circular(
-                                              8,
-                                            ),
-                                            bottomRight: Radius.elliptical(
-                                              -20,
-                                              -10,
-                                            ),
+                                decoration: snapshot.data!.docs[index]
+                                            ['senderId'] ==
+                                        senderId
+                                    ? const BoxDecoration(
+                                        color: AppColor.yellow,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(
+                                            8,
                                           ),
-                                    color: Colors.green),
+                                          topLeft: Radius.circular(
+                                            12,
+                                          ),
+                                          bottomLeft: Radius.circular(
+                                            8,
+                                          ),
+                                          bottomRight: Radius.elliptical(
+                                            -20,
+                                            -10,
+                                          ),
+                                        ),
+                                      )
+                                    : const BoxDecoration(
+                                        color: Color(0xffFFFFFF),
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(
+                                            8,
+                                          ),
+                                          topLeft: Radius.circular(
+                                            12,
+                                          ),
+                                          bottomLeft: Radius.circular(
+                                            8,
+                                          ),
+                                          bottomRight: Radius.elliptical(
+                                            -20,
+                                            -10,
+                                          ),
+                                        )),
                                 child: Text(
                                   snapshot.data!.docs[index]['message']
                                       .toString(),
                                   style: const TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontSize: 15,
                                   ),
                                 ),

@@ -111,9 +111,10 @@ class ChatService {
     // ids.sort();
     // String chatRoomId = ids.join('_');
     //  String chatRoomId = getChatRoomId(currentUserId.toString(), receiverId);
-    String chatRoomId = int.parse(currentUserId) < int.parse(receiverId)
-        ? "${currentUserId}_${receiverId}"
-        : "${receiverId}_${currentUserId}";
+    String chatRoomId =
+        int.parse(currentUserId.toString()) < int.parse(receiverId.toString())
+            ? "${currentUserId}_${receiverId}"
+            : "${receiverId}_${currentUserId}";
     //String chatRoomId = ids.join('_');
     await firestore
         .collection('chat_rooms')
@@ -216,15 +217,15 @@ class ChatService {
   }
 
   Stream<QuerySnapshot> getMessage(String userId, otherUserId) {
-    List<String> ids = [userId.toString(), otherUserId];
-    ids.sort();
+    //   List<String> ids = [userId.toString(), otherUserId];
+    //  ids.sort();
     //   String chatRoomId = ids.join('_');
     //String chatRoomId = getChatRoomId(userId.toString(), otherUserId);
 
-    String chatRoomId =
-        int.parse(userId.toString()) < int.parse(otherUserId.toString())
-            ? "${userId}_${otherUserId}"
-            : "${otherUserId}_${userId}";
+    String chatRoomId = int.parse(userId.toString() ?? '') <
+            int.parse(otherUserId.toString() ?? '')
+        ? "${userId}_${otherUserId}"
+        : "${otherUserId}_${userId}";
     // firestore.collection('chat_rooms').doc(chatRoomId).update({
     //   'count': 0,
     // });

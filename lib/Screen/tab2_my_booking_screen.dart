@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../ApiService/api_service.dart';
 import '../Utils/app_assets.dart';
@@ -31,7 +32,7 @@ class MyBookingScreen extends StatefulWidget {
 class _MyBookingScreenState extends State<MyBookingScreen> {
   bool isVisible = true;
   int? bookingId;
-  bool showLoader = false;
+  bool showLoader = true;
 
   MyBookingResponse? myBookingResponse;
   int currentPage = 1;
@@ -81,51 +82,6 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     }
     return isConnected;
   }
-
-  /* void initConnectivity() async {
-    final List<ConnectivityResult> connectivityResult =
-        await (Connectivity().checkConnectivity());
-
-    if (connectivityResult.contains(ConnectivityResult.mobile)) {
-      getBookingListApi(context,1);
-      // Mobile network available.
-    } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-      getBookingListApi(context,1);
-    } else {
-      // ignore: use_build_context_synchronously
-      showNoNetworkMyBookingDialog(context);
-      setState(() {});
-    }
-  }*/
-
-  ///NetworkDialog
-/*  void showNoNetworkMyBookingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // ignore: deprecated_member_use
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            title: const Text('No Network Connection'),
-            content:
-                const Text('Please check your internet and Wi-Fi connection.'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  // getBooking();
-                  getBookingListApi(context,1);
-                  setState(() {});
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -233,11 +189,36 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
             Expanded(
               child: Visibility(
                 visible: !showLoader,
-                replacement: const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColor.yellow,
+                replacement: Shimmer.fromColors(
+                  baseColor: AppColor.black,
+                  highlightColor: AppColor.gray.withOpacity(0.6),
+                  //  enabled: shimmerEffect,
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: 4,
+                    padding: const EdgeInsets.only(top: 15, bottom: 15),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 150.0,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              15,
+                            ),
+                            color: Colors.white),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const SizedBox(
+                      height: 10,
+                    ),
                   ),
                 ),
+                // const Center(
+                //   child: CircularProgressIndicator(
+                //     color: AppColor.yellow,
+                //   ),
+                // ),
                 child: Visibility(
                   visible: isVisible == true,
                   replacement: Visibility(

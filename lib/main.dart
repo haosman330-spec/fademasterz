@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:fademasterz/Utils/app_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
@@ -12,6 +11,7 @@ import 'package:upgrader/upgrader.dart';
 
 import 'Notification/notification_service.dart';
 import 'Screen/SplashScreen/splash_screen.dart';
+import 'Utils/app_color.dart';
 import 'firebase_options.dart';
 
 void main() async {

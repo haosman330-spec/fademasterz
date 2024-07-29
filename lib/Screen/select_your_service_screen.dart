@@ -359,13 +359,17 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     if (jsonResponse['status'] == true) {
       shopServiceModal = ShopServiceResponse.fromJson(jsonResponse);
 
-      shopServiceModal.data?.services?.forEach((shopItemElement) {
-        selectedServiceList?.forEach((selectedItemElement) {
-          if (shopItemElement.id == selectedItemElement?.id) {
-            shopItemElement.selected = true;
-          }
-        });
-      });
+      shopServiceModal.data?.services?.forEach(
+        (shopItemElement) {
+          selectedServiceList?.forEach(
+            (selectedItemElement) {
+              if (shopItemElement.id == selectedItemElement?.id) {
+                shopItemElement.selected = true;
+              }
+            },
+          );
+        },
+      );
 
       setState(() {});
     }

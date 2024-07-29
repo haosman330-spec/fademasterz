@@ -251,7 +251,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fademasterz/Screen/ChatScreen/chat_screen_inbox.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -261,6 +260,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Screen/Booking/cancelled_booking_details.dart';
 import '../Screen/Booking/complete_booking_details.dart';
+import '../Screen/ChatScreen/chat_screen_inbox.dart';
 import '../Screen/Dashboard/dashboard.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -509,7 +509,6 @@ Future<String> getAccessToken() async {
     // Obtain the access token
     final accessToken = (authClient.credentials).accessToken;
 
-    debugPrint('>>>>>>>>>>>>>>${accessToken.data}<<<<<<<<<<<<<<');
     tokenFcmChat = accessToken.data;
     // Close the auth client to prevent memory leaks
     authClient.close();
