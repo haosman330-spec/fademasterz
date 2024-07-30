@@ -913,7 +913,7 @@ class _HomeScreenState extends State<HomeScreen> {
     debugPrint('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
     log('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
-    if (jsonResponse['status'] == true) {
+    if (jsonResponse['status']) {
       if (searchValue?.isNotEmpty ?? false) {
         searchHomePageModal = HomePageModal.fromJson(jsonResponse);
         totalPage = searchHomePageModal?.data?.totalPages ?? 1;
@@ -936,7 +936,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         setState(() {});
       }
-
       sharedPreferences.setString(
           'image', homePageModal.data?.userDetail?.image ?? '');
       sharedPreferences.setString(
