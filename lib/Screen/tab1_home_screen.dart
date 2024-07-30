@@ -913,7 +913,7 @@ class _HomeScreenState extends State<HomeScreen> {
     debugPrint('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
     log('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
-    if (jsonResponse['status']) {
+    if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {
         searchHomePageModal = HomePageModal.fromJson(jsonResponse);
         totalPage = searchHomePageModal?.data?.totalPages ?? 1;
