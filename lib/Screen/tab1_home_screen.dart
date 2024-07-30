@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       );
-      homeDetailApi(context: context, currentPage: 1);
+      //homeDetailApi(context: context, currentPage: 1);
     }
   }
 
@@ -202,6 +202,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     longitude = position.longitude;
     latitude = position.latitude;
+
+    if (longitude != null) {
+      homeDetailApi(context: context, currentPage: 1);
+    }
   }
 
   @override
@@ -870,9 +874,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    if (latitude == null || longitude == null) {
+    /*if (latitude == null || longitude == null) {
       await getLetLongPosition();
-    }
+    }*/
 
     var request = {};
     request['page'] = currentPage;
@@ -888,6 +892,7 @@ class _HomeScreenState extends State<HomeScreen> {
             : ' ';
     // (startYr?.isNotEmpty ?? false) ?
 
+    debugPrint('-1111----request----$request----');
     var response = await http.post(
         Uri.parse(
           ApiService.home,
