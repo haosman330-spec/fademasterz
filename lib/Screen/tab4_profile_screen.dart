@@ -54,8 +54,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     // TODO: implement initState
     userProfile();
-
-    setState(() {});
     super.initState();
   }
 
@@ -209,23 +207,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Visibility(
                         visible: (image?.isNotEmpty ?? false),
 
-                        child: CachedNetworkImage(
-                          imageUrl: ApiService.imageUrl + (image ?? ''),
-                          height: 72,
-                          width: 72,
-                          fit: BoxFit.fill,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                            child: SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: CircularProgressIndicator(
-                                value: downloadProgress.progress,
+                        child: InkWell(
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.transparent,
+                                  title: Container(
+                                    child: Image.network(
+                                        ApiService.imageUrl + (image ?? '')),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: CachedNetworkImage(
+                            imageUrl: ApiService.imageUrl + (image ?? ''),
+                            height: 72,
+                            width: 72,
+                            fit: BoxFit.fill,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Center(
+                              child: SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                ),
                               ),
                             ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
                         ),
                         // child: Image.network(
                         //   ApiService.imageUrl + (image ?? ''),

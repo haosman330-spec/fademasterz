@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
 import 'package:fademasterz/Modal/get_category_modal.dart';
-import 'package:fademasterz/Utils/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
@@ -30,6 +29,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
   int? selectAvailabilityIndex = 0;
   double? startYr;
   double? endYr;
+  bool dataLoad = true;
   List<CategoryDataModel> categoryService = [];
 
   void onTap(int index) {
@@ -66,7 +66,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
   }
 
   void initData() {
-    debugPrint('>>>>>>>>>>>>>>${widget.filterData?.serviceId}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>>>filterData>>>>>>${widget.filterData}<<<<<<<<<<<<<<');
 
     startYr = double.parse(widget.filterData?.startYear ?? '0.0');
     endYr = double.parse(widget.filterData?.endYear ?? '20.0');
@@ -109,10 +109,7 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
   List<String>? serviceId;
 
   Future<void> getCategory(BuildContext context) async {
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
-
+    dataLoad = true;
     var response = await http.post(
         Uri.parse(
           ApiService.getCategories,
@@ -122,16 +119,11 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
           'Content-Type': 'application/json',
         });
 
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, false);
-    }
-
+    dataLoad = false;
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
+
     if (jsonResponse['status'] == true) {
       getCategoryResponse = GetCategory.fromJson(jsonResponse);
 
@@ -208,58 +200,66 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
           ),
           SizedBox(
             height: 33,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: categoryService.length,
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () => onTap(index),
+            child: Visibility(
+              visible: dataLoad,
+              replacement: ListView.separated(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: categoryService.length,
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () => onTap(index),
 
-                  // {
-                  //   var categoryId = categoryService[index].id!.toInt();
-                  //   debugPrint('>>>>>>>>>>>>>>${categoryId}<<<<<<<<<<<<<<');
-                  //
-                  //   // if (categoryService[index].isSelected == true) {
-                  //   //   categoryService[index].isSelected = false;
-                  //   //   setState(() {});
-                  //   //   debugPrint(
-                  //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
-                  //   // } else {
-                  //   //   categoryService[index].isSelected = true;
-                  //   //   setState(() {});
-                  //   //   debugPrint(
-                  //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
-                  //   // }
-                  //   onTap(index););
-                  // },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: (categoryService[index].isSelected ?? true)
-                          ? AppColor.yellow
-                          : Colors.transparent,
-                      border: Border.all(color: AppColor.yellow),
-                      borderRadius: BorderRadius.circular(19),
+                    // {
+                    //   var categoryId = categoryService[index].id!.toInt();
+                    //   debugPrint('>>>>>>>>>>>>>>${categoryId}<<<<<<<<<<<<<<');
+                    //
+                    //   // if (categoryService[index].isSelected == true) {
+                    //   //   categoryService[index].isSelected = false;
+                    //   //   setState(() {});
+                    //   //   debugPrint(
+                    //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
+                    //   // } else {
+                    //   //   categoryService[index].isSelected = true;
+                    //   //   setState(() {});
+                    //   //   debugPrint(
+                    //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
+                    //   // }
+                    //   onTap(index););
+                    // },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: (categoryService[index].isSelected ?? true)
+                            ? AppColor.yellow
+                            : Colors.transparent,
+                        border: Border.all(color: AppColor.yellow),
+                        borderRadius: BorderRadius.circular(19),
+                      ),
+                      //  margin: const EdgeInsets.all(5),
+                      child: Text(
+                        categoryService[index].name ?? '',
+                        style: (categoryService[index].isSelected ?? true)
+                            ? AppFonts.text
+                                .copyWith(color: AppColor.black1, fontSize: 14)
+                            : AppFonts.yellowFont,
+                      ),
                     ),
-                    //  margin: const EdgeInsets.all(5),
-                    child: Text(
-                      categoryService[index].name ?? '',
-                      style: (categoryService[index].isSelected ?? true)
-                          ? AppFonts.text
-                              .copyWith(color: AppColor.black1, fontSize: 14)
-                          : AppFonts.yellowFont,
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  width: 8,
-                );
-              },
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(
+                    width: 8,
+                  );
+                },
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: AppColor.yellow,
+                ),
+              ),
             ),
           ),
           Padding(
@@ -340,10 +340,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                 setState(() {
                   startYr = value.start;
                   endYr = value.end;
-                  // debugPrint(
-                  //     '>>>>>>startYr>>>>>>>>${startYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
-                  // debugPrint(
-                  //     '>>>>>>>>>>>>>>${endYr?.toStringAsFixed(0)}<<<<<<<<<<<<<<');
                 });
               },
               min: 0.0,
@@ -363,10 +359,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                   '${endYr?.toStringAsFixed(0) ?? 20} yr',
                   style: AppFonts.yellowFont.copyWith(fontSize: 13),
                 ),
-                // Text(
-                //   AppStrings.all,
-                //   style: AppFonts.yellowFont.copyWith(fontSize: 13),
-                // ),
               ],
             ),
           ),
@@ -429,8 +421,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                         serviceId: serviceId,
                       );
 
-                      debugPrint(
-                          '>>>>>>>>>>>>>>${data.toString()}<<<<<<<<<<<<<<');
                       Navigator.pop(context, data);
                     },
                     style: ElevatedButton.styleFrom(

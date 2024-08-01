@@ -27,8 +27,6 @@ import '../Utils/bottom_sheet.dart';
 import '../Utils/custom_app_button.dart';
 
 class HomeScreen extends StatefulWidget {
-  // final String? startYr;
-  // final String? availability;
   const HomeScreen({
     super.key,
   });
@@ -125,7 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         textAlign: TextAlign.center,
                         AppStrings.locationNearest,
                         style: AppFonts.blackFont.copyWith(
-                            fontSize: 14, fontWeight: FontWeight.w500),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -172,28 +172,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getLetLongPosition() async {
     bool serviceEnabled;
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       Geolocator.openLocationSettings();
-
       return Future.error('Location services are disabled.');
     }
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-
       if (permission == LocationPermission.denied) {
         Geolocator.openAppSettings();
-
         return Future.error('Location permissions are denied');
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       Geolocator.openAppSettings();
-
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
@@ -217,13 +210,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  // WidgetsBinding.instance.addPostFrameCallback((_) {
-  // scrollController.animateTo(
-  // selectedIndex * 65.0, // 80 for item width + 5 for separator width
-  // duration: const Duration(milliseconds: 500),
-  // curve: Curves.easeInOut,
-  // );
-  // });
   pagination() {
     scrollController.addListener(() {
       debugPrint('Pagination started>>>');
@@ -453,29 +439,47 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               shimmerEffect
                   ? Expanded(
-                      child: Shimmer.fromColors(
-                        baseColor: AppColor.black,
-                        highlightColor: AppColor.gray.withOpacity(0.6),
-                        //  enabled: shimmerEffect,
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          itemCount: 6,
-                          padding: const EdgeInsets.only(top: 15, bottom: 15),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 70.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  15,
+                      child: RefreshIndicator(
+                        color: Colors.white,
+                        backgroundColor: AppColor.yellow,
+                        onRefresh: () {
+                          return Future.delayed(
+                            Duration.zero,
+                            () async {
+                              Position position =
+                                  await Geolocator.getCurrentPosition(
+                                      desiredAccuracy: LocationAccuracy.high);
+                              longitude = position.longitude;
+                              latitude = position.latitude;
+                              homeDetailApi(context: context, currentPage: 1);
+                            },
+                          );
+                        },
+                        child: Shimmer.fromColors(
+                          baseColor: AppColor.black,
+                          highlightColor: AppColor.gray.withOpacity(0.6),
+                          //  enabled: shimmerEffect,
+                          child: ListView.separated(
+                            shrinkWrap: true,
+                            itemCount: 6,
+                            padding: const EdgeInsets.only(top: 15, bottom: 15),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 70.0,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    15,
+                                  ),
+                                  color: Colors.white,
                                 ),
-                                color: Colors.white,
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) =>
-                              const SizedBox(
-                            height: 10,
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) =>
+                                    const SizedBox(
+                              height: 10,
+                            ),
                           ),
                         ),
                       ),
@@ -497,162 +501,131 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         child: Expanded(
-                          child: ListView.separated(
-                            controller: scrollController,
-                            shrinkWrap: true,
-                            itemCount: (shopList
-                                .length), //(homePageModal.data?.shops?.length ?? 0),
-                            padding: const EdgeInsets.only(top: 15, bottom: 15),
-                            itemBuilder: (context, index) {
-                              //  var item = homePageModal.data?.shops?[index];
-                              var item = shopList[index];
-
-                              return InkWell(
-                                onTap: () async {
-                                  SharedPreferences sharedPreferences =
-                                      await SharedPreferences.getInstance();
-                                  sharedPreferences.setInt(
-                                    'shop_id',
-                                    item.id!.toInt(),
-                                  );
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const ShopDetail(),
-                                    ),
-                                  );
+                          child: RefreshIndicator(
+                            edgeOffset: BorderSide.strokeAlignInside,
+                            color: Colors.white,
+                            backgroundColor: AppColor.yellow,
+                            onRefresh: () {
+                              return Future.delayed(
+                                Duration.zero,
+                                () {
+                                  homeDetailApi(
+                                      context: context, currentPage: 1);
                                 },
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: AppColor.black,
-                                    borderRadius: BorderRadius.circular(
-                                      15,
+                              );
+                            },
+                            child: ListView.separated(
+                              controller: scrollController,
+                              shrinkWrap: true,
+                              itemCount: (shopList
+                                  .length), //(homePageModal.data?.shops?.length ?? 0),
+                              padding:
+                                  const EdgeInsets.only(top: 15, bottom: 15),
+                              itemBuilder: (context, index) {
+                                //  var item = homePageModal.data?.shops?[index];
+                                var item = shopList[index];
+
+                                return InkWell(
+                                  onTap: () async {
+                                    SharedPreferences sharedPreferences =
+                                        await SharedPreferences.getInstance();
+                                    sharedPreferences.setInt(
+                                      'shop_id',
+                                      item.id!.toInt(),
+                                    );
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ShopDetail(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: AppColor.black,
+                                      borderRadius: BorderRadius.circular(
+                                        15,
+                                      ),
                                     ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 77,
-                                        width: 76,
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Visibility(
-                                          visible:
-                                              (item.image?.isNotEmpty ?? false),
-                                          child: CachedNetworkImage(
-                                            imageUrl: ApiService.imageUrl +
-                                                (item.image ?? ''),
-                                            fit: BoxFit.fill,
-                                            placeholder: (
-                                              context,
-                                              url,
-                                            ) =>
-                                                const Center(
-                                              child: SizedBox(
-                                                height: 30,
-                                                width: 30,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  color: AppColor.yellow,
-                                                ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 77,
+                                          width: 76,
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                10,
                                               ),
                                             ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
                                           ),
+                                          child: Visibility(
+                                            visible: (item.image?.isNotEmpty ??
+                                                false),
+                                            child: CachedNetworkImage(
+                                              imageUrl: ApiService.imageUrl +
+                                                  (item.image ?? ''),
+                                              fit: BoxFit.fill,
+                                              placeholder: (
+                                                context,
+                                                url,
+                                              ) =>
+                                                  const Center(
+                                                child: SizedBox(
+                                                  height: 30,
+                                                  width: 30,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: AppColor.yellow,
+                                                  ),
+                                                ),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ),
 
-                                          // Image.network(
-                                          //   ApiService.imageUrl + (item?.image ?? ''),
-                                          //   fit: BoxFit.fill,
-                                          // ),
+                                            // Image.network(
+                                            //   ApiService.imageUrl + (item?.image ?? ''),
+                                            //   fit: BoxFit.fill,
+                                            // ),
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              (item.name ?? ''),
-                                              style: AppFonts.regular
-                                                  .copyWith(fontSize: 16),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SvgPicture.asset(
-                                                  AppIcon.ratingIcon,
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  (item.avgRating) == '0'
-                                                      ? AppStrings.noRatingYet
-                                                      : (item.avgRating ?? ''),
-                                                  style: AppFonts.regular
-                                                      .copyWith(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                ),
-                                                const SizedBox(
-                                                  width: 20,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppIcon.locationIcon,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      '${item.distance ?? ' '} km',
-                                                      style: AppFonts.regular
-                                                          .copyWith(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                    ),
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Row(
-                                              children: [
-                                                SvgPicture.asset(
-                                                  AppIcon.locationIcon,
-                                                ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Expanded(
-                                                  child: Text(
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    (item.address ?? ''),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                (item.name ?? ''),
+                                                style: AppFonts.regular
+                                                    .copyWith(fontSize: 16),
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    AppIcon.ratingIcon,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    (item.avgRating) == '0'
+                                                        ? AppStrings.noRatingYet
+                                                        : (item.avgRating ??
+                                                            ''),
                                                     style: AppFonts.regular
                                                         .copyWith(
                                                             fontSize: 14,
@@ -660,21 +633,70 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 FontWeight
                                                                     .w500),
                                                   ),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                                  const SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                        AppIcon.locationIcon,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        '${item.distance ?? ' '} km',
+                                                        style: AppFonts.regular
+                                                            .copyWith(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    AppIcon.locationIcon,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      (item.address ?? ''),
+                                                      style: AppFonts.regular
+                                                          .copyWith(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const SizedBox(
-                              height: 10,
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      const SizedBox(
+                                height: 10,
+                              ),
                             ),
                           ),
                         ),
@@ -892,7 +914,6 @@ class _HomeScreenState extends State<HomeScreen> {
             : ' ';
     // (startYr?.isNotEmpty ?? false) ?
 
-    debugPrint('-1111----request----$request----');
     var response = await http.post(
         Uri.parse(
           ApiService.home,
@@ -915,7 +936,8 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    debugPrint('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
+    log('>>>>>>>>Api>>>>>>${ApiService.home}<<<<<<<<<<<<<<');
+    log('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
     log('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
     sharedPreferences.setBool("profileSetUp", true);
     if (jsonResponse['status'] == true) {

@@ -54,7 +54,7 @@ dependencies:
   http: ^1.2.1
   html: ^0.15.4
   flutter_widget_from_html: ^0.14.11
-  url_launcher: ^6.2.6
+  url_launcher: ^6.3.0
   internet_connection_checker: ^1.0.0+1
   connectivity_plus: ^6.0.3
   google_maps_flutter: ^2.6.0

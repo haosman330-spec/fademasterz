@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fademasterz/Utils/app_color.dart';
@@ -853,6 +854,9 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
     // Helper().showToast(
     //   jsonResponse['message'],
     // );
+    log('>>>>Api>>>>>>>>>>${ApiService.bookingDetail}<<<<<<<<<<<<<<');
+    log('>>>>request>>>>>>>>>>$request<<<<<<<<<<<<<<');
+    log('>>>>jsonResponse>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status']) {
       bookingDetailResponse = BookingDetailResponse.fromJson(jsonResponse);
       // var shopId = bookingDetailResponse?.data?.shopId;

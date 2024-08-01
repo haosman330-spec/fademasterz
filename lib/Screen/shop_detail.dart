@@ -203,7 +203,8 @@ class _ShopDetailState extends State<ShopDetail> {
                     return Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16)),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       child: GestureDetector(
                         onTap: () {
                           showDialog(
@@ -212,34 +213,36 @@ class _ShopDetailState extends State<ShopDetail> {
                             builder: (context) {
                               return Dialog(
                                 backgroundColor: Colors.transparent,
-                                child: Stack(children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 200,
-                                    child: Image.network(
-                                      ApiService.imageUrl +
-                                          (gallery?.image ?? ''),
-                                      //     images[index],
-
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    top: 0,
-                                    child: SizedBox(
-                                      height: 21,
-                                      width: 21,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: SvgPicture.asset(
-                                            AppIcon.cancelIcon),
+                                child: Stack(
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 250,
+                                      child: Image.network(
+                                        ApiService.imageUrl +
+                                            (gallery?.image ?? ''),
+                                        //     images[index],
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                  )
-                                ]),
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: SizedBox(
+                                        height: 21,
+                                        width: 21,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppIcon.cancelIcon,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               );
                             },
                           );

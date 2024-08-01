@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -634,8 +635,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                 image: image,
                 //  bookingStatus: widget.data?.bookingStatus,
               );
-              debugPrint(
-                  '>>>>>>data?.toString>>>>>>>>${data.toString()}<<<<<<<<<<<<<<');
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -695,9 +695,6 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
         Utility.progressLoadingDialog(context, true);
       }
       shopId ??= sharedPreferences.getInt('shop_id');
-      debugPrint(
-          '>>>>>>>sharedPreferences.getInt-shopId>>>>>>>$shopId<<<<<<<<<<<<<<');
-
       var request = {};
       request["shop_id"] = shopId;
       request["selected_date"] = DateFormat('yyyy-MM-dd')
@@ -738,7 +735,9 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
       Map<String, dynamic> jsonResponse = jsonDecode(
         response.body,
       );
-      debugPrint('>>>>>>>>>>>>>>$request<<<<<<<<<<<<<<');
+      log('>>>>>Api>>>>>>>>>${ApiService.chooseAvailability}<<<<<<<<<<<<<<');
+      log('>>>>>request>>>>>>>>>$request<<<<<<<<<<<<<<');
+      log('>>>>>jsonResponse>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
       if (jsonResponse['status'] == true) {
         chooseAvailabilityResponse =
             ChooseAvailabilityResponse.fromJson(jsonResponse);
@@ -796,6 +795,11 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
+
+    log('>>>>>Api>>>>>>>>>${ApiService.selectSpecialist}<<<<<<<<<<<<<<');
+    log('>>>>>request>>>>>>>>>$request<<<<<<<<<<<<<<');
+    log('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
+
     // Helper().showToast(
     //   jsonResponse['message'],
     // );

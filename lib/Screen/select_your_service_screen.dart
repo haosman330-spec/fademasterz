@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:fademasterz/Modal/shop_service_modal.dart';
 import 'package:fademasterz/Modal/shop_work_service_modal.dart';
@@ -304,9 +305,9 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
+    log('>>>>>Api>>>>>>>>>${ApiService.shopWorkServices}<<<<<<<<<<<<<<');
+    log('>>>>>request>>>>>>>>>${request}<<<<<<<<<<<<<<');
+    log('>>>>>response>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       shopWorkServiceModal = ShopWorkServiceResponse.fromJson(jsonResponse);
       setState(() {});
@@ -353,6 +354,10 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
+
+    log('>>>>>Api>>>>>>>>>${ApiService.shopServices}<<<<<<<<<<<<<<');
+    log('>>>>>request>>>>>>>>>${request}<<<<<<<<<<<<<<');
+    log('>>>>>response>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     // Helper().showToast(
     //   jsonResponse['message'],
     // );

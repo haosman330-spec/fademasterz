@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:fademasterz/Modal/my_booking_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
@@ -671,7 +672,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     var request = {
       'page': currentPage,
     };
-    debugPrint('>>>>request>>>>currentPage>>>>>>$currentPage<<<<<<<<<<<<<<');
+
     var response = await http.post(
         Uri.parse(
           ApiService.myBooking,
@@ -688,7 +689,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-
+    log('>>>>Api>>>>>>>>>>${ApiService.myBooking}<<<<<<<<<<<<<<');
+    log('>>>>request>>>>>>>>>>$request<<<<<<<<<<<<<<');
+    log('>>>>jsonResponse>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     // if (context.mounted) {
     //   Utility.progressLoadingDialog(
     //     context,

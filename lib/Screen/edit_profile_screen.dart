@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -44,11 +45,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ProfileModal? profileModal;
   Future<void> userProfile() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
     image = sharedPreferences.getString('image');
     nameCn.text = (sharedPreferences.getString('name') ?? '');
     emailCn.text = (sharedPreferences.getString('email') ?? '');
-
     phoneCn.text = (sharedPreferences.getString('phone') ?? '');
     setState(() {});
   }
@@ -57,7 +56,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     profileDetail(context);
     //userProfile();
-    setState(() {});
     super.initState();
   }
 
@@ -135,7 +133,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           onPressed: () {
             onCallback();
-            // onCallback();
+
             setState(() {});
           },
         ),
@@ -179,13 +177,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                       ),
                       Positioned(
-                        bottom: -3,
+                        bottom: 5,
                         right: 2,
                         child: InkWell(
-                            onTap: () {
-                              showOptions();
-                            },
-                            child: SvgPicture.asset(AppIcon.cameraIcon)),
+                          onTap: () {
+                            showOptions();
+                          },
+                          child: SvgPicture.asset(
+                            AppIcon.cameraIcon,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -271,28 +272,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: MyAppButton(
-        title: AppStrings.update,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
-        ),
-        onPress: () async {
-          final List<ConnectivityResult> connectivityResult =
-              await (Connectivity().checkConnectivity());
+      floatingActionButton: Visibility(
+        visible: profileModal?.data?.name?.isNotEmpty ?? false,
+        child: MyAppButton(
+          title: AppStrings.update,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 15,
+          ),
+          onPress: () async {
+            final List<ConnectivityResult> connectivityResult =
+                await (Connectivity().checkConnectivity());
 
-          if (connectivityResult.contains(ConnectivityResult.mobile)) {
-            if (context.mounted) userUpdateProfile(context);
-          } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-            if (context.mounted) {
-              userUpdateProfile(context);
+            if (connectivityResult.contains(ConnectivityResult.mobile)) {
+              if (context.mounted) userUpdateProfile(context);
+            } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
+              if (context.mounted) {
+                userUpdateProfile(context);
+              }
+            } else {
+              if (context.mounted) {
+                Utility.showNoNetworkDialog(context);
+              }
             }
-          } else {
-            if (context.mounted) {
-              Utility.showNoNetworkDialog(context);
-            }
-          }
-        },
+          },
+        ),
       ),
     );
   }
@@ -361,7 +365,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         false,
       );
     }
-
+    log('>>>>>>Api>>>>>>>>${ApiService.updateProfile}<<<<<<<<<<<<<<');
+    log('>>>>>>request>>>>>>>>$request<<<<<<<<<<<<<<');
+    log('>>>>>>>jsonResponse>>>>>>>${finalResult.toString()}<<<<<<<<<<<<<<');
     if (finalResult["status"] == true) {
       if (context.mounted) {
         profileDetail(context);
@@ -400,7 +406,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // Helper().showToast(
     //   jsonResponse['message'],
     // );
-    debugPrint('>>>>>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
+    log('>>>>>>Api>>>>>>>>${ApiService.profile}<<<<<<<<<<<<<<');
+    log('>>>>>>request>>>>>>>>$request<<<<<<<<<<<<<<');
+    log('>>>>>>>jsonResponse>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       profileModal = ProfileModal.fromJson(jsonResponse);
 

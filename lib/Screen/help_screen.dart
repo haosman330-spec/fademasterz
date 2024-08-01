@@ -13,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../ApiService/api_service.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/custom_app_bar.dart';
-import '../Utils/utility.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
@@ -62,231 +61,241 @@ class _HelpScreenState extends State<HelpScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 9,
-              ),
-              decoration: BoxDecoration(
-                color: AppColor.black,
-                borderRadius: BorderRadius.circular(
-                  10,
+        child: Visibility(
+          visible: (helpCenterModal.data?.helpNumber?.isNotEmpty ?? false),
+          replacement: const Center(
+            child: CircularProgressIndicator(
+              // backgroundColor: AppColor.white,
+              color: AppColor.yellow,
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 9,
                 ),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 12,
+                decoration: BoxDecoration(
+                  color: AppColor.black,
+                  borderRadius: BorderRadius.circular(
+                    10,
                   ),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.headphoneIcon,
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        AppStrings.customerService,
-                        style: AppFonts.normalText.copyWith(
-                            fontWeight: FontWeight.w500, fontSize: 14),
-                      )
-                    ],
-                  ),
-                  const Divider(
-                    height: 20,
-                    color: Color(0xff434343),
-                  ),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.gmailIcon,
-                        colorFilter: const ColorFilter.mode(
-                            AppColor.white, BlendMode.srcIn),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          launchUrl(Uri(
-                              scheme: 'mailto',
-                              path:
-                                  helpCenterModal.data?.helpEmail.toString()));
-                        },
-                        child: Text(
-                          (helpCenterModal.data?.helpEmail.toString() ?? ''),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.headphoneIcon,
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Text(
+                          AppStrings.customerService,
                           style: AppFonts.normalText.copyWith(
                               fontWeight: FontWeight.w500, fontSize: 14),
+                        )
+                      ],
+                    ),
+                    const Divider(
+                      height: 20,
+                      color: Color(0xff434343),
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.gmailIcon,
+                          colorFilter: const ColorFilter.mode(
+                              AppColor.white, BlendMode.srcIn),
                         ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.phoneIcon,
-                        colorFilter: const ColorFilter.mode(
-                            AppColor.white, BlendMode.srcIn),
-                        //   color: AppColor.white,
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          dialLauncher(
-                              phoneNo:
-                                  helpCenterModal.data?.helpNumber.toString() ??
-                                      '');
-                        },
-                        child: Text(
-                          (helpCenterModal.data?.helpNumber.toString() ?? ''),
-                          style: AppFonts.normalText.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            launchUrl(Uri(
+                                scheme: 'mailto',
+                                path: helpCenterModal.data?.helpEmail
+                                    .toString()));
+                          },
+                          child: Text(
+                            (helpCenterModal.data?.helpEmail.toString() ?? ''),
+                            style: AppFonts.normalText.copyWith(
+                                fontWeight: FontWeight.w500, fontSize: 14),
                           ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.phoneIcon,
+                          colorFilter: const ColorFilter.mode(
+                              AppColor.white, BlendMode.srcIn),
+                          //   color: AppColor.white,
                         ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.webIcon,
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          launchUrlStart(
-                              url: helpCenterModal.data?.helpWebsite
-                                      .toString() ??
-                                  '');
-                        },
-                        child: Text(
-                          (helpCenterModal.data?.helpWebsite.toString() ?? ''),
-                          style: AppFonts.normalText.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            dialLauncher(
+                                phoneNo: helpCenterModal.data?.helpNumber
+                                        .toString() ??
+                                    '');
+                          },
+                          child: Text(
+                            (helpCenterModal.data?.helpNumber.toString() ?? ''),
+                            style: AppFonts.normalText.copyWith(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
                           ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.webIcon,
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            launchUrlStart(
+                                url: helpCenterModal.data?.helpWebsite
+                                        .toString() ??
+                                    '');
+                          },
+                          child: Text(
+                            (helpCenterModal.data?.helpWebsite.toString() ??
+                                ''),
+                            style: AppFonts.normalText.copyWith(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    launchUrlStart(
-                      url: socialLinkModal.data?.instaUrl.toString() ?? '',
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.instagram,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        AppStrings.instagram,
-                        style: AppFonts.appText.copyWith(
-                          fontSize: 15,
+              const SizedBox(
+                height: 50,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      launchUrlStart(
+                        url: socialLinkModal.data?.instaUrl.toString() ?? '',
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.instagram,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    launchUrlStart(
-                      url: socialLinkModal.data?.twitterUrl.toString() ?? '',
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.twitterIcon,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        AppStrings.twitter,
-                        style: AppFonts.appText.copyWith(
-                          fontSize: 15,
+                        const SizedBox(
+                          height: 8,
                         ),
-                      )
-                    ],
+                        Text(
+                          AppStrings.instagram,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 15,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    launchUrlStart(
-                      url: socialLinkModal.data?.facebookUrl.toString() ?? '',
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.facebookIcon,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        AppStrings.facebook,
-                        style: AppFonts.appText.copyWith(
-                          fontSize: 15,
+                  GestureDetector(
+                    onTap: () {
+                      launchUrlStart(
+                        url: socialLinkModal.data?.twitterUrl.toString() ?? '',
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.twitterIcon,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    launchUrlStart(
-                      url: socialLinkModal.data?.whatsupUrl.toString() ?? '',
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      SvgPicture.asset(
-                        AppIcon.whatsappIcon,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Text(
-                        AppStrings.whatsapp,
-                        style: AppFonts.appText.copyWith(
-                          fontSize: 15,
+                        const SizedBox(
+                          height: 8,
                         ),
-                      )
-                    ],
+                        Text(
+                          AppStrings.twitter,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 15,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
-            )
-          ],
+                  InkWell(
+                    onTap: () {
+                      launchUrlStart(
+                        url: socialLinkModal.data?.facebookUrl.toString() ?? '',
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.facebookIcon,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          AppStrings.facebook,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 15,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      launchUrlStart(
+                        url: socialLinkModal.data?.whatsupUrl.toString() ?? '',
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                          AppIcon.whatsappIcon,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          AppStrings.whatsapp,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 15,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -304,9 +313,6 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   Future<void> helpCenterApi(BuildContext context) async {
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
     var request = {};
 
     var response = await http.post(
@@ -318,10 +324,6 @@ class _HelpScreenState extends State<HelpScreen> {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         });
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, false);
-    }
 
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
@@ -337,9 +339,6 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   Future<void> socialLinkApi(BuildContext context) async {
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
     var request = {};
 
     var response = await http.post(
@@ -352,10 +351,6 @@ class _HelpScreenState extends State<HelpScreen> {
           'Content-Type': 'application/json',
         });
 
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, false);
-    }
-
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
@@ -363,15 +358,12 @@ class _HelpScreenState extends State<HelpScreen> {
     if (jsonResponse['status'] == true) {
       socialLinkModal = SocialLinkModal.fromJson(jsonResponse);
 
-      // Helper().showToast(
-      //   jsonResponse['message'],
-      // );
-
       setState(() {});
-
-      // Helper().showToast(
-      //   jsonResponse['message'],
-      // );
     }
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
   }
 }

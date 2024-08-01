@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import '../ApiService/api_service.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/custom_app_bar.dart';
-import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
@@ -95,13 +94,12 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    Helper().showToast(
-      jsonResponse['message'],
-    );
+    // Helper().showToast(
+    //   jsonResponse['message'],
+    // );
 
     if (jsonResponse['status'] == true) {
       privacyPolicyModal = PrivacyPolicyModal.fromJson(jsonResponse);
-
       setState(() {});
     }
   }

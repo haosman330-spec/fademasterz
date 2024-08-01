@@ -101,21 +101,16 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-
+    // Helper().showToast(
+    //   jsonResponse['message'],
+    // );
     if (jsonResponse['status'] == true) {
       termsConditionModal = TermsConditionModal.fromJson(jsonResponse);
-
+      setState(() {});
+    } else {
       Helper().showToast(
         jsonResponse['message'],
       );
-
-      setState(() {});
-      if (context.mounted) {
-      } else {
-        Helper().showToast(
-          jsonResponse['message'],
-        );
-      }
     }
   }
 }
