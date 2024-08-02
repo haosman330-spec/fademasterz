@@ -389,8 +389,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (context) {
-                          return AppBottomSheet(
-                            filterData: filterData,
+                          return PopScope(
+                            canPop: false,
+                            child: AppBottomSheet(
+                              filterData: filterData,
+                            ),
                           );
                         },
                       ).then((value) async {
@@ -510,7 +513,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Duration.zero,
                                 () {
                                   homeDetailApi(
-                                      context: context, currentPage: 1);
+                                    context: context,
+                                    currentPage: 1,
+                                  );
                                 },
                               );
                             },

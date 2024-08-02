@@ -17,6 +17,7 @@ class ServicesScreen extends StatefulWidget {
 }
 
 class _ServicesScreenState extends State<ServicesScreen> {
+  ScrollController controller = ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +57,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 child: ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
+                  controller: controller,
                   padding: EdgeInsets.zero,
                   itemCount: widget.service!.length,
                   itemBuilder: (context, index) {

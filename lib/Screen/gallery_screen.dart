@@ -36,7 +36,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
           onPressed: () {
             Navigator.of(context).pop();
-            // onCallback();
             setState(() {});
           },
         ),

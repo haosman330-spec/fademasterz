@@ -84,7 +84,9 @@ class _SpecialistScreenState extends State<SpecialistScreen> {
                     Text(
                       textAlign: TextAlign.center,
                       (specialist?.name ?? ''),
-                      style: AppFonts.normalText.copyWith(fontSize: 14),
+                      style: AppFonts.normalText.copyWith(
+                        fontSize: 14,
+                      ),
                     )
                   ],
                 ),

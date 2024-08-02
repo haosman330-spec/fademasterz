@@ -106,8 +106,6 @@ class _EnterYourNoState extends State<EnterYourNo> {
                     onChanged: (data) {
                       _selectedCountry = data;
                       setState(() {});
-                      debugPrint(
-                          '>>>>>>>>>>>>>>${data.dialCode}<<dial code<<<<<<<<<<<<');
                     },
                     initialSelection: 'GB',
                     favorite: const ['GB'],
@@ -142,48 +140,6 @@ class _EnterYourNoState extends State<EnterYourNo> {
                 ),
               ),
             ),
-            // Form(
-            //   key: _formKey,
-            //   child: CustomTextField(
-            //     controller: phoneCn,
-            //     hintText: AppStrings.phoneNumber,
-            //     maxLength: 11,
-            //     textInputType: TextInputType.number,
-            //     textInputAction: TextInputAction.done,
-            //     inputFormatters: [
-            //       FilteringTextInputFormatter.allow(
-            //         RegExp(
-            //           r'^\d+?\d*',
-            //         ),
-            //       ),
-            //     ],
-            //     prefixIcon: Row(
-            //       children: [
-            //         const CountryCodePicker(
-            //           onChanged: print,
-            //           // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-            //           initialSelection: 'IT', textStyle: AppFonts.appText,
-            //           favorite: ['+91', 'In'],
-            //           // optional. Shows only country name and flag
-            //           showCountryOnly: false,
-            //           // optional. Shows only country name and flag when popup is closed.
-            //           showOnlyCountryWhenClosed: false,
-            //           // optional. aligns the flag and the Text left
-            //           alignLeft: false,
-            //         ),
-            //         Align(
-            //           heightFactor: 2,
-            //           widthFactor: 2,
-            //           child: SvgPicture.asset(
-            //             AppIcon.phoneIcon,
-            //             height: 17,
-            //             width: 17,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -275,41 +231,6 @@ class _EnterYourNoState extends State<EnterYourNo> {
     }
   }*/
 
-  _signInWithMobileNumber() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    UserCredential credential;
-    User user;
-    try {
-      await auth.verifyPhoneNumber(
-          phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text.trim()}',
-          verificationCompleted: (PhoneAuthCredential authCredential) async {
-            await auth.signInWithCredential(authCredential).then((value) {});
-          },
-          verificationFailed: ((error) {
-            debugPrint('>>>>>>>Otp failed>>>>>>>$error<<<<<<<<<<<<<<');
-          }),
-          codeSent: (String verificationId, [int? forceResendingToken]) {
-            _verificationId = verificationId;
-            debugPrint(
-                '>>>>>>>>_verificationId>>>>>>$_verificationId<<<<<<<<<<<<<<');
-            Utility.progressLoadingDialog(context, false);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => VerifyScreen(
-                    phoneNo: phoneCn.text.toString(),
-                    verificationId: _verificationId,
-                    selectedCountry: _selectedCountry),
-              ),
-            );
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {
-            _verificationId = verificationId;
-          },
-          timeout: const Duration(seconds: 45));
-    } catch (e) {}
-  }
-
   Future<void> signUpOtpAuth() {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -339,9 +260,10 @@ class _EnterYourNoState extends State<EnterYourNo> {
           context,
           MaterialPageRoute(
             builder: (context) => VerifyScreen(
-                phoneNo: phoneCn.text.toString(),
-                verificationId: _verificationId,
-                selectedCountry: _selectedCountry),
+              phoneNo: phoneCn.text.toString(),
+              verificationId: _verificationId,
+              selectedCountry: _selectedCountry,
+            ),
           ),
         );
       },

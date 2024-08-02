@@ -347,14 +347,20 @@ class _ShopDetailState extends State<ShopDetail> {
                       children: [
                         Text(
                           (review?.userName ?? ''),
-                          style: AppFonts.regular.copyWith(fontSize: 15),
+                          style: AppFonts.regular.copyWith(
+                            fontSize: 15,
+                          ),
                         ),
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
+                            horizontal: 15,
+                            vertical: 5,
+                          ),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(
+                              12,
+                            ),
                             border: Border.all(
                               color: AppColor.yellow,
                             ),
@@ -446,13 +452,14 @@ class _ShopDetailState extends State<ShopDetail> {
               child: Visibility(
                 visible: (shopDetailModal.data?.name?.isNotEmpty ?? false),
                 replacement: Center(
-                    child: Visibility(
-                  visible: !isDataLoad,
-                  child: const Text(
-                    'No Data Load',
-                    style: AppFonts.normalText,
+                  child: Visibility(
+                    visible: !isDataLoad,
+                    child: const Text(
+                      'No Data Load',
+                      style: AppFonts.normalText,
+                    ),
                   ),
-                )),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -495,8 +502,11 @@ class _ShopDetailState extends State<ShopDetail> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 15, right: 15, top: 5),
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        top: 5,
+                      ),
                       child: Row(
                         children: [
                           SvgPicture.asset(
@@ -795,24 +805,27 @@ class _ShopDetailState extends State<ShopDetail> {
           ),
         ],
       ),
-      bottomNavigationBar: MyAppButton(
-        title: AppStrings.bookNow,
-        height: 58,
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        onPress: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SelectYourServices(),
-            ),
-          );
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => const WebViewXPage(),
-          //   ),
-          // );
-        },
+      bottomNavigationBar: Visibility(
+        visible: (shopDetailModal.data?.image?.isNotEmpty ?? false),
+        child: MyAppButton(
+          title: AppStrings.bookNow,
+          height: 58,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          onPress: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SelectYourServices(),
+              ),
+            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const WebViewXPage(),
+            //   ),
+            // );
+          },
+        ),
       ),
     );
   }

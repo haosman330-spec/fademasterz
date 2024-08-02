@@ -37,10 +37,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController emailCn = TextEditingController();
   final picker = ImagePicker();
   File? _imageFile;
-  String? name;
   String? image;
-  String? phone;
-  String? email;
+  // String? name;
+//  String? phone;
+//  String? email;
   ProfileUserData? profileUserData;
   ProfileModal? profileModal;
   Future<void> userProfile() async {
@@ -285,9 +285,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 await (Connectivity().checkConnectivity());
 
             if (connectivityResult.contains(ConnectivityResult.mobile)) {
-              if (context.mounted) userUpdateProfile(context);
+              if (isValidate()) {
+                userUpdateProfile(context);
+              }
             } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-              if (context.mounted) {
+              if (isValidate()) {
                 userUpdateProfile(context);
               }
             } else {
@@ -307,6 +309,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {});
 
     return false;
+  }
+
+  bool isValidate() {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = RegExp(pattern);
+    if (nameCn.text.isEmpty) {
+      Helper().showToast('Please Enter Name');
+      return false;
+    } else if (emailCn.text.isEmpty) {
+      Helper().showToast('Please Enter Email');
+      return false;
+    } else if (!regex.hasMatch(emailCn.text.trim())) {
+      Helper().showToast('Invalid Email');
+      return false;
+    } else {
+      return true;
+    }
   }
 
   Future<void> userUpdateProfile(BuildContext context) async {

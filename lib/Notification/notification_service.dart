@@ -453,15 +453,15 @@ void _handleMessage(data) async {
   } else if (data['type'] == 'new_message') {
     //int bookingId = int.parse(data['receiver_id']);
     String receiverId = data['receiver_id'];
-    String receiver_name = data['receiver_name'];
-    String receiver_image = data['receiver_image'];
+    String receiverName = data['receiver_name'];
+    String receiverImage = data['receiver_image'];
 
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (context) => ChatScreenInBox(
           receiverId: receiverId,
-          receiverName: receiver_name,
-          receiverImage: receiver_image,
+          receiverName: receiverName,
+          receiverImage: receiverImage,
         ),
       ),
     );

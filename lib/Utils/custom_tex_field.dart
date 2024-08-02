@@ -3,68 +3,6 @@ import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/*class MyTextField extends StatefulWidget {
-  TextEditingController controller;
-  final TextInputAction? action;
-  int? maxLines;
-  int? minLines;
-  String? hintText;
-  TextStyle? hintTextStyle;
-  TextStyle? style;
-  Image? prefixIcon;
-  Image? suffixIcon;
-  bool? filled;
-  final BorderRadius? radius;
-
-  final BorderSide? side;
-  Color? color;
-  MyTextField(
-      {super.key,
-      required this.controller,
-      this.action,
-      this.hintText,
-      this.maxLines,
-      this.minLines,
-      this.style,
-      this.radius,
-      this.suffixIcon,
-      this.prefixIcon,
-      this.filled,
-      this.hintTextStyle,
-      this.color,
-      this.side});
-
-  @override
-  State<MyTextField> createState() => _MyTextFieldState();
-}
-
-class _MyTextFieldState extends State<MyTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      textInputAction: widget.action ?? TextInputAction.done,
-      style: widget.style ?? AppFonts.regular,
-      decoration: InputDecoration(
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
-        hintText: widget.hintText ?? 'Enter',
-        hintStyle: widget.hintTextStyle ?? AppFonts.text2,
-        filled: widget.filled ?? true,
-        fillColor: widget.color ?? AppColor.black,
-        border: OutlineInputBorder(
-          borderRadius: widget.radius ?? BorderRadius.circular(16),
-          borderSide: widget.side ??
-              BorderSide(
-                width: 1,
-                color: Theme.of(context).hoverColor,
-              ),
-        ),
-      ),
-    );
-  }
-}*/
-
 class MyTextField {
   static Widget myTextFormField({
     String? title,

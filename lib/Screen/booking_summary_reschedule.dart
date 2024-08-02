@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
@@ -41,214 +42,6 @@ class BookingSummaryScreenRescheduleState
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});
-  }
-
-  Future<void> bookingSummaryApi(BuildContext context) async {
-    // Utility.progressLoadingDialog(context, true);
-    setLoader(true);
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    // try {
-    var request = {};
-
-    request["shop_id"] = widget.data.shopId;
-    request["specialist_id"] = widget.data.specialistId;
-    request["time"] = widget.data.time.toString();
-    request["price"] = widget.data.price.toString();
-    request["service_ids"] = widget.data.serviceId.toString();
-    request["date"] = widget.data.date.toString();
-
-    var response = await http.post(
-        Uri.parse(
-          ApiService.bookingSummary,
-        ),
-        body: jsonEncode(request),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Bearer ${sharedPreferences.getString("access_Token")}'
-        });
-
-    // if (context.mounted) {
-    //   Utility.progressLoadingDialog(context, false);
-    // }
-    setLoader(false);
-
-    Map<String, dynamic> jsonResponse = jsonDecode(
-      response.body,
-    );
-    debugPrint('>>>>>>request>>>>>>>>${request.toString()}<<<<<<<<<<<<<<');
-    debugPrint(
-        '>>>>>>jsonResponse>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
-    if (jsonResponse['status'] == true) {
-      bookingSummaryResponse = BookingSummaryResponse.fromJson(jsonResponse);
-
-      setState(() {});
-    }
-    // } catch (e) {
-    //   if (context.mounted) {
-    //     Utility.progressLoadingDialog(context, false);
-    //   }
-    //   Helper().showToast(e.toString());
-    // }
-  }
-
-  Future<void> rescheduleBookingApi(BuildContext context) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
-
-    var headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${sharedPreferences.getString("access_Token")}'
-    };
-
-    var request =
-        http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
-    debugPrint(
-        '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
-    request.fields.addAll({
-      'booking_id': widget.data.bookingId
-          .toString(), //?? sharedPreferences.getInt('ubookingId').toString(),
-      'date': widget.data.date.toString(),
-      'time': widget.data.time.toString(),
-      'specialist_id': widget.data.specialistId.toString(),
-      'note': widget.data.noteText.toString(),
-    });
-    if (widget.data.image?.isNotEmpty ?? false) {
-      debugPrint(
-          '>>>>widget.data.image>>>>>>>>>>${widget.data.image}<<<<<<<<<<<<<<');
-
-      //
-      // request.files.add(
-      //   await http.MultipartFile.fromPath('desired_look', widget.data.image!),
-      // );
-    }
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    setState(
-      () {},
-    );
-    var result = await response.stream.bytesToString();
-
-    var jsonResponse = jsonDecode(result);
-    debugPrint('>>>>>>request.fields>>>>>>>>${request.files}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>jsonResponse>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
-
-    // Helper().showToast(
-    //   jsonResponse["message"],
-    // );
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(
-        context,
-        false,
-      );
-    }
-
-    if (jsonResponse["status"] == 'true') {
-      debugPrint('>>>>>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
-      showDialog(
-        //   barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                17,
-              ),
-            ),
-            insetPadding: const EdgeInsets.symmetric(
-              horizontal: 18,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //     SvgPicture.asset(AppIcon.paymentIcon),
-                  //     const SizedBox(
-                  //       height: 15,
-                  //     ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      AppStrings.rescheduleBookingSuccessfully,
-                      style: AppFonts.blackFont.copyWith(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      AppStrings.successfulReschedule,
-                      style: AppFonts.blackFont
-                          .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  MyAppButton(
-                    onPress: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DashBoardScreen(
-                            selectIndex: 1,
-                          ),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    height: 48,
-                    title: AppStrings.viewBookingSummary,
-                    style: AppFonts.blackFont
-                        .copyWith(fontWeight: FontWeight.w500),
-                    radius: 39,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  // MyAppButton(
-                  //   onPress: () {
-                  //     Navigator.pushAndRemoveUntil(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => const DashBoardScreen(
-                  //           selectIndex: 0,
-                  //         ),
-                  //       ),
-                  //           (route) => false,
-                  //     );
-                  //   },
-                  //   height: 48,
-                  //   title: AppStrings.backToHome,
-                  //   style: AppFonts.blackFont
-                  //       .copyWith(fontWeight: FontWeight.w500),
-                  //   radius: 39,
-                  //   color: const Color(0xffFFFBF0),
-                  // ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-
-      setState(() {});
-    }
   }
 
   @override
@@ -679,6 +472,199 @@ class BookingSummaryScreenRescheduleState
           rescheduleBookingApi(context);
         },
       ),
+    );
+  }
+
+  Future<void> bookingSummaryApi(BuildContext context) async {
+    // Utility.progressLoadingDialog(context, true);
+    setLoader(true);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    // try {
+    var request = {};
+
+    request["shop_id"] = widget.data.shopId;
+    request["specialist_id"] = widget.data.specialistId;
+    request["time"] = widget.data.time.toString();
+    request["price"] = widget.data.price.toString();
+    request["service_ids"] = widget.data.serviceId.toString();
+    request["date"] = widget.data.date.toString();
+
+    var response = await http.post(
+        Uri.parse(
+          ApiService.bookingSummary,
+        ),
+        body: jsonEncode(request),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Bearer ${sharedPreferences.getString("access_Token")}'
+        });
+
+    // if (context.mounted) {
+    //   Utility.progressLoadingDialog(context, false);
+    // }
+    setLoader(false);
+
+    Map<String, dynamic> jsonResponse = jsonDecode(
+      response.body,
+    );
+    log('>>>>>>Api>>>>>>>>${ApiService.bookingSummary}<<<<<<<<<<<<<<');
+    log('>>>>>>request>>>>>>>>${request.toString()}<<<<<<<<<<<<<<');
+    log('>>>>>>jsonResponse>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
+    if (jsonResponse['status'] == true) {
+      bookingSummaryResponse = BookingSummaryResponse.fromJson(jsonResponse);
+
+      setState(() {});
+    }
+    // } catch (e) {
+    //   if (context.mounted) {
+    //     Utility.progressLoadingDialog(context, false);
+    //   }
+    //   Helper().showToast(e.toString());
+    // }
+  }
+
+  Future<void> rescheduleBookingApi(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, true);
+    }
+
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${sharedPreferences.getString("access_Token")}'
+    };
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
+    debugPrint(
+        '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
+    request.fields.addAll({
+      'booking_id': widget.data.bookingId
+          .toString(), //?? sharedPreferences.getInt('ubookingId').toString(),
+      'date': widget.data.date.toString(),
+      'time': widget.data.time.toString(),
+      'specialist_id': widget.data.specialistId.toString(),
+      'note': widget.data.noteText.toString(),
+    });
+    if (widget.data.image?.isNotEmpty ?? false) {
+      debugPrint(
+          '>>>>widget.data.image>>>>>>>>>>${widget.data.image}<<<<<<<<<<<<<<');
+
+      //
+      // request.files.add(
+      //   await http.MultipartFile.fromPath('desired_look', widget.data.image!),
+      // );
+    }
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    setState(
+      () {},
+    );
+    var result = await response.stream.bytesToString();
+
+    var jsonResponse = jsonDecode(result);
+    debugPrint('>>>>>>request.fields>>>>>>>>${request.files}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>jsonResponse>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
+
+    // Helper().showToast(
+    //   jsonResponse["message"],
+    // );
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(
+        context,
+        false,
+      );
+    }
+
+    if (jsonResponse["status"] == 'true') {
+      _showDialog();
+
+      setState(() {});
+    }
+  }
+
+  Future _showDialog() async {
+    return showDialog(
+      //   barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              17,
+            ),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //     SvgPicture.asset(AppIcon.paymentIcon),
+                //     const SizedBox(
+                //       height: 15,
+                //     ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    AppStrings.rescheduleBookingSuccessfully,
+                    style: AppFonts.blackFont.copyWith(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    AppStrings.successfulReschedule,
+                    style: AppFonts.blackFont
+                        .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                MyAppButton(
+                  onPress: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DashBoardScreen(
+                          selectIndex: 1,
+                        ),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  height: 48,
+                  title: AppStrings.viewBookingSummary,
+                  style: AppFonts.blackFont.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                  radius: 39,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

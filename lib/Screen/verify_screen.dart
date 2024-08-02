@@ -245,51 +245,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
         onPress: () async {
           if (isValidate()) {
             otpVerifyFirebase();
-
-            // FirebaseAuth auth = FirebaseAuth.instance;
-            // int error;
-            // String otp = otpTextFieldCn.text;
-            // if (otp.isEmpty) {
-            //   error = 0;
-            //   Helper().showToast('Please enter  otp');
-            //   setState(() {});
-            // } else if (otp.length < 6) {
-            //   error = 1;
-            //   Helper().showToast('Please enter conform otp');
-            //   setState(() {});
-            // } else {
-            //   // verifyMobileNumber();
-            //   setState(() {
-            //     Utility.progressLoadingDialog(context, true);
-            //   });
-            //   final credential = PhoneAuthProvider.credential(
-            //       verificationId: widget.verificationId.toString(),
-            //       smsCode: otpTextFieldCn.text);
-            //   debugPrint('>>>>>credential>>>>>>>>>${credential}<<<<<<<<<<<<<<');
-            //   try {
-            //     await auth.signInWithCredential(credential);
-            //
-            //     verifyOtp(context);
-            //
-            //     setState(() {});
-            //   } catch (e) {
-            //     setState(() {
-            //       Utility.progressLoadingDialog(context, false);
-            //     });
-            //   }
-            //
-            //   setState(() {});
-            // }
-            // // final List<ConnectivityResult> connectivityResult =
-            // //     await (Connectivity().checkConnectivity());
-            // //
-            // // if (connectivityResult.contains(ConnectivityResult.mobile)) {
-            // //   verifyOtp(context);
-            // // } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-            // //   verifyOtp(context);
-            // // } else {
-            // //   Utility.showNoNetworkDialog(context);
-            // // }
           }
         },
       ),
@@ -307,14 +262,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   Future<void> otpVerifyFirebase() async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    int error;
+
     String otp = otpTextFieldCn.text;
     if (otp.isEmpty) {
-      error = 0;
       Helper().showToast(AppStrings.pleaseEnterOtp);
       setState(() {});
     } else if (otp.length < 6) {
-      error = 1;
       Helper().showToast(AppStrings.pleaseEnterConfirmOtp);
       setState(() {});
     } else {

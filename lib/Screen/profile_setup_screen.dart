@@ -156,7 +156,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
       Helper().showToast('Please Enter Name');
       return false;
     } else if (gmailCn.text.isEmpty) {
-      Helper().showToast('Please Email Name');
+      Helper().showToast('Please Enter Email');
       return false;
     } else if (!regex.hasMatch(gmailCn.text.trim())) {
       Helper().showToast('Invalid Email');

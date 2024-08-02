@@ -446,4 +446,9 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
       ),
     );
   }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+  }
 }

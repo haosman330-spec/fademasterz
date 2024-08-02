@@ -123,18 +123,9 @@ class _ChooseAvailabilityBarberRescheduleState
     );
   }
 
-  void initData() {
-    // _selectedDate = widget.data?.date?.toIso8601String();
-    // if (widget.data?.specialistId?.isNotEmpty ?? false) {
-    //   // specialistId = int.parse(widget.data?.specialistId ?? '0');
-    // }
-  }
-
   @override
   void initState() {
-    initData();
     _chooseAvailabilityApi(context);
-
     super.initState();
   }
 
@@ -162,12 +153,10 @@ class _ChooseAvailabilityBarberRescheduleState
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             willPopScop();
 
-            // onCallback();
             setState(() {});
           },
         ),
@@ -715,7 +704,6 @@ class _ChooseAvailabilityBarberRescheduleState
         setState(() {});
       }
     } catch (e) {
-      debugPrint('>>>>>>>>>>>>>>${e.toString()}<<<<<<<<<<<<<<');
       Helper().showToast(e.toString());
     }
   }
