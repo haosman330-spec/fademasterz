@@ -408,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           availability = value?.availability;
                           serviceId = value?.serviceId;
                           debugPrint('>>>>>>>>>>>>>>$serviceId<<<<<<<<<<<<<<');
-                          await homeDetailApi(context: context);
+                          await homeDetailApi(context: context, currentPage: 1);
                         }
                       });
                       // return const AppBottomSheet();
@@ -891,14 +891,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> homeDetailApi({
     required BuildContext context,
     String? searchValue,
-    int? currentPage,
+    required int currentPage,
   }) async {
-    // try {
-    // if (searchValue?.isEmpty ?? true) {
-    //   Utility.progressLoadingDialog(context, true);
-    // }
-    setLoader(true);
-
+    if (currentPage <= 1) {
+      setLoader(true);
+    }
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     /*if (latitude == null || longitude == null) {
@@ -931,12 +928,9 @@ class _HomeScreenState extends State<HomeScreen> {
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
 
-    if (context.mounted) {
-      // if (searchValue?.isEmpty ?? true) {
-      //   Utility.progressLoadingDialog(context, false);
-      // }
+    if (currentPage <= 1) {
+      setLoader(false);
     }
-    setLoader(false);
 
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,

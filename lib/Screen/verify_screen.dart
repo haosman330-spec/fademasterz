@@ -218,6 +218,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   onPressed: () {
                     if (mobileOtpSecondsRemaining == 0) {
                       //  resendOtp(context);
+                      otpTextFieldCn.clear();
                       resendOtpFirebaseAuth();
                     }
                   },

@@ -27,6 +27,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   int currentPage = 1;
   int totalPage = 1;
   bool showLoader = false;
+  bool isLoading = false;
   void setLoader(bool value) {
     showLoader = value;
     setState(() {});
@@ -43,11 +44,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
   pagination() {
     scrollController.addListener(() {
       debugPrint('Pagination started>>>');
-      if ((scrollController.position.maxScrollExtent ==
+      if (!isLoading &&
+          (scrollController.position.maxScrollExtent ==
               scrollController.position.pixels) &&
           (currentPage < totalPage)) {
+        isLoading = true;
         currentPage++;
         notificationList(context: context, currentPage: currentPage);
+
         setState(() {});
       }
     });
@@ -55,13 +59,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Future<void> notificationList({
     required BuildContext context,
-    int? currentPage,
+    required int currentPage,
   }) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    // if (context.mounted) {
-    //   Utility.progressLoadingDialog(context, true);
-    // }
-    setLoader(true);
+
+    if (currentPage <= 1) {
+      setLoader(true);
+    }
     var request = {};
     request['page'] = currentPage;
     var response = await http.post(
@@ -76,17 +80,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
 
-    // if (context.mounted) {
-    //   Utility.progressLoadingDialog(context, false);
-    // }
-    setLoader(false);
+    if (currentPage <= 1) {
+      setLoader(false);
+    }
 
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
+
     if (jsonResponse['status'] == true) {
       notificationResponseModal =
           NotificationResponseModal.fromJson(jsonResponse);
@@ -161,6 +162,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shrinkWrap: true,
                     itemCount: listNotification.length,
+                    physics: AlwaysScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       var notification = listNotification[index];
 
