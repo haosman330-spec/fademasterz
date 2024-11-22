@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
-import 'package:fademasterz/Modal/choose_availability_modal.dart';
-import 'package:fademasterz/Modal/shop_service_modal.dart';
+
 import 'package:fademasterz/Screen/booking_summary_reschedule.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
@@ -21,8 +19,13 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../Utils/app_fonts.dart';
 import '../../Utils/app_string.dart';
 import '../ApiService/api_service.dart';
-import '../Modal/booking_detail_modal.dart';
-import '../Modal/select_specialist_modal.dart';
+
+
+import '../Model/booking_detail_model.dart';
+import '../Model/booking_summary_argument_model.dart';
+import '../Model/choose_availability_model.dart';
+import '../Model/select_specialist_model.dart';
+import '../Model/shop_service_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';

@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fademasterz/Modal/home_page_modal.dart';
 import 'package:fademasterz/Screen/notification_screen.dart';
 import 'package:fademasterz/Screen/shop_detail.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
@@ -22,7 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../ApiService/api_service.dart';
-import '../Modal/booking_summary_argument_modal.dart';
+import '../Model/booking_summary_argument_model.dart';
+import '../Model/home_page_model.dart';
 import '../Utils/bottom_sheet.dart';
 import '../Utils/custom_app_button.dart';
 

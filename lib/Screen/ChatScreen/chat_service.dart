@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'chat_use_modal.dart';
-import 'chat_user_sendMessage_modal.dart';
+import 'chat_use_model.dart';
+import 'chat_user_sendMessage_model.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -120,8 +120,6 @@ class ChatService {
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
-        // .doc(sharedPreferences.getString('name'))
-        // .set(messages.toMap());
         .add(messages.toMap());
 
     await firestore.collection('chat_rooms').doc(chatRoomId).set({
@@ -147,45 +145,6 @@ class ChatService {
         },
       ]
     });
-    // await firestore.collection('chat_rooms').doc(chatRoomId).update({
-    //   'count': unreadCount,
-    //   //  "readMessage": true,
-    // });
-    //  countUnreadMessages(currentUserId, receiverId);
-
-    // }
-    // var apiUrl = Uri.parse(
-    //     'https://fcm.googleapis.com/v1/projects/stayezyapp-91fad/messages:send');
-    //
-    // var data3 = {
-    //   "message": {
-    //     "token": pushToken12
-    //         .toString(), // You can customize the topic as per your application logic
-    //     "notification": {
-    //       "title": "nameUser"
-    //           .toString(), // Assuming nameUser is a variable holding the title
-    //       "body":
-    //           "msg2.toString()" // Assuming msg2 is a variable holding the body
-    //     },
-    //     "data": {}
-    //   }
-    // };
-    //
-    // var headers = {
-    //   "Content-Type": "application/json",
-    //   "Authorization": "Bearer $tokenFcmChat",
-    // };
-    //
-    // var response =
-    //     await http.post(apiUrl, headers: headers, body: jsonEncode(data3));
-    //
-    // if (response.statusCode == 200) {
-    //   print('Request successful');
-    //   print('Response: ${response.body}');
-    // } else {
-    //   print('Request failed with status: ${response.statusCode}');
-    //   print('Response: ${response.body}');
-    // }
   }
 
   bool hasUnread = false;
@@ -233,7 +192,8 @@ class ChatService {
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
-        .orderBy('timestamp', descending: true)
+        .orderBy('timestamp', descending: true
+    )
         .snapshots();
   }
 }

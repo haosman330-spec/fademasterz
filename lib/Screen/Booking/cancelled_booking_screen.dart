@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:fademasterz/Modal/cancelled_booking_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ApiService/api_service.dart';
+import '../../Model/cancelled_booking_model.dart';
 import '../../Utils/app_assets.dart';
 import '../../Utils/app_color.dart';
 import '../../Utils/app_fonts.dart';
@@ -322,7 +323,10 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
   }
 
   Future<void> cancelBookingListApi(BuildContext context, int page) async {
-    setLoader(true);
+  //  setLoader(true);
+    if (currentPage <= 1) {
+      setLoader(true);
+    }
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     // if (context.mounted) {
@@ -343,11 +347,15 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
           'Authorization':
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
-    setLoader(false);
+    if (currentPage <= 1) {
+      setLoader(false);
+    }
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-
+    log('>>>>Api>>>>>>>>>>${ApiService.cancelBookingList}<<<<<<<<<<<<<<');
+    log('>>>>request>>>>>>>>>>$request<<<<<<<<<<<<<<');
+    log('<<<<jsonResponse<<<<<<<${jsonResponse.toString()}>>>>>>>>>>>>>');
     // Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status']) {
       cancelledBookingResponse =

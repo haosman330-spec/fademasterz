@@ -1,10 +1,10 @@
 import 'package:fademasterz/ApiService/api_service.dart';
-import 'package:fademasterz/Modal/shop_detail_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../Model/shop_detail_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_fonts.dart';
 

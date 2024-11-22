@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fademasterz/Modal/privacy_policy_modal.dart';
+import 'package:fademasterz/Model/privacy_policy_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';

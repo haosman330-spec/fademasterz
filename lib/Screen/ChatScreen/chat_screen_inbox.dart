@@ -15,7 +15,7 @@ import '../../Utils/app_string.dart';
 import '../../Utils/custom_app_bar.dart';
 import '../../Utils/helper.dart';
 import 'chat_service.dart';
-import 'messages_modal.dart';
+import 'messages_model.dart';
 
 class ChatScreenInBox extends StatefulWidget {
   final String? receiverName;

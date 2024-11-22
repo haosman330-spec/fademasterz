@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fademasterz/Model/profile_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
@@ -15,7 +16,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Modal/profile_modal.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/custom_app_bar.dart';
 import '../Utils/custom_app_button.dart';
@@ -246,13 +246,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   //   ),
                   // ],
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Not Update Mobile No'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                    // Helper().showToast('Not Update in Mobile No');
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   const SnackBar(
+                    //     content: Text('Not Update Mobile No'),
+                    //     duration: Duration(seconds: 1),
+                    //   ),
+                    // );
+                     Helper().showToast('Not Update Mobile No.');
                   },
                   maxLength: 11,
                   hintTextStyle: AppFonts.textFieldFont,

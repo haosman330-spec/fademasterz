@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
-import 'package:fademasterz/Modal/get_category_modal.dart';
+import 'package:fademasterz/Model/get_category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 
 import '../ApiService/api_service.dart';
+import '../Model/booking_summary_argument_model.dart';
 import '../Screen/Dashboard/dashboard.dart';
 import 'app_color.dart';
 import 'app_fonts.dart';

@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:fademasterz/Modal/shop_service_modal.dart';
-import 'package:fademasterz/Modal/shop_work_service_modal.dart';
+
+import 'package:fademasterz/Model/shop_service_model.dart';
+import 'package:fademasterz/Model/shop_work_service_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
@@ -220,7 +221,18 @@ class _SelectYourServicesState extends State<SelectYourServices> {
                                   double.parse(element?.price ?? '0').toInt())
                           .toStringAsFixed(0)),
                 ),
-              );
+              ).then((value){
+                if(value==true){
+                  selectIndex=0;
+                  selectedServiceList?.clear();
+                  shopWorkServiceId =
+                      shopWorkServiceModal.data?.workServices?[selectIndex].id ?? 0;
+                  shopWorkService(context);
+                  setState(() {
+
+                  });
+                }
+              });;
             } else {
               Helper().showToast(AppStrings.pleaseSelectYourService);
             }
@@ -332,7 +344,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
 
     request["shop_id"] = sharedPreferences.getInt('shop_id');
     request["work_service_id"] =
-        shopWorkServiceId; //sharedPreferences.getInt('shopWorkServiceId');
+        shopWorkServiceId;
 
     var response = await http.post(
         Uri.parse(

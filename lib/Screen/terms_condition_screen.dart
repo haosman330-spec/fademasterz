@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:fademasterz/Modal/terms_condition_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 
 import '../ApiService/api_service.dart';
+import '../Model/terms_condition_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/custom_app_bar.dart';
 import '../Utils/helper.dart';

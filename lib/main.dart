@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -29,7 +30,7 @@ void main() async {
   NotificationService.initialize();
   final accessToken = await getAccessToken();
 
-  debugPrint('>>>>Access Token:>>>>>>>>>>$accessToken<<<<<<<<<<<<<<');
+  log('>>>>Access Token:>>>>>>>>>>$accessToken<<<<<<<<<<<<<<');
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

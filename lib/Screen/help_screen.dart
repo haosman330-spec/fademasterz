@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:fademasterz/Modal/help_center_modal.dart';
-import 'package:fademasterz/Modal/social_link_modal.dart';
+
+import 'package:fademasterz/Model/help_center_model.dart';
+import 'package:fademasterz/Model/social_link_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';

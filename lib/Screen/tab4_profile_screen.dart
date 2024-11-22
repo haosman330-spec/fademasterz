@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:fademasterz/Modal/profile_modal.dart';
 import 'package:fademasterz/Screen/edit_profile_screen.dart';
 import 'package:fademasterz/Screen/help_screen.dart';
 import 'package:fademasterz/Screen/privacy_policy_screen.dart';
@@ -17,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
+import '../Model/profile_model.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';

@@ -432,7 +432,7 @@ class NotificationService {
 void _handleMessage(data) async {
   debugPrint('data is>>> ${data.toString()}');
 
-  if (data['type'] == 'cancelled') {
+  if (data['type'] == 'null') {
     navigatorKey.currentState?.push(
       MaterialPageRoute(
         builder: (context) => const DashBoardScreen(
@@ -440,7 +440,7 @@ void _handleMessage(data) async {
         ),
       ),
     );
-  } else if (data['type'] == 'null') {
+  } else if (data['type'] == 'cancelled') {
     int bookingId = int.parse(data['booking_id']);
 
     navigatorKey.currentState?.push(

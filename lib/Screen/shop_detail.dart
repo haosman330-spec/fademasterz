@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fademasterz/Modal/shop_detail_modal.dart';
 import 'package:fademasterz/Screen/reviews_screen.dart';
 import 'package:fademasterz/Screen/select_your_service_screen.dart';
 import 'package:fademasterz/Screen/services_screen.dart';
@@ -14,12 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:maps_launcher/maps_launcher.dart';
+import 'package:map_launcher/map_launcher.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../ApiService/api_service.dart';
+import '../Model/shop_detail_model.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
@@ -438,8 +438,8 @@ class _ShopDetailState extends State<ShopDetail> {
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(
-                        AppIcon.backIcon,
-                        color: AppColor.black,
+                        AppIcon.backIcon, colorFilter: const ColorFilter.mode(AppColor.black, BlendMode.srcIn,),
+                      //  color: AppColor.black,
                       ),
                     ),
                   ),
@@ -572,15 +572,26 @@ class _ShopDetailState extends State<ShopDetail> {
                             ],
                           ),
                           InkWell(
-                            onTap: () {
-                              MapsLauncher.launchCoordinates(
+                            onTap: () async {
+                              final availableMaps = await MapLauncher.installedMaps;
+                             // [AvailableMap { mapName: Google Maps, mapType: google }, ...]
+                              debugPrint('<<<<<<<<<<<$availableMaps>>>>>>>>>>>>>');
+                              await availableMaps.first.showMarker(
+                                coords: Coords( double.parse(
+                                  shopDetailModal.data!.lat.toString(),
+                                ), double.parse(
+                                  shopDetailModal.data!.lng.toString(),
+                                ),),
+                                title: "Ocean Beach",
+                              );
+                             /* MapsLauncher.launchCoordinates(
                                 double.parse(
                                   shopDetailModal.data!.lat.toString(),
                                 ),
                                 double.parse(
                                   shopDetailModal.data!.lng.toString(),
                                 ),
-                              );
+                              );*/
                             },
                             child: Column(
                               children: [

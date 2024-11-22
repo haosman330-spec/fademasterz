@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ApiService/api_service.dart';
-import '../../Modal/booking_detail_modal.dart';
+import '../../Model/booking_detail_model.dart';
 import '../../Utils/app_assets.dart';
 import '../../Utils/app_string.dart';
 

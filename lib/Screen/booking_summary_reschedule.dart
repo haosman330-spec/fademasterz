@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
@@ -10,13 +9,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../ApiService/api_service.dart';
-import '../Modal/book_now_modal.dart';
-import '../Modal/booking_summary_modal.dart';
+import '../Model/book_now_model.dart';
+import '../Model/booking_summary_argument_model.dart';
+import '../Model/booking_summary_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
+import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 import 'Dashboard/dashboard.dart';
 
@@ -584,14 +584,117 @@ class BookingSummaryScreenRescheduleState
       );
     }
 
-    if (jsonResponse["status"] == 'true') {
-      _showDialog();
-
+    if (jsonResponse["status"] == true) {
+      debugPrint('<<<<<true<<<<<<${jsonResponse["status"]}>>>>>>>>>>>>>');
+      _showDialog(context: context,
+        description: jsonResponse["message"],);
       setState(() {});
+    }  else {
+      debugPrint('<<<else<<<<<<<<${jsonResponse["message"]}>>>>>>>>>>>>>');
+      rescheduleShowBottomSheet(context: context,
+        description: jsonResponse["message"],);
     }
   }
 
-  Future _showDialog() async {
+  Future rescheduleShowBottomSheet({
+    required BuildContext context,
+    required String description,
+  }) async {
+    return await showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      context: context,
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: Container(
+            height: 220,
+            decoration: const BoxDecoration(
+              color: AppColor.bg,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(
+                  20,
+                ),
+                topRight: Radius.circular(
+                  20,
+                ),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox.shrink(),
+                      Text(
+                        textAlign: TextAlign.center,
+                        AppStrings.alert,
+                        style: AppFonts.redFont,
+                      ),
+                      SizedBox(
+                        height: 21,
+                        width: 21,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.cancel,
+                            color: AppColor.yellow,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const Text(
+                    AppStrings.rescheduleBooking,
+                    style: AppFonts.appText,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                    description,
+                      style: AppFonts.normalText.copyWith(fontSize: 14),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 14,
+                  ),
+                  const Divider(
+                    color: AppColor.dividerColor,
+                  ),
+                  MyAppButton(
+                    onPress: () {
+                      Navigator.of(context).pop();
+                    },
+                    title: AppStrings.gotIt,
+                    style: AppFonts.blackFont.copyWith(
+                      color: AppColor.bg,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    radius: 7,
+                    height: 50,
+                    width: 128,
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future _showDialog({required BuildContext context, required description}) async {
     return showDialog(
       //   barrierDismissible: false,
       context: context,
@@ -630,7 +733,8 @@ class BookingSummaryScreenRescheduleState
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     textAlign: TextAlign.center,
-                    AppStrings.successfulReschedule,
+                 description,
+                 //   AppStrings.successfulReschedule,
                     style: AppFonts.blackFont
                         .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                   ),

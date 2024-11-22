@@ -123,6 +123,7 @@ class AppStrings {
   static String pleaseEnterOtp = 'Please enter otp';
   static String pleaseEnterConfirmOtp = 'Please enter confirm otp';
   static String pleaseEnterMobileNo = 'Please Enter Mobile No.';
+  static String pleaseEnterMobileNo10Digit = 'Please Enter Max 10 Digit Mobile No.';
   static String noAvailableSpecialist = 'No Available Specialist';
   static String noTimeSlotFound = 'No TimeSlot Found';
   static String noSpecialistFound = 'No Specialist Found';

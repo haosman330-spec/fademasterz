@@ -173,8 +173,11 @@ class _EnterYourNoState extends State<EnterYourNo> {
   }
 
   bool isValidate() {
-    if (phoneCn.text.isEmpty || phoneCn.text.length < 10) {
+    if (phoneCn.text.isEmpty) {
       Helper().showToast(AppStrings.pleaseEnterMobileNo);
+      return false;
+    } else if ( phoneCn.text.length < 10) {
+      Helper().showToast(AppStrings.pleaseEnterMobileNo10Digit);
       return false;
     }
     return true;
@@ -241,7 +244,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
         Utility.progressLoadingDialog(context, false);
         Helper().showToast(e.toString());
         debugPrint(
-            '>>>>>>>ffffffff>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
+            '>>>>>>>verificationCompleted>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
       },
       verificationFailed: (e) {
         Helper().showToast('Otp failed $e');

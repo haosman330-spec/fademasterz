@@ -1,4 +1,4 @@
-import 'package:fademasterz/Modal/shop_detail_modal.dart';
+import 'package:fademasterz/Model/shop_detail_model.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_string.dart';

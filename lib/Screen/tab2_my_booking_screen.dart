@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:fademasterz/Modal/my_booking_modal.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
@@ -17,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../ApiService/api_service.dart';
+import '../Model/my_booking_model.dart';
 import '../Utils/app_assets.dart';
 import 'Booking/complete_booking_details.dart';
 import 'Booking/upcoming_booking_details.dart';

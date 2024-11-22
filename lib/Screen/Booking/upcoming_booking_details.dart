@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ApiService/api_service.dart';
-import '../../Modal/booking_detail_modal.dart';
+import '../../Model/booking_detail_model.dart';
 import '../../Utils/app_assets.dart';
 import '../../Utils/app_string.dart';
 import '../../Utils/custom_app_button.dart';
@@ -60,7 +60,7 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
   }
 
   void willPopScop() {
-    (bookingDetailResponse?.data?.bookingStatus == "Pending" ||
+    (bookingDetailResponse?.data?.bookingStatus == "Pending" ||bookingDetailResponse?.data?.bookingStatus == "Completed" ||
             bookingDetailResponse?.data?.bookingStatus == "Cancelled")
         ? Navigator.pop(context)
         : '';
@@ -635,37 +635,35 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
                           '$date $time',
                         ).subtract(const Duration(hours: 2));
                         debugPrint('>>>>>>>>>>>>>>$currentTime '
-                            '+'
+                            '+' 
                             ' $scheduleTime}<<<<<<<<<<<<<<');
-                        // if (bookingDetailResponse?.data?.bookingStatus ==
-                        //     "Cancelled") {
-                        //   Helper().showToast('Booking already Cancelled');
-                        // }
-                        //  else {
-                        if (currentTime.isBefore(scheduleTime)) {
-                          if (bookingDetailResponse?.data?.bookingStatus ==
-                              'Cancelled') {
-                            Helper().showToast('Booking already Cancelled');
-                          } else if (bookingDetailResponse
-                                  ?.data?.bookingStatus ==
-                              'Completed') {
-                            Helper().showToast('Booking already Completed');
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ChooseAvailabilityBarberReschedule(
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ChooseAvailabilityBarberReschedule(
                                   data: bookingDetailResponse?.data,
                                 ),
-                              ),
-                            );
-                          }
-                        } else {
-                          showBottomSheet();
-                        }
-                        //   }
-                        //Navigator.of(context).pop();
+                          ),
+                        );
+                        // if (currentTime.isBefore(scheduleTime)) {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+
+                        //         builder: (context) =>
+                        //             ChooseAvailabilityBarberReschedule(
+                        //               data: bookingDetailResponse?.data,
+                        //             ),
+                        //       ),
+                        //     );
+                        // }
+                        // else {
+                        //   rescheduleShowBottomSheet();
+                        //
+                        //   // showBottomSheet();
+                        // }
+
                       },
                       radius: 6,
                       height: 50,
@@ -678,10 +676,7 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
               ),
               TextButton(
                 onPressed: () {
-                  if (bookingDetailResponse?.data?.bookingStatus ==
-                      'Cancelled') {
-                    Helper().showToast('Booking already Cancelled');
-                  } else {
+
                     showModalBottomSheet(
                       isDismissible: false,
                       backgroundColor: Colors.transparent,
@@ -775,19 +770,20 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
                                     Expanded(
                                       child: MyAppButton(
                                         onPress: () {
+                                        //   var currentTime = DateTime.now();
+                                        // // .subtract(const Duration(hours: 2));
+                                        // var scheduleTime = DateTime.parse(
+                                        //   '$date $time',
+                                        // ).subtract(const Duration(hours: 2));
+                                        // debugPrint('>>>>>>>>>>>>>>$currentTime '
+                                        //     '+'
+                                        //     ' $scheduleTime}<<<<<<<<<<<<<<');
+                                        // if (currentTime.isBefore(scheduleTime)) {
+                                        //   // Navigator.pop(ctx);
+                                        //   // cancelBookingApi(context);
+                                        // }
                                           Navigator.pop(ctx);
-                                          /* var currentTime = DateTime.now()
-                                            .subtract(const Duration(hours: 2));
-                                        var scheduleTime =
-                                            DateTime.parse('$date $time');*/
-                                          // .isBefore(scheduleTime)) {
                                           cancelBookingApi(context);
-                                          /*     }
-                                        else {
-                                          showBottomSheet();
-                                        }
-                                        Navigator.popUntil(
-                                            context, (route) => false);*/
                                         },
                                         radius: 6,
                                         height: 50,
@@ -807,7 +803,7 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
                         );
                       },
                     );
-                  }
+
                 },
                 child: Text(
                   AppStrings.cancelBooking,
@@ -834,7 +830,7 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
     var request = {};
 
     request["booking_id"] = widget.bookingId;
-
+    log('<<sharedPreferences.getString("access_Token")<<<<<<<<<${sharedPreferences.getString("access_Token").toString()}>>>>>>>>>>>>>');
     var response = await http.post(
         Uri.parse(
           ApiService.bookingDetail,
@@ -895,12 +891,14 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    //  Helper().showToast(jsonResponse['message']);
+    debugPrint('<<<<<<cancelBookingJsonResponse<<<<<${jsonResponse.toString()}>>>>>>>>>>>>>');
+   // Helper().showToast(jsonResponse['message']);
     if (jsonResponse['status']) {
       if (context.mounted) {
         bookingDetailApi(context);
       }
     }
+
 
     _showBottomSheet(
       context: context,
@@ -909,100 +907,7 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
     );
   }
 
-  Future showBottomSheet() async {
-    return await showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
-      context: context,
-      builder: (context) {
-        return PopScope(
-          canPop: false,
-          child: Container(
-            height: 220,
-            decoration: const BoxDecoration(
-              color: AppColor.bg,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(
-                  20,
-                ),
-                topRight: Radius.circular(
-                  20,
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox.shrink(),
-                      Text(
-                        textAlign: TextAlign.center,
-                        AppStrings.alert,
-                        style: AppFonts.redFont,
-                      ),
-                      SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Icon(
-                            Icons.cancel,
-                            color: AppColor.yellow,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  const Text(
-                    AppStrings.rescheduleBooking,
-                    style: AppFonts.appText,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      'You can only Reschedule before 2 hrs of booking time',
-                      style: AppFonts.normalText.copyWith(fontSize: 14),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  const Divider(
-                    color: AppColor.dividerColor,
-                  ),
-                  MyAppButton(
-                    onPress: () {
-                      Navigator.of(context).pop();
-                    },
-                    title: AppStrings.gotIt,
-                    style: AppFonts.blackFont.copyWith(
-                      color: AppColor.bg,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    radius: 7,
-                    height: 50,
-                    width: 128,
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+
 
   Future _showBottomSheet({
     required BuildContext context,
@@ -1112,6 +1017,100 @@ class _UpcomingBookingDetailState extends State<UpcomingBookingDetail> {
                     title: AppStrings.gotIt,
                     style: AppFonts.blackFont.copyWith(
                         color: AppColor.bg, fontWeight: FontWeight.w500),
+                    radius: 7,
+                    height: 50,
+                    width: 128,
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+  Future rescheduleShowBottomSheet() async {
+    return await showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      context: context,
+      builder: (context) {
+        return PopScope(
+          canPop: false,
+          child: Container(
+            height: 220,
+            decoration: const BoxDecoration(
+              color: AppColor.bg,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(
+                  20,
+                ),
+                topRight: Radius.circular(
+                  20,
+                ),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox.shrink(),
+                      Text(
+                        textAlign: TextAlign.center,
+                        AppStrings.alert,
+                        style: AppFonts.redFont,
+                      ),
+                      SizedBox(
+                        height: 21,
+                        width: 21,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(
+                            Icons.cancel,
+                            color: AppColor.yellow,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const Text(
+                    AppStrings.rescheduleBooking,
+                    style: AppFonts.appText,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      'You can only Reschedule before 2 hrs of booking time',
+                      style: AppFonts.normalText.copyWith(fontSize: 14),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 14,
+                  ),
+                  const Divider(
+                    color: AppColor.dividerColor,
+                  ),
+                  MyAppButton(
+                    onPress: () {
+                      Navigator.of(context).pop();
+                    },
+                    title: AppStrings.gotIt,
+                    style: AppFonts.blackFont.copyWith(
+                      color: AppColor.bg,
+                      fontWeight: FontWeight.w500,
+                    ),
                     radius: 7,
                     height: 50,
                     width: 128,

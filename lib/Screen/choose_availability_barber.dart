@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
-import 'package:fademasterz/Modal/choose_availability_modal.dart';
-import 'package:fademasterz/Modal/shop_service_modal.dart';
+import 'package:fademasterz/Model/booking_detail_model.dart';
+import 'package:fademasterz/Model/booking_summary_argument_model.dart';
+import 'package:fademasterz/Model/choose_availability_model.dart';
+import 'package:fademasterz/Model/select_specialist_model.dart';
+import 'package:fademasterz/Model/shop_service_model.dart';
+
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
 import 'package:fademasterz/Utils/custom_tex_field.dart';
@@ -21,8 +24,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../Utils/app_fonts.dart';
 import '../../Utils/app_string.dart';
 import '../ApiService/api_service.dart';
-import '../Modal/booking_detail_modal.dart';
-import '../Modal/select_specialist_modal.dart';
+
 import '../Utils/app_assets.dart';
 import '../Utils/helper.dart';
 import '../Utils/utility.dart';
@@ -30,10 +32,11 @@ import 'booking_summary_screen.dart';
 
 class ChooseAvailabilityBarber extends StatefulWidget {
   final String? price;
+
   final List<Service1?>? selectedServiceList;
   final BookingDetailData? data;
   const ChooseAvailabilityBarber(
-      {super.key, this.price, this.selectedServiceList, this.data});
+      {super.key, this.price, this.selectedServiceList, this.data,});
 
   @override
   State<ChooseAvailabilityBarber> createState() =>
@@ -586,7 +589,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding:  const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 15,
         ),
@@ -643,7 +646,15 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                     data: data,
                   ),
                 ),
-              );
+              ).then((value){
+               if(value==true){
+                 Navigator.of(context).pop(true);
+                 setState(() {
+
+                 });
+               }
+              });
+
             } else {
               Helper().showToast(
                 AppStrings.noAvailableSpecialist,

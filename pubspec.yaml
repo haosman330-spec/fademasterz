@@ -43,22 +43,22 @@ dependencies:
   syncfusion_flutter_datepicker: ^26.2.4
   readmore: ^3.0.0
   intl: ^0.19.0
-  flutter_credit_card: ^4.0.1
+#  flutter_credit_card: ^4.0.1
   table_calendar: ^3.1.1
   flutter_rating_bar: ^4.0.1
   geolocator: ^11.0.0
   permission_handler: ^11.3.1
   fluttertoast: ^8.2.4
   shared_preferences: ^2.2.2
-  device_info_plus: ^10.1.0
+  device_info_plus: ^10.1.2
   http: ^1.2.1
   html: ^0.15.4
-  flutter_widget_from_html: ^0.14.11
+  flutter_widget_from_html: ^0.15.2
   url_launcher: ^6.3.0
   internet_connection_checker: ^1.0.0+1
-  connectivity_plus: ^6.0.3
+ # connectivity_plus: ^6.1.0
   google_maps_flutter: ^2.6.0
-  maps_launcher: ^2.2.1
+ # maps_launcher: ^2.2.1
   webview_flutter: ^4.7.0
   webviewx_plus: ^0.5.0
   cached_network_image: ^3.3.1
@@ -69,13 +69,16 @@ dependencies:
   firebase_auth: ^4.19.4
   firebase_phone_auth_handler: ^1.0.8
   country_code_picker: ^3.0.0
-  flutter_local_notifications: ^17.1.2
+  flutter_local_notifications: ^17.2.3
   internet_connection_checker_plus: ^2.3.0
   pinput: ^4.0.0
   geocoding: ^3.0.0
-  upgrader: ^10.3.0
+  upgrader: ^11.3.0
   googleapis_auth: ^1.6.0
   shimmer: ^3.0.0
+  map_launcher: ^3.5.0
+  win32: ^5.6.1
+
 
 
 

@@ -1,4 +1,4 @@
-import 'package:fademasterz/Modal/shop_detail_modal.dart';
+import 'package:fademasterz/Model/shop_detail_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

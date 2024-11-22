@@ -11,7 +11,7 @@ import '../Utils/app_color.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_bar.dart';
-import 'ChatScreen/chat_list_data_modal.dart';
+import 'ChatScreen/chat_list_data_model.dart';
 import 'ChatScreen/chat_screen_inbox.dart';
 
 class ChatListScreen extends StatefulWidget {

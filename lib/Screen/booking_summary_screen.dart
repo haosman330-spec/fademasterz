@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:fademasterz/Modal/booking_summary_argument_modal.dart';
+import 'package:fademasterz/Screen/select_your_service_screen.dart';
 import 'package:fademasterz/Screen/web_view_page.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
+import 'package:fademasterz/Utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -13,8 +14,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
-import '../Modal/book_now_modal.dart';
-import '../Modal/booking_summary_modal.dart';
+import '../Model/book_now_model.dart';
+import '../Model/booking_summary_argument_model.dart';
+import '../Model/booking_summary_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
@@ -43,162 +45,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     setState(() {});
   }
 
-/*  Future<void> rescheduleBookingApi(BuildContext context) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
-
-    var headers = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${sharedPreferences.getString("access_Token")}'
-    };
-
-    var request =
-        http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
-    debugPrint(
-        '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
-    request.fields.addAll({
-      'booking_id': sharedPreferences.getInt('ubookingId').toString(),
-      'date': widget.data.date.toString(),
-      'time': widget.data.time.toString(),
-      'specialist_id': widget.data.specialistId.toString(),
-      'note': widget.data.noteText.toString(),
-    });
-    if (widget.data.image?.isNotEmpty ?? false) {
-      debugPrint(
-          '>>>>widget.data.image>>>>>>>>>>${widget.data.image}<<<<<<<<<<<<<<');
-      debugPrint(
-          '>>>>widget.data.image>>>>>>>>>>${widget.data.image.toString()}<<<<<<<<<<<<<<');
-
-      request.files.add(
-        await http.MultipartFile.fromPath('desired_look', widget.data.image!),
-      );
-    }
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    setState(
-      () {},
-    );
-    var result = await response.stream.bytesToString();
-
-    var jsonResponse = jsonDecode(result);
-    debugPrint('>>>>>>request.fields>>>>>>>>${request.files}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>jsonResponse>>>>>>>>${jsonResponse}<<<<<<<<<<<<<<');
-
-    // Helper().showToast(
-    //   jsonResponse["message"],
-    // );
-
-    if (context.mounted) {
-      Utility.progressLoadingDialog(
-        context,
-        false,
-      );
-    }
-
-    if (jsonResponse["status"] == 'true') {
-      debugPrint('>>>>>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
-      showDialog(
-        //   barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                17,
-              ),
-            ),
-            insetPadding: const EdgeInsets.symmetric(
-              horizontal: 18,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //     SvgPicture.asset(AppIcon.paymentIcon),
-                  //     const SizedBox(
-                  //       height: 15,
-                  //     ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      AppStrings.rescheduleBookingSuccessfully,
-                      style: AppFonts.blackFont.copyWith(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      AppStrings.successfulReschedule,
-                      style: AppFonts.blackFont
-                          .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  MyAppButton(
-                    onPress: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DashBoardScreen(
-                            selectIndex: 1,
-                          ),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    height: 48,
-                    title: AppStrings.viewBookingSummary,
-                    style: AppFonts.blackFont
-                        .copyWith(fontWeight: FontWeight.w500),
-                    radius: 39,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  // MyAppButton(
-                  //   onPress: () {
-                  //     Navigator.pushAndRemoveUntil(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => const DashBoardScreen(
-                  //           selectIndex: 0,
-                  //         ),
-                  //       ),
-                  //           (route) => false,
-                  //     );
-                  //   },
-                  //   height: 48,
-                  //   title: AppStrings.backToHome,
-                  //   style: AppFonts.blackFont
-                  //       .copyWith(fontWeight: FontWeight.w500),
-                  //   radius: 39,
-                  //   color: const Color(0xffFFFBF0),
-                  // ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-
-      setState(() {});
-    }
-  }*/
 
   @override
   void initState() {
@@ -242,7 +89,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
           visible: bookingSummaryResponse != null,
           replacement: Center(
             child: Text(
-              'No Data Found',
+             'Service not found.',
               style: AppFonts.regular.copyWith(
                 fontSize: 16,
               ),
@@ -716,6 +563,12 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
 
       setState(() {});
     }
+    else {
+
+      Helper().showToast(jsonResponse['message']);
+      Navigator.of(context).pop(true);
+
+    }
     // } catch (e) {
     //   if (context.mounted) {
     //     Utility.progressLoadingDialog(context, false);
@@ -778,7 +631,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
       );
     }
     log('>>>>>>Api>>>>>>>>${ApiService.bookNow}<<<<<<<<<<<<<<');
-    log('>>>>>>request>>>>>>>>${request.toString()}<<<<<<<<<<<<<<');
+    log('>>>>>>request>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
     log('>>>>>>jsonResponse>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse["status"]) {
       bookNowResponse = BookNowResponse.fromJson(jsonResponse);
@@ -911,5 +764,165 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
       });
       setState(() {});
     }
+    else{
+      Helper().showToast(jsonResponse['message']);
+      Navigator.of(context).pop(true);
+    }
   }
+/*  Future<void> rescheduleBookingApi(BuildContext context) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(context, true);
+    }
+
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${sharedPreferences.getString("access_Token")}'
+    };
+
+    var request =
+        http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
+    debugPrint(
+        '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
+    request.fields.addAll({
+      'booking_id': sharedPreferences.getInt('ubookingId').toString(),
+      'date': widget.data.date.toString(),
+      'time': widget.data.time.toString(),
+      'specialist_id': widget.data.specialistId.toString(),
+      'note': widget.data.noteText.toString(),
+    });
+    if (widget.data.image?.isNotEmpty ?? false) {
+      debugPrint(
+          '>>>>widget.data.image>>>>>>>>>>${widget.data.image}<<<<<<<<<<<<<<');
+      debugPrint(
+          '>>>>widget.data.image>>>>>>>>>>${widget.data.image.toString()}<<<<<<<<<<<<<<');
+
+      request.files.add(
+        await http.MultipartFile.fromPath('desired_look', widget.data.image!),
+      );
+    }
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    setState(
+      () {},
+    );
+    var result = await response.stream.bytesToString();
+
+    var jsonResponse = jsonDecode(result);
+    debugPrint('>>>>>>request.fields>>>>>>>>${request.files}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
+    debugPrint('>>>>>>jsonResponse>>>>>>>>${jsonResponse}<<<<<<<<<<<<<<');
+
+    // Helper().showToast(
+    //   jsonResponse["message"],
+    // );
+
+    if (context.mounted) {
+      Utility.progressLoadingDialog(
+        context,
+        false,
+      );
+    }
+
+    if (jsonResponse["status"] == 'true') {
+      debugPrint('>>>>>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
+      showDialog(
+        //   barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                17,
+              ),
+            ),
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 18,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //     SvgPicture.asset(AppIcon.paymentIcon),
+                  //     const SizedBox(
+                  //       height: 15,
+                  //     ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 20),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      AppStrings.rescheduleBookingSuccessfully,
+                      style: AppFonts.blackFont.copyWith(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      AppStrings.successfulReschedule,
+                      style: AppFonts.blackFont
+                          .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  MyAppButton(
+                    onPress: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashBoardScreen(
+                            selectIndex: 1,
+                          ),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    height: 48,
+                    title: AppStrings.viewBookingSummary,
+                    style: AppFonts.blackFont
+                        .copyWith(fontWeight: FontWeight.w500),
+                    radius: 39,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // MyAppButton(
+                  //   onPress: () {
+                  //     Navigator.pushAndRemoveUntil(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const DashBoardScreen(
+                  //           selectIndex: 0,
+                  //         ),
+                  //       ),
+                  //           (route) => false,
+                  //     );
+                  //   },
+                  //   height: 48,
+                  //   title: AppStrings.backToHome,
+                  //   style: AppFonts.blackFont
+                  //       .copyWith(fontWeight: FontWeight.w500),
+                  //   radius: 39,
+                  //   color: const Color(0xffFFFBF0),
+                  // ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+
+      setState(() {});
+    }
+  }*/
 }
