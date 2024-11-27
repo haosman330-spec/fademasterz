@@ -176,7 +176,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
     if (phoneCn.text.isEmpty) {
       Helper().showToast(AppStrings.pleaseEnterMobileNo);
       return false;
-    } else if ( phoneCn.text.length < 10) {
+    } else if (phoneCn.text.length < 10) {
       Helper().showToast(AppStrings.pleaseEnterMobileNo10Digit);
       return false;
     }
