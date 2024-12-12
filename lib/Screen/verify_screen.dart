@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:country_code_picker/src/country_code.dart';
+import 'package:fademasterz/Screen/enter_your_no.dart';
 import 'package:fademasterz/Screen/profile_setup_screen.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
@@ -128,7 +129,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
               appContext: context,
               textStyle: AppFonts.textFieldFont,
               length: 6,
-              obscureText: true,
+              obscureText: false,
               //obscuringCharacter: '*',
               obscuringWidget: const Text(
                 '*',
@@ -391,9 +392,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    Helper().showToast(
-      jsonResponse['message'],
-    );
+
     log('>>>>jsonResponse>>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       verifyOtpModal = VerifyOtpModal.fromJson(jsonResponse);
@@ -406,7 +405,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
       sharedPreferences.setInt("senderId", senderId!);
       sharedPreferences.setString("email", email.toString());
-
+      Helper().showToast(
+        jsonResponse['message'],
+      );
       if (context.mounted) {
         if (verifyOtpModal.data?.isSetup == 'yes') {
           // sharedPreferences.setBool("profileSetUp", true);
@@ -426,6 +427,21 @@ class _VerifyScreenState extends State<VerifyScreen> {
             (route) => false,
           );
         }
+      }
+    }
+    else{
+      Helper().showToast(
+        jsonResponse['message'],
+      );
+      if(jsonResponse['message'] =='Mobile Number already exits.'){
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                EnterYourNo(),
+          ),
+        );
       }
     }
   }

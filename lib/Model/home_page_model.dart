@@ -143,4 +143,9 @@ class UserDetail {
         "name": name,
         "image": image,
       };
+
+  @override
+  String toString() {
+    return 'UserDetail{name: $name, image: $image}';
+  }
 }

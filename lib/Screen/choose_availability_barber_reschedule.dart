@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -128,6 +129,7 @@ class _ChooseAvailabilityBarberRescheduleState
 
   @override
   void initState() {
+    log('<<<<<<<widget.data}<<<<${widget.data}>>>>>>>>>>>>>');
     _chooseAvailabilityApi(context);
     super.initState();
   }
@@ -574,12 +576,12 @@ class _ChooseAvailabilityBarberRescheduleState
 
               String? image = _imageFile?.path.toString();
               String? price = widget.selectedServiceList
-                      ?.fold(
-                          0,
+                      ?.fold<double>(
+                          0.0,
                           (previousValue, element) =>
                               previousValue +
-                              double.parse(element?.price ?? '0').toInt())
-                      .toStringAsFixed(0) ??
+                              double.parse(element?.price ?? '0'))
+                      .toStringAsFixed(2) ??
                   '0';
               List<String> serviceId = [];
 
@@ -592,20 +594,18 @@ class _ChooseAvailabilityBarberRescheduleState
                 date: date,
                 shopId: widget.data?.shopId.toString(),
                 price: widget.data?.subTotal.toString(),
-                noteText: widget.data?.note ?? noteCn.text,
+                noteText: (widget.data?.note?.isEmpty ?? false)?noteCn.text.trim(): widget.data?.note,
                 specialistId: specialistId.toString(),
                 serviceId: widget.data?.serviceIds,
-                image: widget.data?.desiredLook ?? image,
+                image: (widget.data?.desiredLook ),
                 bookingStatus: widget.data?.bookingStatus,
                 bookingId: widget.data?.id,
               );
-              debugPrint(
-                  '>>>>>>.data?.>>>>>>>>${data.toString()}<<<<<<<<<<<<<<');
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => BookingSummaryScreenReschedule(
-                    data: data,
+                    data: data,image:image ,
                   ),
                 ),
               );
@@ -652,10 +652,6 @@ class _ChooseAvailabilityBarberRescheduleState
       if (context.mounted) {
         Utility.progressLoadingDialog(context, true);
       }
-      // shopId ??= sharedPreferences.getInt('shop_id');
-      // debugPrint('>>>>>>>shopId>>>>>>>${shopId}<<<<<<<<<<<<<<');
-      debugPrint(
-          '>>>>>>>widget.data?.shopId>>>>>>>${widget.data?.shopId}<<<<<<<<<<<<<<');
       var request = {};
       request["shop_id"] = widget.data?.shopId;
       request["selected_date"] = DateFormat('yyyy-MM-dd')
@@ -696,7 +692,9 @@ class _ChooseAvailabilityBarberRescheduleState
       Map<String, dynamic> jsonResponse = jsonDecode(
         response.body,
       );
-
+      debugPrint('<<<<<Api<<<<<${ApiService.chooseAvailability}>>>>>>>>>>>>>');
+      debugPrint('<<<<<request<<<<<$request>>>>>>>>>>>>>');
+      debugPrint('<<<<<jsonResponse<<<<<$jsonResponse>>>>>>>>>>>>>');
       if (jsonResponse['status'] == true) {
         chooseAvailabilityResponse =
             ChooseAvailabilityResponse.fromJson(jsonResponse);
@@ -755,6 +753,9 @@ class _ChooseAvailabilityBarberRescheduleState
     // Helper().showToast(
     //   jsonResponse['message'],
     // );
+    debugPrint('<<<<<Api<<<<<${ApiService.selectSpecialist}>>>>>>>>>>>>>');
+    debugPrint('<<<<<request<<<<<$request>>>>>>>>>>>>>');
+    debugPrint('<<<<<jsonResponse<<<<<$jsonResponse>>>>>>>>>>>>>');
     if (jsonResponse['status'] == true) {
       selectSpecialistTimeResponse =
           SelectSpecialistTimeResponse.fromJson(jsonResponse);

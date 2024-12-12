@@ -31,6 +31,7 @@ class AppStrings {
   static const String applyFilter = 'Apply Filter';
   static const String reset = 'Reset';
   static const String all = 'All';
+  static const String login = 'Login';
   static const String notification = 'Notification';
   static const String instagram = 'Instagram';
   static const String openNow = 'Open Now';
@@ -138,4 +139,6 @@ class AppStrings {
   static String typeAMessage = 'Type a message';
 
   static String noShopAvailable = 'No Shop Available';
+  static String skip = 'Skip';
+
 }

@@ -23,6 +23,7 @@ import '../Model/shop_detail_model.dart';
 import '../Utils/app_fonts.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
+import '../Utils/custom_login_Dialog.dart';
 import '../Utils/utility.dart';
 import 'gallery_screen.dart';
 
@@ -34,6 +35,7 @@ class ShopDetail extends StatefulWidget {
 }
 
 class _ShopDetailState extends State<ShopDetail> {
+  SharedPreferences? sharedPreferences;
   int selectIndex = 0;
   int selectIndex1 = 0;
   bool isListVisible = false;
@@ -47,7 +49,7 @@ class _ShopDetailState extends State<ShopDetail> {
 
   @override
   void initState() {
-    shopDetail(context).then(
+    shopDetailApi(context).then(
       (value) => categories = [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -207,45 +209,8 @@ class _ShopDetailState extends State<ShopDetail> {
                       ),
                       child: GestureDetector(
                         onTap: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: Colors.transparent,
-                                child: Stack(
-                                  children: [
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 250,
-                                      child: Image.network(
-                                        ApiService.imageUrl +
-                                            (gallery?.image ?? ''),
-                                        //     images[index],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: SizedBox(
-                                        height: 21,
-                                        width: 21,
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: SvgPicture.asset(
-                                            AppIcon.cancelIcon,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          );
+                          fullImage(context,
+                              ApiService.imageUrl + (gallery?.image ?? ''));
                         },
                         child: CachedNetworkImage(
                           imageUrl:
@@ -417,12 +382,25 @@ class _ShopDetailState extends State<ShopDetail> {
               children: [
                 Visibility(
                   visible: (shopDetailModal.data?.image?.isNotEmpty ?? false),
-                  child: Image.network(
+                  child: CachedNetworkImage(
+                    imageUrl:
                     ApiService.imageUrl + (shopDetailModal.data?.image ?? ''),
-                    fit: BoxFit.fill,
                     height: 250,
                     width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.fill,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                      child: SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: CircularProgressIndicator(
+                            value: downloadProgress.progress),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.error),
                   ),
+
                 ),
                 Positioned(
                   left: 15,
@@ -438,8 +416,12 @@ class _ShopDetailState extends State<ShopDetail> {
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(
-                        AppIcon.backIcon, colorFilter: const ColorFilter.mode(AppColor.black, BlendMode.srcIn,),
-                      //  color: AppColor.black,
+                        AppIcon.backIcon,
+                        colorFilter: const ColorFilter.mode(
+                          AppColor.black,
+                          BlendMode.srcIn,
+                        ),
+                        //  color: AppColor.black,
                       ),
                     ),
                   ),
@@ -573,18 +555,22 @@ class _ShopDetailState extends State<ShopDetail> {
                           ),
                           InkWell(
                             onTap: () async {
-                              final availableMaps = await MapLauncher.installedMaps;
-                             // [AvailableMap { mapName: Google Maps, mapType: google }, ...]
-                              debugPrint('<<<<<<<<<<<$availableMaps>>>>>>>>>>>>>');
+                              final availableMaps =
+                                  await MapLauncher.installedMaps;
+                              debugPrint(
+                                  '<<<<<<<<<<<$availableMaps>>>>>>>>>>>>>');
                               await availableMaps.first.showMarker(
-                                coords: Coords( double.parse(
-                                  shopDetailModal.data!.lat.toString(),
-                                ), double.parse(
-                                  shopDetailModal.data!.lng.toString(),
-                                ),),
-                                title: "Ocean Beach",
+                                coords: Coords(
+                                  double.parse(
+                                    shopDetailModal.data!.lat.toString(),
+                                  ),
+                                  double.parse(
+                                    shopDetailModal.data!.lng.toString(),
+                                  ),
+                                ),
+                                title: shopDetailModal.data!.address.toString(),
                               );
-                             /* MapsLauncher.launchCoordinates(
+                              /* MapsLauncher.launchCoordinates(
                                 double.parse(
                                   shopDetailModal.data!.lat.toString(),
                                 ),
@@ -822,19 +808,27 @@ class _ShopDetailState extends State<ShopDetail> {
           title: AppStrings.bookNow,
           height: 58,
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          onPress: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SelectYourServices(),
-              ),
-            );
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => const WebViewXPage(),
-            //   ),
-            // );
+          onPress: () async {
+            sharedPreferences = await SharedPreferences.getInstance();
+
+            int  userId= sharedPreferences?.getInt("senderId")??0;
+            if(userId==0) {
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (ctx) {
+                  return CustomLoginDialog();
+                },
+              );
+            }
+            else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SelectYourServices(),
+                ),
+              );
+            }
           },
         ),
       ),
@@ -868,7 +862,7 @@ class _ShopDetailState extends State<ShopDetail> {
   String? openTime;
   String? closeTime;
   ShopDetailModal shopDetailModal = ShopDetailModal();
-  Future<void> shopDetail(BuildContext context) async {
+  Future<void> shopDetailApi(BuildContext context) async {
     setLoader(true);
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
@@ -878,6 +872,7 @@ class _ShopDetailState extends State<ShopDetail> {
     var request = {};
 
     request["shop_id"] = sharedPreferences.getInt('shop_id');
+    request['user_id'] =sharedPreferences.getInt("senderId")??0;
 
     var response = await http.post(
         Uri.parse(
@@ -898,19 +893,62 @@ class _ShopDetailState extends State<ShopDetail> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
-
+    log('>>>>>jsonResponse>>>>>>>>>${ApiService.shopDetail}<<<<<<<<<<<<<<');
+    log('>>>>>request>>>>>>>>>${request}<<<<<<<<<<<<<<');
+    log('>>>>>jsonResponse>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       shopDetailModal = ShopDetailModal.fromJson(jsonResponse);
       openTime = shopDetailModal.data?.shopStartTime;
       closeTime = shopDetailModal.data?.shopEndTime;
-      // var id = shopDetailModal.data?.id;
-      log('>>>>>jsonResponse>>>>>>>>>${jsonResponse['data'].toString()}<<<<<<<<<<<<<<');
+
+
       _updateShopStatus(openTime!, closeTime!);
       setState(() {});
     }
+  }
+
+  fullImage(BuildContext context, imageUrl) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 250,
+                child: ClipRRect(
+                  clipBehavior: Clip.antiAlias,
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
+                    imageUrl: imageUrl,
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: SvgPicture.asset(
+                      AppIcon.cancelIcon,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

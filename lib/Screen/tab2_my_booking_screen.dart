@@ -190,7 +190,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
             Expanded(
               child: Visibility(
                 visible: !showLoader,
-                replacement: Shimmer.fromColors(
+                replacement: Center(child: CircularProgressIndicator(color: AppColor.yellow,)),
+                        /*      Shimmer.fromColors(
                   baseColor: AppColor.black,
                   highlightColor: AppColor.gray.withOpacity(0.6),
                   //  enabled: shimmerEffect,
@@ -214,12 +215,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                       height: 10,
                     ),
                   ),
-                ),
-                // const Center(
-                //   child: CircularProgressIndicator(
-                //     color: AppColor.yellow,
-                //   ),
-                // ),
+                ),*/
+              
                 child: Visibility(
                   visible: isVisible == true,
                   replacement: Visibility(
@@ -236,7 +233,7 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
                       itemCount: completedList.length,
                       itemBuilder: (BuildContext context, int index) {
                         var myCompleteBooking = completedList[index];
-
+              
                         return DecoratedBox(
                           decoration: BoxDecoration(
                             color: AppColor.black,

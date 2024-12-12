@@ -1,4 +1,5 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:fademasterz/Screen/Dashboard/dashboard.dart';
 import 'package:fademasterz/Screen/verify_screen.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
@@ -7,6 +8,7 @@ import 'package:fademasterz/Utils/app_string.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../Utils/custom_app_button.dart';
 import '../Utils/helper.dart';
@@ -140,6 +142,32 @@ class _EnterYourNoState extends State<EnterYourNo> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 41,
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const DashBoardScreen(selectIndex: 0),));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColor.yellow,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      10,
+                    ),
+                  ),
+                ),
+                child: Text(
+                  AppStrings.skip,
+                  style: const TextStyle(
+                    color: AppColor.black,
+                    fontSize: 15,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -190,50 +218,6 @@ class _EnterYourNoState extends State<EnterYourNo> {
     }
   }
 
-/*  Future<void> enterNumberApi(BuildContext context) async {
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, true);
-    }
-    var request = {};
-    request["country_code"] = "91";
-    request['mobile_number'] = phoneCn.text.trim();
-
-    var response = await http.post(
-      Uri.parse(
-        ApiService.enterNumber,
-      ),
-      body: jsonEncode(request),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    );
-    if (context.mounted) {
-      Utility.progressLoadingDialog(context, false);
-    }
-
-    Map<String, dynamic> jsonResponse = jsonDecode(
-      response.body,
-    );
-    Helper().showToast(
-      jsonResponse['message'],
-    );
-    debugPrint(
-        '>>>>>>> jsonResponse[message]>>>>>>>${jsonResponse['message']}<<<<<<<<<<<<<<');
-    if (jsonResponse['status'] == true) {
-      // if (context.mounted) {
-      //   await Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => VerifyScreen(
-      //         phoneNo: phoneCn.text.trim(),
-      //       ),
-      //     ),
-      //   );
-      // }
-    }
-  }*/
-
   Future<void> signUpOtpAuth() {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -247,6 +231,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
             '>>>>>>>verificationCompleted>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
       },
       verificationFailed: (e) {
+        Utility.progressLoadingDialog(context, false);
         Helper().showToast('Otp failed $e');
         debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
       },
@@ -274,29 +259,4 @@ class _EnterYourNoState extends State<EnterYourNo> {
       forceResendingToken: 1,
     );
   }
-
-  /* Future<void> verifyPhoneNumber(String phoneNumber) async {
-    debugPrint(
-        '>>>>>>>>>>>>>>${_selectedCountry?.dialCode}$phoneNumber}<<<<<<<<<<<<<<');
-    FirebasePhoneAuthHandler(
-      phoneNumber: "${_selectedCountry?.dialCode}$phoneNumber",
-      // If true, the user is signed out before the onLoginSuccess callback is fired when the OTP is verified successfully.
-      signOutOnSuccessfulVerification: false,
-
-      linkWithExistingUser: false,
-      builder: (context, controller) {
-        return const SizedBox.shrink();
-      },
-      autoRetrievalTimeOutDuration: const Duration(seconds: 60),
-      otpExpirationDuration: const Duration(seconds: 60),
-      onLoginSuccess: (userCredential, autoVerified) {
-        debugPrint("autoVerified: $autoVerified");
-        debugPrint("Login success UID: ${userCredential.user?.uid}");
-      },
-      onLoginFailed: (authException, stackTrace) {
-        debugPrint("An error occurred: ${authException.message}");
-      },
-      onError: (error, stackTrace) {},
-    );
-  }*/
 }

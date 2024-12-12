@@ -614,12 +614,12 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
 
               String? image = _imageFile?.path.toString();
               String? price = widget.selectedServiceList
-                      ?.fold(
-                          0,
+                      ?.fold<double>(
+                          0.0,
                           (previousValue, element) =>
                               previousValue +
-                              double.parse(element?.price ?? '0').toInt())
-                      .toStringAsFixed(0) ??
+                              double.parse(element?.price ?? '0'))
+                      .toStringAsFixed(2) ??
                   '0';
               List<String> serviceId = [];
 
@@ -773,6 +773,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
     var request = {};
 
     request["shop_id"] = sharedPreferences.getInt('shop_id');
+    request['user_id'] =sharedPreferences.getInt("senderId")??0;
     request["specialist_id"] = //specialistId
         (chooseAvailabilityResponse
                 .data?.availableSpecialist?[selectIndex].id ??

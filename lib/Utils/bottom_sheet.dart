@@ -151,23 +151,28 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           Padding(
-            padding: const EdgeInsets.only(right: 15, top: 10),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: SizedBox(
-                height: 21,
-                width: 21,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+            padding: const EdgeInsets.only(right: 5, top: 10),
+            child: InkWell(onTap: () {
+              Navigator.pop(context);
+            },
+              child: Align(
+                alignment: Alignment.topRight,
+                child:   IconButton(onPressed: (){  Navigator.pop(context);}, icon: Icon(
+                  Icons.cancel,
+                  size: 30,
+                  color: AppColor.yellow,
+                ),),
+             /*   SizedBox(
+                  height: 21,
+                  width: 21,
                   child: const Icon(
                     Icons.cancel,
                     size: 30,
                     color: AppColor.yellow,
                   ),
-                ),
+                ),*/
               ),
             ),
           ),
@@ -211,23 +216,6 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
                   return InkWell(
                     onTap: () => onTap(index),
 
-                    // {
-                    //   var categoryId = categoryService[index].id!.toInt();
-                    //   debugPrint('>>>>>>>>>>>>>>${categoryId}<<<<<<<<<<<<<<');
-                    //
-                    //   // if (categoryService[index].isSelected == true) {
-                    //   //   categoryService[index].isSelected = false;
-                    //   //   setState(() {});
-                    //   //   debugPrint(
-                    //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
-                    //   // } else {
-                    //   //   categoryService[index].isSelected = true;
-                    //   //   setState(() {});
-                    //   //   debugPrint(
-                    //   //       '>>>>>>>>>>>>>>${categoryService[index].isSelected}<<<<<<<<<<<<<<');
-                    //   // }
-                    //   onTap(index););
-                    // },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       alignment: Alignment.center,
@@ -449,6 +437,8 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
 
   @override
   void setState(VoidCallback fn) {
-    super.setState(fn);
+    if(mounted) {
+      super.setState(fn);
+    }
   }
 }

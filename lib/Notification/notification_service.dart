@@ -455,16 +455,32 @@ void _handleMessage(data) async {
     String receiverId = data['receiver_id'];
     String receiverName = data['receiver_name'];
     String receiverImage = data['receiver_image'];
+    bool isChatScreenActive = false;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+ var chatId=   sharedPreferences.getString(
+        'chatReceiverId');
+    debugPrint('<<<<receiverIdreceiverId<<<<<<<${receiverId}>>>>>>>>>>>>>');
+    debugPrint('<<<<<<chatIdchatId<<<<<${chatId}>>>>>>>>>>>>>');
+    navigatorKey.currentState?.popUntil((route) {
+      if (chatId == receiverId) {
+        isChatScreenActive = true;
+      }
+      return true;
+    });
 
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) => ChatScreenInBox(
-          receiverId: receiverId,
-          receiverName: receiverName,
-          receiverImage: receiverImage,
+    if (!isChatScreenActive) {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+          builder: (context) => ChatScreenInBox(
+            receiverId: receiverId,
+            receiverName: receiverName,
+            receiverImage: receiverImage,
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+
   } else if (data['type'] == 'completed') {
     int bookingId = int.parse(data['booking_id']);
     navigatorKey.currentState?.push(

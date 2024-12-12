@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-
 import 'package:fademasterz/Model/shop_service_model.dart';
 import 'package:fademasterz/Model/shop_work_service_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
@@ -172,9 +171,12 @@ class _SelectYourServicesState extends State<SelectYourServices> {
                         ),
                         InkWell(
                           onTap: () {
+
+
                             onItemAddRemove(shopService);
 
                             setState(() {});
+
                           },
                           child: !(shopService?.selected ?? false)
                               ? SvgPicture.asset(
@@ -213,26 +215,21 @@ class _SelectYourServicesState extends State<SelectYourServices> {
                 MaterialPageRoute(
                   builder: (context) => ChooseAvailabilityBarber(
                       selectedServiceList: selectedServiceList,
-                      price: selectedServiceList!
-                          .fold(
-                              0,
-                              (previousValue, element) =>
-                                  previousValue +
-                                  double.parse(element?.price ?? '0').toInt())
-                          .toStringAsFixed(0)),
+                      price: selectedServiceList?.fold<double>(0.0, (previousValue, element) =>
+                      previousValue + double.parse(element?.price ?? '0')).toStringAsFixed(2)),
                 ),
-              ).then((value){
-                if(value==true){
-                  selectIndex=0;
+              ).then((value) {
+                if (value == true) {
+                  selectIndex = 0;
                   selectedServiceList?.clear();
-                  shopWorkServiceId =
-                      shopWorkServiceModal.data?.workServices?[selectIndex].id ?? 0;
+                  shopWorkServiceId = shopWorkServiceModal
+                          .data?.workServices?[selectIndex].id ??
+                      0;
                   shopWorkService(context);
-                  setState(() {
-
-                  });
+                  setState(() {});
                 }
-              });;
+              });
+              ;
             } else {
               Helper().showToast(AppStrings.pleaseSelectYourService);
             }
@@ -247,7 +244,8 @@ class _SelectYourServicesState extends State<SelectYourServices> {
           child: Row(
             children: [
               Text(
-                '£ ${selectedServiceList?.fold(0, (previousValue, element) => previousValue + double.parse(element?.price ?? '0').toInt()).toStringAsFixed(0)}',
+                '£ ${selectedServiceList?.fold<double>(0.0, (previousValue, element) =>
+                previousValue + double.parse(element?.price ?? '0')).toStringAsFixed(2)}',
                 style: AppFonts.blackFont,
               ),
               const Spacer(),
@@ -274,8 +272,10 @@ class _SelectYourServicesState extends State<SelectYourServices> {
       }
     });
     if (isAlreadySelected) {
+      Helper().showToast('Unselect',backgroundColor: AppColor.black,textColor1: AppColor.white );
       selectedServiceList?.removeWhere((element) => element?.id == data?.id);
     } else {
+      Helper().showToast('Selected',backgroundColor: AppColor.black,textColor1: AppColor.white );
       selectedServiceList?.add(data);
     }
     shopServiceModal.data?.services?.forEach((element) {
@@ -296,6 +296,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
 
     var request = {};
     request["shop_id"] = sharedPreferences.getInt('shop_id');
+    request['user_id'] =sharedPreferences.getInt("senderId")??0;
 
     var response = await http.post(
         Uri.parse(
@@ -343,8 +344,7 @@ class _SelectYourServicesState extends State<SelectYourServices> {
     var request = {};
 
     request["shop_id"] = sharedPreferences.getInt('shop_id');
-    request["work_service_id"] =
-        shopWorkServiceId;
+    request["work_service_id"] = shopWorkServiceId;
 
     var response = await http.post(
         Uri.parse(

@@ -22,10 +22,12 @@ import 'Dashboard/dashboard.dart';
 
 class BookingSummaryScreenReschedule extends StatefulWidget {
   final BookingSummaryArgument data;
+  final  String? image;
 
   const BookingSummaryScreenReschedule({
     super.key,
     required this.data,
+    this.image,
   });
 
   @override
@@ -46,6 +48,7 @@ class BookingSummaryScreenRescheduleState
 
   @override
   void initState() {
+    log('=====widget.data  BookingSummaryScreenReschedule========${widget.data.toString()}');
     bookingSummaryApi(context);
     super.initState();
   }
@@ -544,34 +547,29 @@ class BookingSummaryScreenRescheduleState
         '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
     request.fields.addAll({
       'booking_id': widget.data.bookingId
-          .toString(), //?? sharedPreferences.getInt('ubookingId').toString(),
+          .toString(),
       'date': widget.data.date.toString(),
       'time': widget.data.time.toString(),
       'specialist_id': widget.data.specialistId.toString(),
+      'service_ids': widget.data.serviceId.toString(),
       'note': widget.data.noteText.toString(),
     });
-    if (widget.data.image?.isNotEmpty ?? false) {
-      debugPrint(
-          '>>>>widget.data.image>>>>>>>>>>${widget.data.image}<<<<<<<<<<<<<<');
-
-      //
-      // request.files.add(
-      //   await http.MultipartFile.fromPath('desired_look', widget.data.image!),
-      // );
+    if (widget.image?.isNotEmpty ?? false) {
+      request.files.add(
+        await http.MultipartFile.fromPath('desired_look', widget.image!),
+      );
     }
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
 
-    setState(
-      () {},
-    );
     var result = await response.stream.bytesToString();
 
     var jsonResponse = jsonDecode(result);
-    debugPrint('>>>>>>request.fields>>>>>>>>${request.files}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
-    debugPrint('>>>>>>jsonResponse>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
+    log('>>>>>>Api>>>>>>>>${ApiService.rescheduleBooking}<<<<<<<<<<<<<<');
+    log('>>>>>>request.files>>>>>>>>${request.files.toString()}<<<<<<<<<<<<<<');
+    log('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
+    log('>>>>>>jsonResponse>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
 
     // Helper().showToast(
     //   jsonResponse["message"],

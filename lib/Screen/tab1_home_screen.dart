@@ -5,12 +5,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fademasterz/Screen/enter_your_no.dart';
 import 'package:fademasterz/Screen/notification_screen.dart';
 import 'package:fademasterz/Screen/shop_detail.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
+import 'package:fademasterz/Utils/custom_login_Dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,7 +39,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchCn = TextEditingController();
+  SharedPreferences? sharedPreferences;
   bool isDataLoading = false;
+  bool isMoreDataLoad = true;
   bool shimmerEffect = true;
   String? startYr;
   String? endYr;
@@ -47,7 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
   double? latitude;
   double? longitude;
   late LocationPermission permission;
-
   late StreamSubscription<InternetStatus> listener;
   HomePageModal homePageModal = HomePageModal();
   HomePageModal? searchHomePageModal;
@@ -239,19 +242,23 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   shimmerEffect
-                      ? Shimmer.fromColors(
-                          baseColor: AppColor.black,
-                          highlightColor: AppColor.bg,
-                          //  enabled: shimmerEffect,
-                          child: Container(
-                            height: 38,
-                            width: 38,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
+                      ? Visibility(visible: (homePageModal
+                      .data?.userDetail?.image?.isNotEmpty ??
+                      false),
+                        child: Shimmer.fromColors(
+                            baseColor: AppColor.black,
+                            highlightColor: AppColor.bg,
+                            //  enabled: shimmerEffect,
+                            child: Container(
+                              height: 38,
+                              width: 38,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        )
+                      )
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(26),
                           child: Visibility(
@@ -267,28 +274,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fit: BoxFit.cover,
                               )
 
-                              // CachedNetworkImage(
-                              //   imageUrl: ApiService.imageUrl +
-                              //       (homePageModal.data?.userDetail?.image ?? ''),
-                              //   height: 36,
-                              //   width: 36,
-                              //   fit: BoxFit.cover,
-                              //   placeholder: (
-                              //     context,
-                              //     url,
-                              //   ) =>
-                              //       const Center(
-                              //     child: SizedBox(
-                              //       height: 20,
-                              //       width: 20,
-                              //       child: CircularProgressIndicator(
-                              //         color: AppColor.yellow,
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   errorWidget: (context, url, error) =>
-                              //       const Icon(Icons.error),
-                              // ),
                               ),
                         ),
                   const SizedBox(
@@ -314,13 +299,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                   sharedPreferences = await SharedPreferences.getInstance();
+
+                   int  userId= sharedPreferences?.getInt("senderId")??0;
+                      if(userId==0) {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (ctx) {
+                            return const CustomLoginDialog();
+                          },
+                        );
+
+                      }
+                     else {
+                        Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const NotificationScreen(),
                         ),
                       );
+                      }
                     },
                     child: SvgPicture.asset(
                       AppIcon.notificationIcon,
@@ -385,12 +385,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                     onTap: () async {
                       showModalBottomSheet(
-                        isDismissible: false,
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (context) {
                           return PopScope(
-                            canPop: false,
+                            // canPop: false,
                             child: AppBottomSheet(
                               filterData: filterData,
                             ),
@@ -454,11 +453,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       desiredAccuracy: LocationAccuracy.high);
                               longitude = position.longitude;
                               latitude = position.latitude;
-                              homeDetailApi(context: context, currentPage: 1);
+                              currentPage=1;
+                              homeDetailApi(context: context, currentPage: currentPage);
                             },
                           );
                         },
-                        child: Shimmer.fromColors(
+                        child: const Center(
+                            child: CircularProgressIndicator(
+                          color: AppColor.yellow,
+                        ),),
+                        /*    Shimmer.fromColors(
                           baseColor: AppColor.black,
                           highlightColor: AppColor.gray.withOpacity(0.6),
                           //  enabled: shimmerEffect,
@@ -484,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 10,
                             ),
                           ),
-                        ),
+                        ),*/
                       ),
                     )
                   : Visibility(
@@ -512,9 +516,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               return Future.delayed(
                                 Duration.zero,
                                 () {
+                                  currentPage=1;
                                   homeDetailApi(
                                     context: context,
-                                    currentPage: 1,
+                                    currentPage: currentPage,
                                   );
                                 },
                               );
@@ -522,163 +527,113 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: ListView.separated(
                               controller: scrollController,
                               shrinkWrap: true,
-                              itemCount: (shopList
-                                  .length), //(homePageModal.data?.shops?.length ?? 0),
+                              itemCount:
+                                  (shopList.length) + (isMoreDataLoad ? 1 : 0),
                               padding:
                                   const EdgeInsets.only(top: 15, bottom: 15),
                               itemBuilder: (context, index) {
                                 //  var item = homePageModal.data?.shops?[index];
-                                var item = shopList[index];
 
-                                return InkWell(
-                                  onTap: () async {
-                                    SharedPreferences sharedPreferences =
-                                        await SharedPreferences.getInstance();
-                                    sharedPreferences.setInt(
-                                      'shop_id',
-                                      item.id!.toInt(),
-                                    );
+                                if (index < shopList.length) {
+                                  var item = shopList[index];
+                                  return InkWell(
+                                    onTap: () async {
+                                      SharedPreferences sharedPreferences =
+                                          await SharedPreferences.getInstance();
+                                      sharedPreferences.setInt(
+                                        'shop_id',
+                                        item.id!.toInt(),
+                                      );
 
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ShopDetail(),
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ShopDetail(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: AppColor.black,
+                                        borderRadius: BorderRadius.circular(
+                                          15,
+                                        ),
                                       ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: AppColor.black,
-                                      borderRadius: BorderRadius.circular(
-                                        15,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 77,
-                                          width: 76,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                10,
-                                              ),
-                                            ),
-                                          ),
-                                          child: Visibility(
-                                            visible: (item.image?.isNotEmpty ??
-                                                false),
-                                            child: CachedNetworkImage(
-                                              imageUrl: ApiService.imageUrl +
-                                                  (item.image ?? ''),
-                                              fit: BoxFit.fill,
-                                              placeholder: (
-                                                context,
-                                                url,
-                                              ) =>
-                                                  const Center(
-                                                child: SizedBox(
-                                                  height: 30,
-                                                  width: 30,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    color: AppColor.yellow,
-                                                  ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            height: 77,
+                                            width: 76,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: const BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                  10,
                                                 ),
                                               ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      const Icon(Icons.error),
                                             ),
-
-                                            // Image.network(
-                                            //   ApiService.imageUrl + (item?.image ?? ''),
-                                            //   fit: BoxFit.fill,
-                                            // ),
+                                            child: Visibility(
+                                              visible:
+                                                  (item.image?.isNotEmpty ??
+                                                      false),
+                                              child: CachedNetworkImage(
+                                                imageUrl: ApiService.imageUrl +
+                                                    (item.image ?? ''),
+                                                fit: BoxFit.fill,
+                                                placeholder: (
+                                                  context,
+                                                  url,
+                                                ) =>
+                                                    const Center(
+                                                  child: SizedBox(
+                                                    height: 30,
+                                                    width: 30,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: AppColor.yellow,
+                                                    ),
+                                                  ),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                (item.name ?? ''),
-                                                style: AppFonts.regular
-                                                    .copyWith(fontSize: 16),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    AppIcon.ratingIcon,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    (item.avgRating) == '0'
-                                                        ? AppStrings.noRatingYet
-                                                        : (item.avgRating ??
-                                                            ''),
-                                                    style: AppFonts.regular
-                                                        .copyWith(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 20,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        AppIcon.locationIcon,
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        '${item.distance ?? ' '} km',
-                                                        style: AppFonts.regular
-                                                            .copyWith(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    AppIcon.locationIcon,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      (item.address ?? ''),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (item.name ?? ''),
+                                                  style: AppFonts.regular
+                                                      .copyWith(fontSize: 16),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppIcon.ratingIcon,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      (item.avgRating) == '0'
+                                                          ? AppStrings
+                                                              .noRatingYet
+                                                          : (item.avgRating ??
+                                                              ''),
                                                       style: AppFonts.regular
                                                           .copyWith(
                                                               fontSize: 14,
@@ -686,16 +641,72 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   FontWeight
                                                                       .w500),
                                                     ),
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        )
-                                      ],
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          AppIcon.locationIcon,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          '${item.distance ?? ' '} km',
+                                                          style: AppFonts
+                                                              .regular
+                                                              .copyWith(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppIcon.locationIcon,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        (item.address ?? ''),
+                                                        style: AppFonts.regular
+                                                            .copyWith(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColor.yellow,
+                                    ),
+                                  );
+                                }
                               },
                               separatorBuilder:
                                   (BuildContext context, int index) =>
@@ -892,18 +903,20 @@ class _HomeScreenState extends State<HomeScreen> {
     required BuildContext context,
     String? searchValue,
     required int currentPage,
-  }) async {
+  }) async
+  {
     if (currentPage <= 1) {
       setLoader(true);
     }
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    /*if (latitude == null || longitude == null) {
-      await getLetLongPosition();
-    }*/
+    if(currentPage>1){
+      isMoreDataLoad=true;
+      setState((){});
+    }
+    sharedPreferences = await SharedPreferences.getInstance();
 
     var request = {};
     request['page'] = currentPage;
+    request['user_id'] =sharedPreferences?.getInt("senderId")??0;
     request["latitude"] = latitude.toString();
     request['longitude'] = longitude.toString();
     request["search"] = searchValue ?? '';
@@ -914,8 +927,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ((startYr?.isNotEmpty ?? false) && (endYr?.isNotEmpty ?? false))
             ? "$startYr" "-" "$endYr"
             : ' ';
-    // (startYr?.isNotEmpty ?? false) ?
-
     var response = await http.post(
         Uri.parse(
           ApiService.home,
@@ -925,11 +936,15 @@ class _HomeScreenState extends State<HomeScreen> {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization':
-              'Bearer ${sharedPreferences.getString("access_Token")}'
+              'Bearer ${sharedPreferences?.getString("access_Token")}'
         });
 
     if (currentPage <= 1) {
       setLoader(false);
+    }
+    if(isMoreDataLoad){
+      isMoreDataLoad=false;
+      setState((){});
     }
 
     Map<String, dynamic> jsonResponse = jsonDecode(
@@ -938,7 +953,7 @@ class _HomeScreenState extends State<HomeScreen> {
     log('>>>>>>>>Api>>>>>>${ApiService.home}<<<<<<<<<<<<<<');
     log('>>>>>>>>request>>>>>>${request.toString()}<<<<<<<<<<<<<<');
     log('>>>>>jsonResponse>>>>>>>>>$jsonResponse<<<<<<<<<<<<<<');
-    sharedPreferences.setBool("profileSetUp", true);
+    sharedPreferences?.setBool("profileSetUp", true);
     if (jsonResponse['status'] == true) {
       if (searchValue?.isNotEmpty ?? false) {
         searchHomePageModal = HomePageModal.fromJson(jsonResponse);
@@ -962,19 +977,18 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         setState(() {});
       }
-      sharedPreferences.setString(
+      sharedPreferences?.setString(
           'image', homePageModal.data?.userDetail?.image ?? '');
-      sharedPreferences.setString(
+      sharedPreferences?.setString(
           'name', homePageModal.data?.userDetail?.name ?? '');
 
-      sharedPreferences.setBool("profileSetUp", true);
+      sharedPreferences?.setBool("profileSetUp", true);
       setState(() {});
     }
-    // }
-    // catch (e) {
-    //   Helper().showToast(e.toString());
-    // }
+
   }
+
+
 
   @override
   void setState(VoidCallback fn) {

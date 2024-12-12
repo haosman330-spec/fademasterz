@@ -33,9 +33,6 @@ class ChatScreenInBox extends StatefulWidget {
   State<ChatScreenInBox> createState() => _ChatScreenInBoxState();
 }
 
-// String? pushtoken12;
-// dynamic datafirebase;
-
 class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   List<GetMessage> listt = [];
   TextEditingController chatCn = TextEditingController();
@@ -66,28 +63,21 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
   @override
   void initState() {
     getID();
+
     super.initState();
   }
 
   Future<void> getID() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString(
+        'chatReceiverId',
+        (widget.receiverId.toString()
+            ));
     senderId = sharedPreferences.getInt('senderId').toString();
 
     List<String> ids = [senderId.toString(), widget.receiverId.toString()];
     ids.sort();
     String chatRoomId = ids.join('_');
-
-    // _messagesStream = FirebaseFirestore.instance
-    //     .collection("chat_rooms")
-    //     .where(
-    //       "members",
-    //       arrayContains: widget.receiverId,
-    //     )
-    //     .orderBy('last_message_time', descending: true)
-    //     .snapshots();
-
-    //   _markMessagesAsRead();
-
     setState(() {});
   }
 
@@ -133,49 +123,22 @@ class _ChatScreenInBoxState extends State<ChatScreenInBox> {
             SizedBox(
               height: 50,
               width: 50,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          ApiService.imageUrl + (widget.receiverImage ?? ''),
-                      height: 40,
-                      width: 40,
-                      fit: BoxFit.fill,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                        value: downloadProgress.progress,
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      ApiService.imageUrl + (widget.receiverImage ?? ''),
+                  height: 40,
+                  width: 40,
+                  fit: BoxFit.fill,
+                  progressIndicatorBuilder:
+                      (context, url, downloadProgress) =>
+                          CircularProgressIndicator(
+                    value: downloadProgress.progress,
                   ),
-                  Positioned(
-                    right: 0,
-                    top: 3,
-                    // left: 15,
-                    child: Container(
-                      padding: const EdgeInsets.all(
-                        4,
-                      ),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColor.gray,
-                      ),
-                      child: Container(
-                        height: 8,
-                        width: 7,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error),
+                ),
               ),
             ),
             const SizedBox(

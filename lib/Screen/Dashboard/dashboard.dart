@@ -5,9 +5,11 @@ import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/app_assets.dart';
 import '../../Utils/app_string.dart';
+import '../../Utils/custom_login_Dialog.dart';
 import '../ChatScreen/chat_service.dart';
 import '../tab1_home_screen.dart';
 import '../tab2_my_booking_screen.dart';
@@ -31,9 +33,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   List<Widget> pages = [];
   InternetStatus? _connectionStatus;
   late StreamSubscription<InternetStatus> listener;
+  int? userId;
+  SharedPreferences? sharedPreferences;
+
+  localData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+
+    userId = sharedPreferences?.getInt("senderId") ?? 0;
+  }
 
   @override
   void initState() {
+    localData();
     ChatService.getSelfInfo();
     // TODO: implement initState
 
@@ -95,7 +106,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     pages = [
       const HomeScreen(),
       const MyBookingScreen(),
-      //   const AllChatListScreen(),
       const ChatListScreen(),
       ProfileScreen(
         onTap: (value) {
@@ -110,15 +120,42 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   void onBottomTap(int value) {
-    setState(() {
       selectIndex = value;
-    });
+    setState(() {});
   }
 
   @override
   void dispose() {
     super.dispose();
     listener.cancel();
+  }
+
+  onTabTap(int value){
+    debugPrint('<<<<value<<<<<<<${value}>>>>>>>>>>>>>');
+    debugPrint('<<<<userId<<<<<<<${userId}>>>>>>>>>>>>>');
+    debugPrint('<<<<senderId<<<<<<<${sharedPreferences?.getInt('senderId')}>>>>>>>>>>>>>');
+
+    if(userId == 0 && (value == 1 || value == 2)){
+      if (userId == 0) {
+        showDialog(context: context, builder: (_) => const CustomLoginDialog());
+      }
+    }else{
+      selectIndex = value;
+    }
+
+    /*
+    if (value == 1 || value == 2) {
+      if (userId == 0) {
+        showDialog(context: context, builder: (_) => const CustomLoginDialog());
+      } else {
+        selectIndex = value;
+      }
+    } else {
+      selectIndex = value;
+    }
+
+     */
+    setState(() {});
   }
 
   @override
@@ -150,11 +187,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 child: InkWell(
                   highlightColor: Colors.transparent,
                   onTap: () {
-                    setState(
-                      () {
-                        selectIndex = 0;
-                      },
-                    );
+                    onTabTap(0);
                   },
                   child: Visibility(
                     visible: selectIndex == 0,
@@ -211,11 +244,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 flex: 1,
                 child: InkWell(
                   onTap: () {
-                    setState(
-                      () {
-                        selectIndex = 1;
-                      },
-                    );
+                    onTabTap(1);
                   },
                   child: Visibility(
                     visible: selectIndex == 1,
@@ -263,11 +292,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 flex: 1,
                 child: InkWell(
                   onTap: () {
-                    setState(
-                      () {
-                        selectIndex = 2;
-                      },
-                    );
+                    onTabTap(2);
                   },
                   child: Visibility(
                     visible: selectIndex == 2,
@@ -311,11 +336,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 flex: 1,
                 child: InkWell(
                   onTap: () {
-                    setState(
-                      () {
-                        selectIndex = 3;
-                      },
-                    );
+                    onTabTap(3);
                   },
                   child: Visibility(
                     visible: selectIndex == 3,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fademasterz/Model/shop_detail_model.dart';
 import 'package:fademasterz/Utils/app_color.dart';
 import 'package:flutter/material.dart';
@@ -70,42 +71,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           borderRadius: BorderRadius.circular(16)),
                       child: GestureDetector(
                         onTap: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return Dialog(
-                                backgroundColor: Colors.transparent,
-                                child: Stack(children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 200,
-                                    child: Image.network(
-                                      ApiService.imageUrl +
-                                          (widget.gallery?[index].image ?? ''),
-                                      //     images[index],
-
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    child: SizedBox(
-                                      height: 21,
-                                      width: 21,
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: SvgPicture.asset(
-                                            AppIcon.cancelIcon),
-                                      ),
-                                    ),
-                                  )
-                                ]),
-                              );
-                            },
-                          );
+                          fullImage(context,
+                              ApiService.imageUrl +
+                                  (widget.gallery?[index].image ?? ''));
                         },
                         child: Image.network(
                           ApiService.imageUrl +
@@ -124,6 +92,50 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  fullImage(BuildContext context, imageUrl) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Stack(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 250,
+                child: ClipRRect(
+                  clipBehavior: Clip.antiAlias,
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
+                    imageUrl: imageUrl,
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: SvgPicture.asset(
+                      AppIcon.cancelIcon,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }
