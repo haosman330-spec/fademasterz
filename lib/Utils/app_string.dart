@@ -110,8 +110,9 @@ class AppStrings {
   static String successfulReschedule =
       'Your booking has been  reschedule successfully done';
   static String rateNow = 'Rate Now';
+  //static String locationNearest = 'We need location access to find the nearest barber/salon around you.';
   static String locationNearest =
-      'We need location access to find the nearest barber/salon around you.';
+      'App required your current location to see near shop.';
   static String rating = 'Rating';
   static String customerService = 'Customer Service';
   static String submit = 'Submit';
@@ -124,7 +125,8 @@ class AppStrings {
   static String pleaseEnterOtp = 'Please enter otp';
   static String pleaseEnterConfirmOtp = 'Please enter confirm otp';
   static String pleaseEnterMobileNo = 'Please Enter Mobile No.';
-  static String pleaseEnterMobileNo10Digit = 'Please Enter Max 10 Digit Mobile No.';
+  static String pleaseEnterMobileNo10Digit =
+      'Please Enter Max 10 Digit Mobile No.';
   static String noAvailableSpecialist = 'No Available Specialist';
   static String noTimeSlotFound = 'No TimeSlot Found';
   static String noSpecialistFound = 'No Specialist Found';
@@ -140,5 +142,4 @@ class AppStrings {
 
   static String noShopAvailable = 'No Shop Available';
   static String skip = 'Skip';
-
 }

@@ -660,7 +660,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   }
 
   Future<void> getBookingListApi(BuildContext context, int currentPage) async {
-    setLoader(true);
+    if(currentPage<=1) {
+      setLoader(true);
+    }
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
     // if (context.mounted) {
@@ -681,7 +683,9 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
           'Authorization':
               'Bearer ${sharedPreferences.getString("access_Token")}'
         });
-    setLoader(false);
+    if(currentPage<=1) {
+      setLoader(false);
+    }
 
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,

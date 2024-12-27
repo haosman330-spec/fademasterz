@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.of(ctx).pop();
                       },
                       height: 48,
-                      title: AppStrings.enableLocation,
+                      title: AppStrings.continueString,
                       style: AppFonts.blackFont
                           .copyWith(fontWeight: FontWeight.w500),
                       radius: 39,
@@ -151,17 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    /*        MyAppButton(
-                      onPress: () {
-                        Navigator.of(ctx).pop();
-                      },
-                      height: 48,
-                      title: AppStrings.cancel,
-                      style: AppFonts.blackFont
-                          .copyWith(fontWeight: FontWeight.w500),
-                      radius: 39,
-                      color: const Color(0xffFFFBF0),
-                    ),*/
+
                   ],
                 ),
               ),

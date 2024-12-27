@@ -42,14 +42,16 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>Need microphone access for uploading audio</string>
 	<key>NSCameraUsageDescription</key>
 	<string>App required to access your camera to capture your profile picture.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app required your current location.</string>
+	<string>App required your current location to see near shop.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app required your current location.</string>
+	<string>App required your current location to see near shop.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app required your current location.</string>
+	<string>App required your current location to see near shop.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App required to access your photo library to pick your profile image.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
