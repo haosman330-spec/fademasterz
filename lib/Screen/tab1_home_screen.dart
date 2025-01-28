@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fademasterz/Screen/enter_your_no.dart';
 import 'package:fademasterz/Screen/notification_screen.dart';
 import 'package:fademasterz/Screen/shop_detail.dart';
 import 'package:fademasterz/Utils/app_assets.dart';
@@ -75,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
       longitude = position.longitude;
       latitude = position.latitude;
 
-      homeDetailApi(context: context, currentPage: 1);
+      homeDetailApi(context: context, currentPage: 1,check: true);
 
       // return;
     } else {
@@ -159,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       );
-      //homeDetailApi(context: context, currentPage: 1);
+
     }
   }
 
@@ -190,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
     latitude = position.latitude;
 
     if (longitude != null) {
-      homeDetailApi(context: context, currentPage: 1);
+      homeDetailApi(context: context, currentPage: 1,check: true);
     }
   }
 
@@ -210,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollController.position.pixels) &&
           (currentPage < totalPage)) {
         currentPage++;
-        homeDetailApi(context: context, currentPage: currentPage);
+        homeDetailApi(context: context, currentPage: currentPage,check: true);
         setState(() {});
       }
     });
@@ -338,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           homeDetailApi(
                               context: context,
                               searchValue: value,
-                              currentPage: 1);
+                              currentPage: 1,check: false);
                           setState(() {});
                           // }
                         },
@@ -397,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           availability = value?.availability;
                           serviceId = value?.serviceId;
                           debugPrint('>>>>>>>>>>>>>>$serviceId<<<<<<<<<<<<<<');
-                          await homeDetailApi(context: context, currentPage: 1);
+                          await homeDetailApi(context: context, currentPage: 1,check: true);
                         }
                       });
                       // return const AppBottomSheet();
@@ -444,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               longitude = position.longitude;
                               latitude = position.latitude;
                               currentPage=1;
-                              homeDetailApi(context: context, currentPage: currentPage);
+                              homeDetailApi(context: context, currentPage: currentPage,check: true);
                             },
                           );
                         },
@@ -509,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   currentPage=1;
                                   homeDetailApi(
                                     context: context,
-                                    currentPage: currentPage,
+                                    currentPage: currentPage,check: true
                                   );
                                 },
                               );
@@ -893,10 +892,11 @@ class _HomeScreenState extends State<HomeScreen> {
     required BuildContext context,
     String? searchValue,
     required int currentPage,
+    bool? check,
   }) async
   {
     if (currentPage <= 1) {
-      setLoader(true);
+      setLoader(check!);
     }
     if(currentPage>1){
       isMoreDataLoad=true;

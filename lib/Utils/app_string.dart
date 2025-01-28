@@ -142,4 +142,5 @@ class AppStrings {
 
   static String noShopAvailable = 'No Shop Available';
   static String skip = 'Skip';
+  static String noInternetPleaseCheckYourInterNetConnection = 'No Internet Please Check Your InterNet Connection';
 }

@@ -21,7 +21,6 @@ import '../../Utils/app_fonts.dart';
 import '../../Utils/app_string.dart';
 import '../ApiService/api_service.dart';
 
-
 import '../Model/booking_detail_model.dart';
 import '../Model/booking_summary_argument_model.dart';
 import '../Model/choose_availability_model.dart';
@@ -167,390 +166,386 @@ class _ChooseAvailabilityBarberRescheduleState
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    9,
-                  ),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: SfDateRangePicker(
-                  //    view: DateRangePickerView.month,
-                  onSubmit: (p0) => _onSelectionChanged,
-                  onSelectionChanged: _onSelectionChanged,
-                  selectionMode: DateRangePickerSelectionMode.single,
-                  backgroundColor: AppColor.black,
-                  enablePastDates: false,
-                  initialDisplayDate: DateTime.now(),
-                  monthViewSettings: const DateRangePickerMonthViewSettings(
-                    dayFormat: 'EEE',
-                    weekNumberStyle: DateRangePickerWeekNumberStyle(
-                      textStyle: AppFonts.appText,
-                    ),
-                    viewHeaderStyle: DateRangePickerViewHeaderStyle(
-                      textStyle: AppFonts.normalText,
-                    ),
-                  ),
-                  monthCellStyle: DateRangePickerMonthCellStyle(
-                      textStyle: AppFonts.normalText,
-                      todayTextStyle: AppFonts.appText,
-                      weekendTextStyle: AppFonts.yellowFont,
-                      blackoutDatesDecoration: const BoxDecoration(),
-                      leadingDatesTextStyle: AppFonts.normalText,
-                      disabledDatesTextStyle:
-                          AppFonts.normalText.copyWith(color: AppColor.gray),
-                      trailingDatesTextStyle: AppFonts.appText),
-                  showNavigationArrow: true,
-                  yearCellStyle: const DateRangePickerYearCellStyle(
-                    disabledDatesTextStyle: AppFonts.appText,
-                    leadingDatesTextStyle: AppFonts.appText,
-                  ),
-                  todayHighlightColor: AppColor.yellow,
-                  headerStyle: const DateRangePickerHeaderStyle(
-                    backgroundColor: AppColor.yellow,
-                    textStyle: AppFonts.blackFont,
-                  ),
-                  selectionColor: AppColor.yellow,
-                  initialSelectedDate: DateTime.now(),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  9,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  color: AppColor.black,
+              clipBehavior: Clip.antiAlias,
+              child: SfDateRangePicker(
+                //    view: DateRangePickerView.month,
+                onSubmit: (p0) => _onSelectionChanged,
+                onSelectionChanged: _onSelectionChanged,
+                selectionMode: DateRangePickerSelectionMode.single,
+                backgroundColor: AppColor.black,
+                enablePastDates: false,
+                initialDisplayDate: DateTime.now(),
+                monthViewSettings: const DateRangePickerMonthViewSettings(
+                  dayFormat: 'EEE',
+                  weekNumberStyle: DateRangePickerWeekNumberStyle(
+                    textStyle: AppFonts.appText,
+                  ),
+                  viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                    textStyle: AppFonts.normalText,
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 11, vertical: 10),
-                      child: Text(
-                        AppStrings.chooseYourSpecialists,
-                        style: AppFonts.regular.copyWith(fontSize: 16),
-                      ),
+                monthCellStyle: DateRangePickerMonthCellStyle(
+                    textStyle: AppFonts.normalText,
+                    todayTextStyle: AppFonts.appText,
+                    weekendTextStyle: AppFonts.yellowFont,
+                    blackoutDatesDecoration: const BoxDecoration(),
+                    leadingDatesTextStyle: AppFonts.normalText,
+                    disabledDatesTextStyle:
+                        AppFonts.normalText.copyWith(color: AppColor.gray),
+                    trailingDatesTextStyle: AppFonts.appText),
+                showNavigationArrow: true,
+                yearCellStyle: const DateRangePickerYearCellStyle(
+                  disabledDatesTextStyle: AppFonts.appText,
+                  leadingDatesTextStyle: AppFonts.appText,
+                ),
+                todayHighlightColor: AppColor.yellow,
+                headerStyle: const DateRangePickerHeaderStyle(
+                  backgroundColor: AppColor.yellow,
+                  textStyle: AppFonts.blackFont,
+                ),
+                selectionColor: AppColor.yellow,
+                initialSelectedDate: DateTime.now(),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9),
+                color: AppColor.black,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 11, vertical: 10),
+                    child: Text(
+                      AppStrings.chooseYourSpecialists,
+                      style: AppFonts.regular.copyWith(fontSize: 16),
                     ),
-                    SizedBox(
-                      height: 110,
-                      child: Visibility(
-                        visible: (chooseAvailabilityResponse
-                                .data?.availableSpecialist?.isNotEmpty ??
-                            false),
-                        replacement: Center(
-                          child: Text(
-                            AppStrings.noSpecialistFound,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
+                  ),
+                  SizedBox(
+                    height: 110,
+                    child: Visibility(
+                      visible: (chooseAvailabilityResponse
+                              .data?.availableSpecialist?.isNotEmpty ??
+                          false),
+                      replacement: Center(
+                        child: Text(
+                          AppStrings.noSpecialistFound,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
                           ),
                         ),
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: (chooseAvailabilityResponse
-                                  .data?.availableSpecialist?.length ??
-                              0),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 11, vertical: 5),
-                          itemBuilder: (BuildContext context, int index) {
-                            speciaList = chooseAvailabilityResponse
-                                .data?.availableSpecialist?[index];
-                            return InkWell(
-                              onTap: () async {
-                                selectIndex = index;
-
-                                specialistId = (speciaList?.id);
-
-                                await _selectSpecialistTimeApi(context);
-
-                                setState(
-                                  () {},
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        //  clipBehavior: Clip.antiAlias,
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            width: 3,
-                                            color: selectIndex == index
-                                                ? AppColor.yellow
-                                                : Colors.transparent,
-                                          ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          child: Image.network(
-                                            ApiService.imageUrl +
-                                                (speciaList?.image ?? ''),
-                                            width: 60,
-                                            height: 60,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        (speciaList?.name ?? ''),
-                                        style: AppFonts.yellowFont.copyWith(
-                                          color: selectIndex == index
-                                              ? null
-                                              : AppColor.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const SizedBox(
-                              width: 15,
-                            );
-                          },
-                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  color: AppColor.black,
-                ),
-                padding: const EdgeInsets.only(bottom: 9),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 11, vertical: 9),
-                      child: Text(
-                        AppStrings.availableTime,
-                        style: AppFonts.regular.copyWith(fontSize: 16),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 35,
-                      child: Visibility(
-                        visible: (chooseAvailabilityResponse
-                                .data?.slots?.isNotEmpty ??
-                            false),
-                        replacement: Center(
-                          child: Text(
-                            AppStrings.noTimeSlotFound,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount:
-                              (selectSpecialistTimeResponse.data?.length ?? 0),
-                          addSemanticIndexes: true,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            var timeSlot =
-                                selectSpecialistTimeResponse.data?[index];
-                            return InkWell(
-                              onTap: () {
-                                debugPrint(
-                                    '>>>>>>>>>>>>>>${selectSpecialistTimeResponse.data?[index].time}<<<<<<<<<<<<<<');
-                                timeSelectIndex = index;
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: (chooseAvailabilityResponse
+                                .data?.availableSpecialist?.length ??
+                            0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 11, vertical: 5),
+                        itemBuilder: (BuildContext context, int index) {
+                          speciaList = chooseAvailabilityResponse
+                              .data?.availableSpecialist?[index];
+                          return InkWell(
+                            onTap: () async {
+                              selectIndex = index;
 
-                                setState(
-                                  () {},
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 18,
-                                ),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: timeSelectIndex == index
-                                      ? AppColor.yellow
-                                      : Colors.transparent,
-                                  border: Border.all(color: AppColor.yellow),
-                                  borderRadius: BorderRadius.circular(19),
-                                ),
-                                //  margin: const EdgeInsets.all(5),
-                                child: Text((timeSlot?.time ?? ''),
-                                    style: AppFonts.yellowFont.copyWith(
-                                        color: timeSelectIndex == index
-                                            ? AppColor.black1
-                                            : null)),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const SizedBox(
-                              width: 15,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColor.black,
-                  borderRadius: BorderRadius.circular(9),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 9,
-                  vertical: 13,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          AppStrings.desiredLook,
-                          style: AppFonts.regular.copyWith(fontSize: 16),
-                        ),
-                        const Spacer(),
-                        const Text(
-                          AppStrings.optional,
-                          style: AppFonts.yellowFont,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 9,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width,
-                      height: 106,
-                      child: DottedBorder(
-                        borderType: BorderType.RRect,
-                        color: AppColor.yellow,
-                        dashPattern: const [5, 2],
-                        strokeWidth: 2,
-                        radius: const Radius.circular(5),
-                        child: Center(
-                          child: (_imageFile?.path.isNotEmpty ?? false)
-                              ? Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      11,
-                                    ),
-                                  ),
-                                  clipBehavior: Clip.antiAlias,
-                                  child: Image.file(
-                                    _imageFile ?? File('path'),
-                                    fit: BoxFit.fill,
-                                  ),
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                              specialistId = (speciaList?.id);
+
+                              await _selectSpecialistTimeApi(context);
+
+                              setState(
+                                () {},
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        showOptions();
-                                      },
-                                      child: (widget.data?.desiredLook
-                                                  ?.isNotEmpty ??
-                                              false)
-                                          ? Image.network(
-                                              height: 70,
-                                              width: 70,
-                                              fit: BoxFit.cover,
-                                              '${ApiService.imageUrl}${widget.data?.desiredLook.toString()}')
-                                          : SvgPicture.asset(
-                                              AppIcon.cameraIcon1),
+                                    Container(
+                                      //  clipBehavior: Clip.antiAlias,
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 3,
+                                          color: selectIndex == index
+                                              ? AppColor.yellow
+                                              : Colors.transparent,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Image.network(
+                                          ApiService.imageUrl +
+                                              (speciaList?.image ?? ''),
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
                                     ),
-                                    const Text(
-                                      AppStrings.uploadImage,
-                                      style: AppFonts.yellowFont,
-                                    )
+                                    Text(
+                                      (speciaList?.name ?? ''),
+                                      style: AppFonts.yellowFont.copyWith(
+                                        color: selectIndex == index
+                                            ? null
+                                            : AppColor.white,
+                                      ),
+                                    ),
                                   ],
                                 ),
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(
+                            width: 15,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9),
+                color: AppColor.black,
+              ),
+              padding: const EdgeInsets.only(bottom: 9),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 11, vertical: 9),
+                    child: Text(
+                      AppStrings.availableTime,
+                      style: AppFonts.regular.copyWith(fontSize: 16),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 35,
+                    child: Visibility(
+                      visible:
+                          (chooseAvailabilityResponse.data?.slots?.isNotEmpty ??
+                              false),
+                      replacement: Center(
+                        child: Text(
+                          AppStrings.noTimeSlotFound,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColor.black,
-                  borderRadius: BorderRadius.circular(9),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 9,
-                  vertical: 13,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          AppStrings.note,
-                          style: AppFonts.regular.copyWith(fontSize: 16),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount:
+                            (selectSpecialistTimeResponse.data?.length ?? 0),
+                        addSemanticIndexes: true,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
                         ),
-                        const Spacer(),
-                        const Text(
-                          AppStrings.optional,
-                          style: AppFonts.yellowFont,
-                        ),
-                      ],
+                        itemBuilder: (BuildContext context, int index) {
+                          var timeSlot =
+                              selectSpecialistTimeResponse.data?[index];
+                          return InkWell(
+                            onTap: () {
+                              debugPrint(
+                                  '>>>>>>>>>>>>>>${selectSpecialistTimeResponse.data?[index].time}<<<<<<<<<<<<<<');
+                              timeSelectIndex = index;
+
+                              setState(
+                                () {},
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                              ),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: timeSelectIndex == index
+                                    ? AppColor.yellow
+                                    : Colors.transparent,
+                                border: Border.all(color: AppColor.yellow),
+                                borderRadius: BorderRadius.circular(19),
+                              ),
+                              //  margin: const EdgeInsets.all(5),
+                              child: Text((timeSlot?.time ?? ''),
+                                  style: AppFonts.yellowFont.copyWith(
+                                      color: timeSelectIndex == index
+                                          ? AppColor.black1
+                                          : null)),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return const SizedBox(
+                            width: 15,
+                          );
+                        },
+                      ),
                     ),
-                    const SizedBox(
-                      height: 9,
-                    ),
-                    CustomTextField(
-                      controller: noteCn,
-                      hintText: 'Write a message !',
-                      maxLines: 4,
-                      textInputAction: TextInputAction.done,
-                      fillColor: const Color(0xff333333),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 38,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColor.black,
+                borderRadius: BorderRadius.circular(9),
               ),
-            ],
-          ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 9,
+                vertical: 13,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        AppStrings.desiredLook,
+                        style: AppFonts.regular.copyWith(fontSize: 16),
+                      ),
+                      const Spacer(),
+                      const Text(
+                        AppStrings.optional,
+                        style: AppFonts.yellowFont,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 9,
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    height: 106,
+                    child: DottedBorder(
+                      borderType: BorderType.RRect,
+                      color: AppColor.yellow,
+                      dashPattern: const [5, 2],
+                      strokeWidth: 2,
+                      radius: const Radius.circular(5),
+                      child: Center(
+                        child: (_imageFile?.path.isNotEmpty ?? false)
+                            ? Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    11,
+                                  ),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Image.file(
+                                  _imageFile ?? File('path'),
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      showOptions();
+                                    },
+                                    child: (widget.data?.desiredLook
+                                                ?.isNotEmpty ??
+                                            false)
+                                        ? Image.network(
+                                            height: 70,
+                                            width: 70,
+                                            fit: BoxFit.cover,
+                                            '${ApiService.imageUrl}${widget.data?.desiredLook.toString()}')
+                                        : SvgPicture.asset(AppIcon.cameraIcon1),
+                                  ),
+                                  const Text(
+                                    AppStrings.uploadImage,
+                                    style: AppFonts.yellowFont,
+                                  )
+                                ],
+                              ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColor.black,
+                borderRadius: BorderRadius.circular(9),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 9,
+                vertical: 13,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        AppStrings.note,
+                        style: AppFonts.regular.copyWith(fontSize: 16),
+                      ),
+                      const Spacer(),
+                      const Text(
+                        AppStrings.optional,
+                        style: AppFonts.yellowFont,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 9,
+                  ),
+                  CustomTextField(
+                    controller: noteCn,
+                    hintText: 'Write a message !',
+                    maxLines: 4,
+                    textInputAction: TextInputAction.done,
+                    fillColor: const Color(0xff333333),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 38,
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: Padding(
@@ -594,10 +589,12 @@ class _ChooseAvailabilityBarberRescheduleState
                 date: date,
                 shopId: widget.data?.shopId.toString(),
                 price: widget.data?.subTotal.toString(),
-                noteText: (widget.data?.note?.isEmpty ?? false)?noteCn.text.trim(): widget.data?.note,
+                noteText: (widget.data?.note?.isEmpty ?? false)
+                    ? noteCn.text.trim()
+                    : widget.data?.note,
                 specialistId: specialistId.toString(),
                 serviceId: widget.data?.serviceIds,
-                image: (widget.data?.desiredLook ),
+                image: (widget.data?.desiredLook),
                 bookingStatus: widget.data?.bookingStatus,
                 bookingId: widget.data?.id,
               );
@@ -605,7 +602,8 @@ class _ChooseAvailabilityBarberRescheduleState
                 context,
                 MaterialPageRoute(
                   builder: (context) => BookingSummaryScreenReschedule(
-                    data: data,image:image ,
+                    data: data,
+                    image: image,
                   ),
                 ),
               );

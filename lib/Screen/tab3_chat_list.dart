@@ -38,10 +38,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
   void initState() {
     super.initState();
     getUserId();
-    // APIs.getSelfInfo();
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) => profileGet(context));
-  }
+    }
 
   getUserId() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -228,7 +225,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                           shape: BoxShape.circle,
                                           color: AppColor.yellow),
                                     )
-                                  : SizedBox.shrink(),
+                                  : const SizedBox.shrink(),
                             ],
                           )
                         ],

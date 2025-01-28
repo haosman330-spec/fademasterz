@@ -18,12 +18,10 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+      name: "fade-masterz",
+      options: DefaultFirebaseOptions.currentPlatform);
 
-  // await FirebaseAppCheck.instance.activate(
-  //     androidProvider: AndroidProvider.playIntegrity,
-  //     appleProvider: AppleProvider.debug);
+
   await Upgrader.clearSavedSettings();
 
   FirebaseMessaging.onBackgroundMessage(_backgroundHandler);

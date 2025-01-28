@@ -377,7 +377,6 @@ class _ShopDetailState extends State<ShopDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            //height: 250,
             child: Stack(
               children: [
                 Visibility(
@@ -817,7 +816,7 @@ class _ShopDetailState extends State<ShopDetail> {
                 barrierDismissible: false,
                 context: context,
                 builder: (ctx) {
-                  return CustomLoginDialog();
+                  return const CustomLoginDialog();
                 },
               );
             }
@@ -894,7 +893,7 @@ class _ShopDetailState extends State<ShopDetail> {
       response.body,
     );
     log('>>>>>jsonResponse>>>>>>>>>${ApiService.shopDetail}<<<<<<<<<<<<<<');
-    log('>>>>>request>>>>>>>>>${request}<<<<<<<<<<<<<<');
+    log('>>>>>request>>>>>>>>>$request<<<<<<<<<<<<<<');
     log('>>>>>jsonResponse>>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse['status'] == true) {
       shopDetailModal = ShopDetailModal.fromJson(jsonResponse);

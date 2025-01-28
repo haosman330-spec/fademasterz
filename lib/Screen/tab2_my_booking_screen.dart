@@ -5,16 +5,12 @@ import 'package:fademasterz/Utils/app_color.dart';
 import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:fademasterz/Utils/app_string.dart';
 import 'package:fademasterz/Utils/custom_app_bar.dart';
-import 'package:fademasterz/Utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
-
 import '../ApiService/api_service.dart';
 import '../Model/my_booking_model.dart';
 import '../Utils/app_assets.dart';
@@ -52,7 +48,6 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    // initConnectivity();
     pagination();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       getBookingListApi(context, 1);
@@ -76,13 +71,6 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
     });
   }
 
-  static Future<bool> internetConnected() async {
-    bool isConnected = await InternetConnection().hasInternetAccess;
-    if (!isConnected) {
-      Helper().showToast("No Internet Connection");
-    }
-    return isConnected;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,33 +178,8 @@ class _MyBookingScreenState extends State<MyBookingScreen> {
             Expanded(
               child: Visibility(
                 visible: !showLoader,
-                replacement: Center(child: CircularProgressIndicator(color: AppColor.yellow,)),
-                        /*      Shimmer.fromColors(
-                  baseColor: AppColor.black,
-                  highlightColor: AppColor.gray.withOpacity(0.6),
-                  //  enabled: shimmerEffect,
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: 4,
-                    padding: const EdgeInsets.only(top: 15, bottom: 15),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 150.0,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              15,
-                            ),
-                            color: Colors.white),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(
-                      height: 10,
-                    ),
-                  ),
-                ),*/
-              
+                replacement: const Center(child: CircularProgressIndicator(color: AppColor.yellow,)),
+
                 child: Visibility(
                   visible: isVisible == true,
                   replacement: Visibility(

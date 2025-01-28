@@ -35,14 +35,7 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
   bool isLoading = false;
   willPopScop() {
     Navigator.of(context).pop();
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const DashBoardScreen(
-    //         selectIndex: 1,
-    //       ),
-    //     ),
-    //     (route) => false);
+
   }
 
   void setLoader(bool value) {
@@ -102,218 +95,215 @@ class _CancelledBookingScreenState extends State<CancelledBookingScreen> {
           ),
         ),
         child: SingleChildScrollView(
-          controller: scrollController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 15,
-            ),
-            child: Visibility(
-              visible: (cancelledList.isNotEmpty),
-              replacement: Container(
-                height: MediaQuery.of(context).size.height / 1.3,
-                alignment: Alignment.center,
-                child: const Text(
-                  'No Cancelled Booking',
-                  style: AppFonts.normalText,
-                ),
+          controller: scrollController, padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
+          child: Visibility(
+            visible: (cancelledList.isNotEmpty),
+            replacement: Container(
+              height: MediaQuery.of(context).size.height / 1.3,
+              alignment: Alignment.center,
+              child: const Text(
+                'No Cancelled Booking',
+                style: AppFonts.normalText,
               ),
-              child: ListView.separated(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: cancelledList.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (BuildContext context, int index) {
-                  // var cancelledBooking =
-                  //     cancelledBookingResponse?.data?.cancelBooking?[index];
-                  var cancelledBooking = cancelledList[index];
+            ),
+            child: ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: cancelledList.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext context, int index) {
+                // var cancelledBooking =
+                //     cancelledBookingResponse?.data?.cancelBooking?[index];
+                var cancelledBooking = cancelledList[index];
 
-                  return DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 2),
+                        child: Row(
+                          children: [
+                            Text(
+                              '#${cancelledBooking.bookingId ?? ''}',
+                              style: AppFonts.yellowFont.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            SvgPicture.asset(AppIcon.timerIcon),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              (cancelledBooking.startTime ?? ''),
+                              style: AppFonts.yellowFont,
+                            ),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            SvgPicture.asset(
+                              AppIcon.calenderIcon,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              DateFormat('dd MMM yyyy').format(
+                                (cancelledBooking.date ?? DateTime.now()),
+                              ),
+                              style: AppFonts.yellowFont,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 2),
-                          child: Row(
-                            children: [
-                              Text(
-                                '#${cancelledBooking.bookingId ?? ''}',
-                                style: AppFonts.yellowFont.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const Spacer(),
-                              SvgPicture.asset(AppIcon.timerIcon),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                (cancelledBooking.startTime ?? ''),
-                                style: AppFonts.yellowFont,
-                              ),
-                              const SizedBox(
-                                width: 12,
-                              ),
-                              SvgPicture.asset(
-                                AppIcon.calenderIcon,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                DateFormat('dd MMM yyyy').format(
-                                  (cancelledBooking.date ?? DateTime.now()),
-                                ),
-                                style: AppFonts.yellowFont,
-                              ),
-                            ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                        ),
+                        child: Divider(
+                          color: AppColor.gray.withOpacity(
+                            .49,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
-                          child: Divider(
-                            color: AppColor.gray.withOpacity(
-                              .49,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 77,
+                              width: 76,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  11,
+                                ),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Image.network(
+                                ApiService.imageUrl +
+                                    (cancelledBooking.shopImage ?? ''),
+                                // (cancelledBookingResponse?.data
+                                //         ?.cancelBooking?[index].shopImage
+                                //         .toString() ??
+                                //     ''),
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 77,
-                                width: 76,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    11,
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    (cancelledBooking.shopName.toString()),
+                                    style: AppFonts.regular.copyWith(
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: Image.network(
-                                  ApiService.imageUrl +
-                                      (cancelledBooking.shopImage ?? ''),
-                                  // (cancelledBookingResponse?.data
-                                  //         ?.cancelBooking?[index].shopImage
-                                  //         .toString() ??
-                                  //     ''),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      (cancelledBooking.shopName.toString()),
-                                      style: AppFonts.regular.copyWith(
-                                        fontSize: 16,
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppIcon.locationIcon,
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          AppIcon.locationIcon,
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            (cancelledBooking.shopAddress
-                                                .toString()),
-                                            style: AppFonts.regular.copyWith(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          (cancelledBooking.shopAddress
+                                              .toString()),
+                                          style: AppFonts.regular.copyWith(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      '£  ${cancelledBooking.total ?? ''}',
-                                      style: AppFonts.yellowFont,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    '£  ${cancelledBooking.total ?? ''}',
+                                    style: AppFonts.yellowFont,
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            cancelBookingId = cancelledBooking.id;
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          cancelBookingId = cancelledBooking.id;
 
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CancelledBookingDetail(
-                                  cancelBookingId: cancelBookingId,
-                                ),
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CancelledBookingDetail(
+                                cancelBookingId: cancelBookingId,
                               ),
-                            );
-                          },
-                          child: Align(
+                            ),
+                          );
+                        },
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 28,
                             alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: 28,
-                              alignment: Alignment.bottomCenter,
-                              decoration: const BoxDecoration(
-                                color: AppColor.yellow,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(
-                                    10,
-                                  ),
-                                  bottomRight: Radius.circular(
-                                    10,
-                                  ),
+                            decoration: const BoxDecoration(
+                              color: AppColor.yellow,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(
+                                  10,
+                                ),
+                                bottomRight: Radius.circular(
+                                  10,
                                 ),
                               ),
-                              child: Text(
-                                AppStrings.viewDetails,
-                                style: AppFonts.blackFont.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColor.black1,
-                                ),
+                            ),
+                            child: Text(
+                              AppStrings.viewDetails,
+                              style: AppFonts.blackFont.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: AppColor.black1,
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const SizedBox(
-                  height: 10,
-                ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(
+                height: 10,
               ),
             ),
           ),

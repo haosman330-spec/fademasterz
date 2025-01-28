@@ -33,7 +33,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -42,54 +41,53 @@ class _GalleryScreenState extends State<GalleryScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              Visibility(
-                visible: (widget.gallery?.isNotEmpty ?? false),
-                replacement: Center(
-                  child: Text(
-                    'No Gallery Image',
-                    style: AppFonts.appText.copyWith(fontSize: 14),
-                  ),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            Visibility(
+              visible: (widget.gallery?.isNotEmpty ?? false),
+              replacement: Center(
+                child: Text(
+                  'No Gallery Image',
+                  style: AppFonts.appText.copyWith(fontSize: 14),
                 ),
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  shrinkWrap: true,
-                  itemCount: widget.gallery?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16)),
-                      child: GestureDetector(
-                        onTap: () {
-                          fullImage(context,
-                              ApiService.imageUrl +
-                                  (widget.gallery?[index].image ?? ''));
-                        },
-                        child: Image.network(
-                          ApiService.imageUrl +
-                              (widget.gallery?[index].image ?? ''),
-                          //     images[index],
-                          width: 103,
-                          height: 104,
-                          fit: BoxFit.fill,
-                        ),
+              ),
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                shrinkWrap: true,
+                itemCount: widget.gallery?.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    clipBehavior: Clip.antiAlias,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(16)),
+                    child: GestureDetector(
+                      onTap: () {
+                        fullImage(
+                            context,
+                            ApiService.imageUrl +
+                                (widget.gallery?[index].image ?? ''));
+                      },
+                      child: Image.network(
+                        ApiService.imageUrl +
+                            (widget.gallery?[index].image ?? ''),
+                        //     images[index],
+                        width: 103,
+                        height: 104,
+                        fit: BoxFit.fill,
                       ),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
         ),
       ),
     );

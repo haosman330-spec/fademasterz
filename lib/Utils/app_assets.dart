@@ -1,17 +1,12 @@
 class AppAssets {
   static const String splash = 'assets/images/splashimage.jpg';
   static const String fadeMasterz = 'assets/images/fademasterz.png';
-  static const String dummyImage = 'assets/images/dummyImage.png';
-  static const String homeImage = 'assets/images/homeImage.png';
-  static const String shopImage = 'assets/images/shopImage.png';
-  static const String specialistImage2 = 'assets/images/specialistImage2.png';
 }
 
 class AppIcon {
   static const String phoneIcon = 'assets/icon/phoneIcon.svg';
   static const String homeIcon1 = 'assets/icon/homeIcon1.svg';
   static const String cancelledIcon = 'assets/icon/cancelledIcon.svg';
-  static const String cancelledIcon1 = 'assets/icon/cancelledIcon1.svg';
   static const String bookingIcon1 = 'assets/icon/bookingIcon1.svg';
   static const String chatIcon1 = 'assets/icon/chatIcon1.svg';
   static const String profileIcon1 = 'assets/icon/profileIcon1.svg';
@@ -45,7 +40,6 @@ class AppIcon {
   static const String rightIcon = 'assets/icon/rightIcon.svg';
   static const String timerIcon = 'assets/icon/timerIcon.svg';
   static const String calenderIcon = 'assets/icon/calenderIcon.svg';
-  static const String cardIcon = 'assets/icon/cardIcon.svg';
   static const String lockIcon = 'assets/icon/lockIcon.svg';
   static const String paymentIcon = 'assets/icon/paymentIcon.svg';
   static const String ratingDialogIcon = 'assets/icon/ratingDialogIcon.svg';

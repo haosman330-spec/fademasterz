@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/api_service.dart';
@@ -34,7 +35,6 @@ class _ProfileSetupState extends State<ProfileSetup> {
   @override
   void initState() {
     phoneCn.text = widget.phoneNo.toString();
-    setState(() {});
     super.initState();
 
     // TODO: implement initState
@@ -139,9 +139,20 @@ class _ProfileSetupState extends State<ProfileSetup> {
       floatingActionButton: MyAppButton(
         title: AppStrings.next,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-        onPress: () {
+        onPress: () async {
           if (isValidate()) {
-            profileSetupApi(context);
+            bool result = await InternetConnection().hasInternetAccess;
+            debugPrint('<<<<<<<<<<<$result>>>>>>>>>>>>>');
+            if (result) {
+              if (context.mounted) {
+                profileSetupApi(context);
+              }
+            } else {
+              Helper().showToast(
+                  AppStrings.noInternetPleaseCheckYourInterNetConnection);
+            }
+
+
           }
         },
       ),

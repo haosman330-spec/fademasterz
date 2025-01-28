@@ -16,7 +16,6 @@ import '../Model/booking_summary_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
-import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 import 'Dashboard/dashboard.dart';
 
@@ -63,7 +62,6 @@ class BookingSummaryScreenRescheduleState
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -93,267 +91,360 @@ class BookingSummaryScreenRescheduleState
               style: AppFonts.regular.copyWith(fontSize: 16),
             ),
           ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
+          child: SingleChildScrollView(padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 77,
-                          width: 76,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                11,
-                              ),
-                            ),
-                          ),
-                          child: Visibility(
-                            visible: (bookingSummaryResponse
-                                    ?.data?.image?.isNotEmpty ??
-                                false),
-                            child: Image.network(
-                              ApiService.imageUrl +
-                                  (bookingSummaryResponse?.data?.image ?? ''),
-                              fit: BoxFit.fill,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 77,
+                        width: 76,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              11,
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 10,
+                        child: Visibility(
+                          visible: (bookingSummaryResponse
+                                  ?.data?.image?.isNotEmpty ??
+                              false),
+                          child: Image.network(
+                            ApiService.imageUrl +
+                                (bookingSummaryResponse?.data?.image ?? ''),
+                            fit: BoxFit.fill,
+                          ),
                         ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                (bookingSummaryResponse?.data?.name ?? ' '),
-                                style: AppFonts.regular.copyWith(fontSize: 16),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    AppIcon.timerIcon,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    (bookingSummaryResponse
-                                            ?.data?.bookingTime ??
-                                        'N/A'),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              (bookingSummaryResponse?.data?.name ?? ' '),
+                              style: AppFonts.regular.copyWith(fontSize: 16),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppIcon.timerIcon,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  (bookingSummaryResponse
+                                          ?.data?.bookingTime ??
+                                      'N/A'),
+                                  style: AppFonts.regular.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                SvgPicture.asset(
+                                  AppIcon.calenderIcon,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    // bookingSummaryResponse?.data?.bookingDate
+                                    //         .toString() ??
+                                    //     'N/A',
+                                    DateFormat('dd MMM yyyy').format(
+                                        bookingSummaryResponse
+                                                ?.data?.bookingDate ??
+                                            DateTime.now()),
+                                    //  DateTime.now().toString(),
                                     style: AppFonts.regular.copyWith(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500),
                                   ),
-                                  const SizedBox(
-                                    width: 20,
-                                  ),
-                                  SvgPicture.asset(
-                                    AppIcon.calenderIcon,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      // bookingSummaryResponse?.data?.bookingDate
-                                      //         .toString() ??
-                                      //     'N/A',
-                                      DateFormat('dd MMM yyyy').format(
-                                          bookingSummaryResponse
-                                                  ?.data?.bookingDate ??
-                                              DateTime.now()),
-                                      //  DateTime.now().toString(),
-                                      style: AppFonts.regular.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '£${bookingSummaryResponse?.data?.subTotal ?? ' '}',
+                              style: AppFonts.yellowFont.copyWith(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        AppStrings.salonAddress,
+                        style: AppFonts.yellowFont,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        (bookingSummaryResponse?.data?.address ?? ' '),
+                        style: AppFonts.regular.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppStrings.bookingDate,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            AppStrings.bookingTime,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            AppStrings.specialist,
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            // (bookingSummaryResponse?.data?.bookingDate
+                            //         .toString() ??
+                            //     'N/A'),
+
+                            DateFormat('dd MMM yyyy').format(
+                              bookingSummaryResponse?.data?.bookingDate ??
+                                  DateTime.now(),
+                            ),
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            (bookingSummaryResponse?.data?.bookingTime ??
+                                ' '),
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          const SizedBox(
+                            height: 9,
+                          ),
+                          Text(
+                            (bookingSummaryResponse?.data?.specialist?.name ??
+                                'N/A'),
+                            style: AppFonts.regular.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: bookingSummaryResponse?.data?.services?.length,
+                    itemBuilder: (context, index) {
+                      var service =
+                          bookingSummaryResponse?.data?.services?[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (index == 0)
+                            const Text(
+                              AppStrings.services,
+                              style: AppFonts.yellowFont,
+                            ),
+                          Row(
+                            children: [
                               Text(
-                                '£${bookingSummaryResponse?.data?.subTotal ?? ' '}',
-                                style: AppFonts.yellowFont.copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
+                                (service?.name ?? ' '),
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '£ ${(service?.price ?? ' ')}',
+                                style: AppFonts.regular.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
-                        )
-                      ],
-                    ),
+                        ],
+                      );
+                    },
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          AppStrings.salonAddress,
-                          style: AppFonts.yellowFont,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                (widget.data.bookingStatus != "Pending")
+                    ? Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: AppColor.black,
+                          borderRadius: BorderRadius.circular(
+                            11,
+                          ),
                         ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          (bookingSummaryResponse?.data?.address ?? ' '),
-                          style: AppFonts.regular.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Column(
                           children: [
-                            Text(
-                              AppStrings.bookingDate,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppStrings.subTotal,
+                                      style: AppFonts.regular.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      height: 9,
+                                    ),
+                                    Text(
+                                      AppStrings.tax,
+                                      style: AppFonts.regular.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      height: 9,
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      ' £${bookingSummaryResponse?.data?.subTotal ?? ' '}',
+                                      style: AppFonts.regular.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      height: 9,
+                                    ),
+                                    Text(
+                                      ' £${(bookingSummaryResponse?.data?.tax ?? ' ')}',
+                                      style: AppFonts.regular.copyWith(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      height: 9,
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              height: 9,
+                            const Divider(
+                              color: Color(0xff434343),
+                              height: 1,
                             ),
-                            Text(
-                              AppStrings.bookingTime,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 9,
-                            ),
-                            Text(
-                              AppStrings.specialist,
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              // (bookingSummaryResponse?.data?.bookingDate
-                              //         .toString() ??
-                              //     'N/A'),
-
-                              DateFormat('dd MMM yyyy').format(
-                                bookingSummaryResponse?.data?.bookingDate ??
-                                    DateTime.now(),
-                              ),
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 9,
-                            ),
-                            Text(
-                              (bookingSummaryResponse?.data?.bookingTime ??
-                                  ' '),
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(
-                              height: 9,
-                            ),
-                            Text(
-                              (bookingSummaryResponse?.data?.specialist?.name ??
-                                  'N/A'),
-                              style: AppFonts.regular.copyWith(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.black,
-                      borderRadius: BorderRadius.circular(
-                        11,
-                      ),
-                    ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: bookingSummaryResponse?.data?.services?.length,
-                      itemBuilder: (context, index) {
-                        var service =
-                            bookingSummaryResponse?.data?.services?[index];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (index == 0)
-                              const Text(
-                                AppStrings.services,
-                                style: AppFonts.yellowFont,
-                              ),
                             Row(
                               children: [
                                 Text(
-                                  (service?.name ?? ' '),
+                                  AppStrings.total,
                                   style: AppFonts.regular.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 const Spacer(),
                                 Text(
-                                  '£ ${(service?.price ?? ' ')}',
+                                  '£ ${(bookingSummaryResponse?.data?.total ?? ' ')}',
                                   style: AppFonts.regular.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
@@ -361,106 +452,10 @@ class BookingSummaryScreenRescheduleState
                               ],
                             ),
                           ],
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  (widget.data.bookingStatus != "Pending")
-                      ? Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: AppColor.black,
-                            borderRadius: BorderRadius.circular(
-                              11,
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        AppStrings.subTotal,
-                                        style: AppFonts.regular.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 9,
-                                      ),
-                                      Text(
-                                        AppStrings.tax,
-                                        style: AppFonts.regular.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 9,
-                                      ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        ' £${bookingSummaryResponse?.data?.subTotal ?? ' '}',
-                                        style: AppFonts.regular.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 9,
-                                      ),
-                                      Text(
-                                        ' £${(bookingSummaryResponse?.data?.tax ?? ' ')}',
-                                        style: AppFonts.regular.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 9,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                color: Color(0xff434343),
-                                height: 1,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    AppStrings.total,
-                                    style: AppFonts.regular.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '£ ${(bookingSummaryResponse?.data?.total ?? ' ')}',
-                                    style: AppFonts.regular.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ],
             ),
           ),
         ),
@@ -521,12 +516,7 @@ class BookingSummaryScreenRescheduleState
 
       setState(() {});
     }
-    // } catch (e) {
-    //   if (context.mounted) {
-    //     Utility.progressLoadingDialog(context, false);
-    //   }
-    //   Helper().showToast(e.toString());
-    // }
+
   }
 
   Future<void> rescheduleBookingApi(BuildContext context) async {
@@ -543,8 +533,7 @@ class BookingSummaryScreenRescheduleState
 
     var request =
         http.MultipartRequest('POST', Uri.parse(ApiService.rescheduleBooking));
-    debugPrint(
-        '>>>>>>>>>>upComingBookingId>>>>${sharedPreferences.getInt('ubookingId').toString()}<<<<<<<<<<<<<<');
+
     request.fields.addAll({
       'booking_id': widget.data.bookingId
           .toString(),
@@ -571,9 +560,6 @@ class BookingSummaryScreenRescheduleState
     log('>>>>>>request.fields>>>>>>>>${request.fields}<<<<<<<<<<<<<<');
     log('>>>>>>jsonResponse>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
 
-    // Helper().showToast(
-    //   jsonResponse["message"],
-    // );
 
     if (context.mounted) {
       Utility.progressLoadingDialog(
@@ -583,12 +569,10 @@ class BookingSummaryScreenRescheduleState
     }
 
     if (jsonResponse["status"] == true) {
-      debugPrint('<<<<<true<<<<<<${jsonResponse["status"]}>>>>>>>>>>>>>');
       _showDialog(context: context,
         description: jsonResponse["message"],);
       setState(() {});
     }  else {
-      debugPrint('<<<else<<<<<<<<${jsonResponse["message"]}>>>>>>>>>>>>>');
       rescheduleShowBottomSheet(context: context,
         description: jsonResponse["message"],);
     }
@@ -712,10 +696,6 @@ class BookingSummaryScreenRescheduleState
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //     SvgPicture.asset(AppIcon.paymentIcon),
-                //     const SizedBox(
-                //       height: 15,
-                //     ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -732,7 +712,6 @@ class BookingSummaryScreenRescheduleState
                   child: Text(
                     textAlign: TextAlign.center,
                  description,
-                 //   AppStrings.successfulReschedule,
                     style: AppFonts.blackFont
                         .copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                   ),

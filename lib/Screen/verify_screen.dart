@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/api_service.dart';
@@ -285,10 +286,15 @@ class _VerifyScreenState extends State<VerifyScreen> {
         await auth.signInWithCredential(credential).then((value) {
           debugPrint('>>>>>value>>>>>>>>>${value.credential}<<<<<<<<<<<<<<');
         }).timeout(Duration(seconds: 60));
-
-        verifyOtp(context);
-
-        //   Helper().showToast('Please enter confirm otp');
+        bool result = await InternetConnection().hasInternetAccess;
+        debugPrint('<<<<<<<<<<<$result>>>>>>>>>>>>>');
+        if (result) {
+          if (mounted) {
+            verifyOtp(context);          }
+        } else {
+          Helper().showToast(
+              AppStrings.noInternetPleaseCheckYourInterNetConnection);
+        }
 
         setState(() {});
       } catch (e) {
@@ -410,7 +416,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       );
       if (context.mounted) {
         if (verifyOtpModal.data?.isSetup == 'yes') {
-          // sharedPreferences.setBool("profileSetUp", true);
+
           Navigator.push(
             context,
             MaterialPageRoute(

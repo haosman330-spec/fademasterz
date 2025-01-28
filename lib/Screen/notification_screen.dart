@@ -117,120 +117,88 @@ class _NotificationScreenState extends State<NotificationScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
-            // onCallback();
             setState(() {});
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // const Align(
-            //   alignment: Alignment.topRight,
-            //   child: Text(
-            //     AppStrings.clearAll,
-            //     style: AppFonts.yellowFont,
-            //   ),
-            // ),
-            Expanded(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Visibility(
+              visible: !showLoader,
+              replacement: const Center(
+                child: CircularProgressIndicator(
+                  color: AppColor.yellow,
+                ),
+              ),
               child: Visibility(
-                visible: !showLoader,
+                visible: notificationResponseModal?.data?.list?.isNotEmpty ??
+                    false,
                 replacement: const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColor.yellow,
+                  child: Text(
+                    'No Found Notification',
+                    style: AppFonts.normalText,
                   ),
                 ),
-                child: Visibility(
-                  visible: notificationResponseModal?.data?.list?.isNotEmpty ??
-                      false,
-                  replacement: const Center(
-                    child: Text(
-                      'No Found Notification',
-                      style: AppFonts.normalText,
-                    ),
-                  ),
-                  child: ListView.builder(
-                    controller: scrollController,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shrinkWrap: true,
-                    itemCount: listNotification.length,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      var notification = listNotification[index];
+                child: ListView.builder(
+                  controller: scrollController,
+                  padding: const EdgeInsets.symmetric(vertical: 12,horizontal: 15),
+                  shrinkWrap: true,
+                  itemCount: listNotification.length,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    var notification = listNotification[index];
 
-                      return InkWell(
-                        // onTap: () {
-                        //   // notificationResponseModal?.data?.list?.clear();
-                        //   debugPrint(
-                        //       '>>>>>>>>>>>>>>${notification.type}<<<<<<<<<<<<<<');
-                        //   notification.type == 'cancelled'
-                        //       ? Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //             builder: (context) =>
-                        //                 CancelledBookingDetail(
-                        //               cancelBookingId: notification.bookingId,
-                        //             ),
-                        //           ),
-                        //         )
-                        //       : '';
-                        //  },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(
+                          color: AppColor.white.withOpacity(
+                            .5,
+                          ),
+                          height: 25,
+                        ),
+                        Row(
                           children: [
-                            Divider(
-                              color: AppColor.white.withOpacity(
-                                .5,
-                              ),
-                              height: 25,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  notification.title ?? '',
-                                  style: AppFonts.regular.copyWith(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  DateFormat('dd-MM-yyyy' //hh:mm a',
-                                          )
-                                      .format(notification.createdAt ??
-                                          DateTime.now()),
-                                  style: AppFonts.regular.copyWith(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
                             Text(
-                              ('${notification.description}' ?? ''),
-                              style: AppFonts.yellowFont.copyWith(
+                              notification.title ?? '',
+                              style: AppFonts.regular.copyWith(
+                                fontSize: 16,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              DateFormat('dd-MM-yyyy' //hh:mm a',
+                                      )
+                                  .format(notification.createdAt ??
+                                      DateTime.now()),
+                              style: AppFonts.regular.copyWith(
                                 fontSize: 12,
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          ('${notification.description}' ?? ''),
+                          style: AppFonts.yellowFont.copyWith(
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -32,66 +32,61 @@ class _ServicesScreenState extends State<ServicesScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
-            // onCallback();
             setState(() {});
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              Visibility(
-                visible: (widget.service?.isNotEmpty ?? false),
-                replacement: Center(
-                  child: Text(
-                    AppStrings.noServices,
-                    style: AppFonts.appText.copyWith(fontSize: 14),
-                  ),
+      body: SingleChildScrollView(       padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            Visibility(
+              visible: (widget.service?.isNotEmpty ?? false),
+              replacement: Center(
+                child: Text(
+                  AppStrings.noServices,
+                  style: AppFonts.appText.copyWith(fontSize: 14),
                 ),
-                child: ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  controller: controller,
-                  padding: EdgeInsets.zero,
-                  itemCount: widget.service!.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: AppColor.black,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(AppIcon.rightIcon),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              (widget.service?[index].name ?? ''),
-                              style: AppFonts.appText.copyWith(fontSize: 14),
-                            )
-                          ],
-                        ),
+              ),
+              child: ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                controller: controller,
+                padding: EdgeInsets.zero,
+                itemCount: widget.service!.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {},
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: AppColor.black,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 10,
-                  ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(AppIcon.rightIcon),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Text(
+                            (widget.service?[index].name ?? ''),
+                            style: AppFonts.appText.copyWith(fontSize: 14),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

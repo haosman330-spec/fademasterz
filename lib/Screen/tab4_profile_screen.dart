@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> userProfile() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    userId= sharedPreferences.getInt("senderId")??0;
+    userId = sharedPreferences.getInt("senderId") ?? 0;
     image = sharedPreferences.getString('image');
     name = sharedPreferences.getString('name');
     setState(() {});
@@ -88,6 +88,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
     Helper().showToast(jsonResponse['message']);
+
+    debugPrint('<<<ApiService<<<<<<<<${ApiService.logout}>>>>>>>>>>>>>');
+    debugPrint('<<<jsonResponse<<<<<<<<$jsonResponse>>>>>>>>>>>>>');
     if (jsonResponse['status'] == true) {
       await sharedPreferences.setBool("profileSetUp", false);
       await sharedPreferences.remove("senderId");
@@ -187,659 +190,662 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 20,
-          ),
-          child: Visibility(visible:userId==0 ,
-            replacement: Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 20,
+        ),
+        child:
+
+        Visibility(
+          visible: userId == 0,
+          replacement: Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      7,
+                    ),
+                    color: AppColor.black),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        70,
+                      ),
+                      child: Visibility(
+                        visible: (image?.isNotEmpty ?? false),
+
+                        child: CachedNetworkImage(
+                          imageUrl: ApiService.imageUrl + (image ?? ''),
+                          height: 72,
+                          width: 72,
+                          fit: BoxFit.fill,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                        // child: Image.network(
+                        //   ApiService.imageUrl + (image ?? ''),
+                        //   height: 72,
+                        //   width: 72,
+                        //   fit: BoxFit.fill,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      (name ?? ''),
+                      style: AppFonts.appText.copyWith(
+                        fontSize: 17,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfileScreen(
+                        updateProfile: updateProfile,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 10,
+                    horizontal: 22,
+                    vertical: 14,
                   ),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(
-                        7,
+                        5,
                       ),
                       color: AppColor.black),
-                  child: Column(
+                  child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          70,
+                      SvgPicture.asset(
+                        AppIcon.parsonIcon,
+                        colorFilter: const ColorFilter.mode(
+                          AppColor.white,
+                          BlendMode.srcIn,
                         ),
-                        child: Visibility(
-                          visible: (image?.isNotEmpty ?? false),
-
-                          child: CachedNetworkImage(
-                            imageUrl: ApiService.imageUrl + (image ?? ''),
-                            height: 72,
-                            width: 72,
-                            fit: BoxFit.fill,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                              child: SizedBox(
-                                height: 30,
-                                width: 30,
-                                child: CircularProgressIndicator(
-                                  value: downloadProgress.progress,
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                          // child: Image.network(
-                          //   ApiService.imageUrl + (image ?? ''),
-                          //   height: 72,
-                          //   width: 72,
-                          //   fit: BoxFit.fill,
-                        ),
+                        //   color: AppColor.white,
+                        height: 20,
+                        width: 20,
                       ),
-
                       const SizedBox(
-                        height: 4,
+                        width: 13,
                       ),
-                      Text(
-                        (name ?? ''),
-                        style: AppFonts.appText.copyWith(
-                          fontSize: 17,
+                      Expanded(
+                        child: Text(
+                          AppStrings.editProfile,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
                         ),
                       ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  widget.onTap(1);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.bookingIcon,
+                        colorFilter: const ColorFilter.mode(
+                          AppColor.white,
+                          BlendMode.srcIn,
+                        ),
+                        //    color: AppColor.white,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.myBookings,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
                 ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CancelledBookingScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.cancelledIcon,
+                        //   color: AppColor.white,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.cancelledBookings,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PrivacyPolicyScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.privacyPolicyIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.privacyPolicy,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TermsConditionScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.termConditionIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.termConditions,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HelpScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        5,
+                      ),
+                      color: AppColor.black),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        //'assets/icon/cameraIcon.svg',
+                        AppIcon.helpIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.help,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  showLogoutDialog();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.logoutIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.logout,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  showDeleteDialog(context);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.deleteIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.deleteAccount,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PrivacyPolicyScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.privacyPolicyIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.privacyPolicy,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TermsConditionScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.termConditionIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.termConditions,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HelpScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        5,
+                      ),
+                      color: AppColor.black),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        //'assets/icon/cameraIcon.svg',
+                        AppIcon.helpIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.help,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              InkWell(
+                onTap: () async {
+                  SharedPreferences sharedPreferences =
+                      await SharedPreferences.getInstance();
+                  sharedPreferences.setBool("profileSetUp", false);
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditProfileScreen(
-                          updateProfile: updateProfile,
+                        builder: (context) => const EnterYourNo(),
+                      ));
+                  //    showLogoutDialog();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 22,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      5,
+                    ),
+                    color: AppColor.black,
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppIcon.logoutIcon,
+                        height: 20,
+                        width: 20,
+                      ),
+                      const SizedBox(
+                        width: 13,
+                      ),
+                      Expanded(
+                        child: Text(
+                          AppStrings.login,
+                          style: AppFonts.appText.copyWith(
+                            fontSize: 14,
+                          ),
                         ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          5,
-                        ),
-                        color: AppColor.black),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.parsonIcon,
-                          colorFilter: const ColorFilter.mode(
-                            AppColor.white,
-                            BlendMode.srcIn,
-                          ),
-                          //   color: AppColor.white,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.editProfile,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
+                      SvgPicture.asset(
+                        AppIcon.forwardIcon,
+                      )
+                    ],
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    widget.onTap(1);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.bookingIcon,
-                          colorFilter: const ColorFilter.mode(
-                            AppColor.white,
-                            BlendMode.srcIn,
-                          ),
-                          //    color: AppColor.white,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.myBookings,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CancelledBookingScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.cancelledIcon,
-                          //   color: AppColor.white,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.cancelledBookings,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PrivacyPolicyScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.privacyPolicyIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.privacyPolicy,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TermsConditionScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.termConditionIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.termConditions,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HelpScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          5,
-                        ),
-                        color: AppColor.black),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          //'assets/icon/cameraIcon.svg',
-                          AppIcon.helpIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.help,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    showLogoutDialog();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.logoutIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.logout,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    showDeleteDialog(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.deleteIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.deleteAccount,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            child:  Column(
-              children: [
-
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PrivacyPolicyScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.privacyPolicyIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.privacyPolicy,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TermsConditionScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.termConditionIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.termConditions,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HelpScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          5,
-                        ),
-                        color: AppColor.black),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          //'assets/icon/cameraIcon.svg',
-                          AppIcon.helpIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.help,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                InkWell(
-                  onTap: () async {
-                    SharedPreferences    sharedPreferences=await SharedPreferences.getInstance();
-                    sharedPreferences.setBool("profileSetUp", false);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const EnterYourNo(),));
-                //    showLogoutDialog();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 14,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        5,
-                      ),
-                      color: AppColor.black,
-                    ),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.logoutIcon,
-                          height: 20,
-                          width: 20,
-                        ),
-                        const SizedBox(
-                          width: 13,
-                        ),
-                        Expanded(
-                          child: Text(
-                            AppStrings.login,
-                            style: AppFonts.appText.copyWith(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          AppIcon.forwardIcon,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+
   ///------- Logout Dialog------------------
   Future showLogoutDialog() async {
     return await showDialog(
       barrierDismissible: false,
       context: context,
-      builder: (context) {
+      builder: (ctx) {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
@@ -887,12 +893,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           if (connectivityResult
                               .contains(ConnectivityResult.mobile)) {
-                            userLogoutApi(context);
+                            if(mounted) {
+                              userLogoutApi(context);
+                            }
                           } else if (connectivityResult
                               .contains(ConnectivityResult.wifi)) {
-                            userLogoutApi(context);
+                            if(mounted) {
+                              userLogoutApi(context);
+                            }
                           } else {
-                            if (context.mounted) {
+                            if (mounted) {
                               Utility.showNoNetworkDialog(context);
                             }
                           }
@@ -953,7 +963,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
-///------- Delete  Dialog------------------
+
+  ///------- Delete  Dialog------------------
   Future showDeleteDialog(BuildContext context) async {
     return await showDialog(
       barrierDismissible: false,
@@ -1016,7 +1027,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .contains(ConnectivityResult.wifi)) {
                             deleteAccountApi(context);
                           } else {
-                            Utility.showNoNetworkDialog(context);
+                            if(ctx.mounted) {
+                              Utility.showNoNetworkDialog(context);
+                            }
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -1080,5 +1093,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
-

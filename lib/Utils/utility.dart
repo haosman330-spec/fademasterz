@@ -16,10 +16,9 @@ class Utility {
           );
         },
       );
-      // return pr.show();
+
     } else {
       Navigator.pop(context);
-      // return pr.hide();
     }
   }
 
@@ -46,28 +45,5 @@ class Utility {
     );
   }
 
-  static showNoGetNetworkDialog(BuildContext context) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return const PopScope(
-            canPop: false,
-            child: AlertDialog(
-              title: Text('No Network Connection'),
-              content: Text(
-                'No Internet Please check your internet connection',
-              ),
-              // actions: <Widget>[
-              //   TextButton(
-              //     child: const Text('OK'),
-              //     onPressed: () {
-              //       Navigator.of(context).pop();
-              //     },
-              //   ),
-              // ],
-            ));
-      },
-    );
-  }
+
 }

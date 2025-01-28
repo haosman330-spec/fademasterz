@@ -3,65 +3,6 @@ import 'package:fademasterz/Utils/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyTextField {
-  static Widget myTextFormField({
-    String? title,
-    bool? isBorder,
-    required TextEditingController controller,
-    FocusNode? focusNode,
-    required TextInputType textInputType,
-    required TextInputAction textInputAction,
-    GestureTapCallback? onTap,
-    TextStyle? hintTextStyle,
-    BorderRadius? radius,
-    required String hintText,
-    final BorderSide? borderSide,
-    bool? obscureText,
-    Color? fillColor,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    int? maxLength,
-    int? maxLines,
-  }) {
-    return TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please fill password';
-        }
-      },
-      maxLines: maxLines ?? 1,
-      maxLength: maxLength,
-      textAlignVertical: TextAlignVertical.center,
-      controller: controller,
-      focusNode: focusNode,
-      obscureText: false,
-      keyboardType: textInputType,
-      style: AppFonts.textFieldFont,
-      textInputAction: textInputAction,
-      cursorColor: AppColor.yellow,
-      decoration: InputDecoration(
-          filled: true,
-          fillColor: fillColor ?? AppColor.black,
-          suffixIcon: suffixIcon,
-          prefixIcon: prefixIcon,
-          counterText: '',
-          border: OutlineInputBorder(
-            borderRadius: radius ?? BorderRadius.circular(16),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: radius ??
-                BorderRadius.circular(
-                  16,
-                ),
-            borderSide: borderSide ?? BorderSide.none,
-          ),
-          hintText: hintText,
-          hintStyle: hintTextStyle ?? AppFonts.textFieldHint),
-      onTap: onTap,
-    );
-  }
-}
-
 class CustomTextField extends StatelessWidget {
   final String? title;
   final bool? readonly;
@@ -118,6 +59,7 @@ class CustomTextField extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'Please fill field';
         }
+        return null;
       },
       readOnly: readonly ?? false,
       maxLines: maxLines ?? 1,

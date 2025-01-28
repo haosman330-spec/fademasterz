@@ -58,7 +58,6 @@ class _SelectYourServicesState extends State<SelectYourServices> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();

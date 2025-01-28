@@ -38,7 +38,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   localData() async {
     sharedPreferences = await SharedPreferences.getInstance();
-
     userId = sharedPreferences?.getInt("senderId") ?? 0;
   }
 
@@ -46,7 +45,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void initState() {
     localData();
     ChatService.getSelfInfo();
-    // TODO: implement initState
 
     listener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
@@ -64,16 +62,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                content: const Column(
+                content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.network_check,
                       color: AppColor.yellow,
                       size: 150,
                     ),
                     Text(
-                      'No Internet Please check your internet connection',
+                      AppStrings.noInternetPleaseCheckYourInterNetConnection,
                       style: AppFonts.blackFont,
                       textAlign: TextAlign.center,
                     ),
@@ -114,13 +112,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
     ];
     selectIndex = widget.selectIndex;
-
-    setState(() {});
     super.initState();
   }
 
   void onBottomTap(int value) {
-      selectIndex = value;
+    selectIndex = value;
     setState(() {});
   }
 
@@ -130,16 +126,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     listener.cancel();
   }
 
-  onTabTap(int value){
+  onTabTap(int value) {
     debugPrint('<<<<value<<<<<<<${value}>>>>>>>>>>>>>');
     debugPrint('<<<<userId<<<<<<<${userId}>>>>>>>>>>>>>');
-    debugPrint('<<<<senderId<<<<<<<${sharedPreferences?.getInt('senderId')}>>>>>>>>>>>>>');
+    debugPrint(
+        '<<<<senderId<<<<<<<${sharedPreferences?.getInt('senderId')}>>>>>>>>>>>>>');
 
-    if(userId == 0 && (value == 1 || value == 2)){
+    if (userId == 0 && (value == 1 || value == 2)) {
       if (userId == 0) {
         showDialog(context: context, builder: (_) => const CustomLoginDialog());
       }
-    }else{
+    } else {
       selectIndex = value;
     }
 
@@ -180,7 +177,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           color: AppColor.black,
           height: 70,
           child: Row(
-            // mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               Expanded(
                 flex: 1,

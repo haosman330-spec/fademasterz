@@ -161,10 +161,8 @@ class _WebViewPageState extends State<WebViewPage> {
     } else {
       jsonData = convert.jsonDecode("{$str}");
     }
-    // var jsonData = convert.jsonDecode("{"+str+"}");
 
     debugPrint('>>>>>>>jsonData>>>>>>>${jsonData['status']}<<<<<<<<<<<<<<');
-    // Helper().showToast(jsonData['message']);
     Navigator.of(context).pop(jsonData['status']);
 
     /*

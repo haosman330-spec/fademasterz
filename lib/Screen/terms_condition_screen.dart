@@ -27,7 +27,6 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _termsConditionScreen(context));
@@ -47,31 +46,24 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
-            // onCallback();
-            setState(() {});
           },
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-          ),
-          child: HtmlWidget(
-            (termsConditionModal?.data?.terms ?? ''),
-            customStylesBuilder: (element) {
-              return {'color': 'white'};
-            },
-
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-            ),
-            //  viewType: (privacyPolicyModal.data?.privacyPolicy ?? ''),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,vertical: 10
+        ),
+        child: HtmlWidget(
+          (termsConditionModal?.data?.terms ?? ''),
+          customStylesBuilder: (element) {
+            return {'color': 'white'};
+          },
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
           ),
         ),
       ),
@@ -82,6 +74,7 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
+    try{
     var request = {};
 
     var response = await http.post(
@@ -101,9 +94,6 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
     if (jsonResponse['status'] == true) {
       termsConditionModal = TermsConditionModal.fromJson(jsonResponse);
       setState(() {});
@@ -111,6 +101,9 @@ class _TermsConditionScreen extends State<TermsConditionScreen> {
       Helper().showToast(
         jsonResponse['message'],
       );
+    }}catch(e){
+      Helper().showToast(e.toString());
+
     }
   }
 }

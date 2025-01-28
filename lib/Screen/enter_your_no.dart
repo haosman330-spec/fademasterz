@@ -8,7 +8,6 @@ import 'package:fademasterz/Utils/app_string.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../Utils/custom_app_button.dart';
 import '../Utils/helper.dart';

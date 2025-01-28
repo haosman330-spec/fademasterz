@@ -37,7 +37,6 @@ class _SpecialistScreenState extends State<SpecialistScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -46,7 +45,7 @@ class _SpecialistScreenState extends State<SpecialistScreen> {
           },
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Visibility(
           visible: (widget.specialist?.isNotEmpty ?? false),

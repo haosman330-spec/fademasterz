@@ -2,11 +2,7 @@ import 'dart:ui';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../Screen/enter_your_no.dart';
 import 'app_color.dart';
-import 'app_fonts.dart';
-import 'app_string.dart';
 
 class Helper {
 
@@ -29,5 +25,4 @@ class Helper {
     );
   }
 
-  void isValidate() {}
 }

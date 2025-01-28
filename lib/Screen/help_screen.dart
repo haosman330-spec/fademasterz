@@ -51,11 +51,9 @@ class _HelpScreenState extends State<HelpScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
-            // onCallback();
             setState(() {});
           },
         ),
@@ -66,7 +64,6 @@ class _HelpScreenState extends State<HelpScreen> {
           visible: (helpCenterModal.data?.helpNumber?.isNotEmpty ?? false),
           replacement: const Center(
             child: CircularProgressIndicator(
-              // backgroundColor: AppColor.white,
               color: AppColor.yellow,
             ),
           ),
@@ -329,9 +326,7 @@ class _HelpScreenState extends State<HelpScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
+
     if (jsonResponse['status'] == true) {
       helpCenterModal = HelpCenterModal.fromJson(jsonResponse);
 
@@ -365,6 +360,8 @@ class _HelpScreenState extends State<HelpScreen> {
 
   @override
   void setState(VoidCallback fn) {
-    super.setState(fn);
+    if(mounted) {
+      super.setState(fn);
+    }
   }
 }

@@ -45,7 +45,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -54,27 +53,25 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: HtmlWidget(
-            (privacyPolicyModal?.data?.privacyPolicy ?? ''),
-            customStylesBuilder: (element) {
-              return {'color': 'white'};
-            },
+      body: SingleChildScrollView( padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: HtmlWidget(
+          (privacyPolicyModal?.data?.privacyPolicy ?? ''),
+          customStylesBuilder: (element) {
+            return {'color': 'white'};
+          },
 
-            textStyle: const TextStyle(color: Colors.white, fontSize: 15),
-            //  viewType: (privacyPolicyModal.data?.privacyPolicy ?? ''),
-          ),
+          textStyle: const TextStyle(color: Colors.white, fontSize: 15),
         ),
       ),
     );
   }
 
   void _privacyPolicy(BuildContext context) async {
+
     if (context.mounted) {
       Utility.progressLoadingDialog(context, true);
     }
+
     var request = {};
 
     var response = await http.post(
@@ -94,13 +91,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     Map<String, dynamic> jsonResponse = jsonDecode(
       response.body,
     );
-    // Helper().showToast(
-    //   jsonResponse['message'],
-    // );
-
     if (jsonResponse['status'] == true) {
       privacyPolicyModal = PrivacyPolicyModal.fromJson(jsonResponse);
       setState(() {});
     }
   }
+
 }

@@ -26,31 +26,35 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    getLocalData();
+    getLocalData(context);
     super.initState();
   }
 
   bool? profileSetUp = false;
-  Future<void> getLocalData() async {
+  Future<void> getLocalData(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     profileSetUp = prefs.getBool('profileSetUp');
     setState(() {});
     Future.delayed(const Duration(seconds: 3), () {
-      // FlutterNativeSplash.remove();
+
       if (profileSetUp ?? false) {
-        Navigator.pushReplacement(
+        if(context.mounted) {
+          Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const DashBoardScreen(selectIndex: 0),
           ),
         );
+        }
       } else {
-        Navigator.pushReplacement(
+        if(context.mounted) {
+          Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const EnterYourNo(),
           ),
         );
+        }
       }
     });
   }

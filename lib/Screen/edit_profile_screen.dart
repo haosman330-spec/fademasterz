@@ -38,9 +38,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final picker = ImagePicker();
   File? _imageFile;
   String? image;
-  // String? name;
-//  String? phone;
-//  String? email;
   ProfileUserData? profileUserData;
   ProfileModal? profileModal;
   Future<void> userProfile() async {
@@ -129,7 +126,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             AppIcon.backIcon,
             height: 12,
             width: 15,
-            //     color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
             onCallback();
@@ -442,8 +438,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');
       sharedPreferences.setString('email', profileModal?.data?.email ?? '');
 
-      // sharedPreferences.setString(
-      //     'User_Id', profileModal?.data?.id.toString() ?? '');
+
       sharedPreferences
           .setInt(
               'senderId', int.parse(profileModal?.data!.id?.toString() ?? ''))
