@@ -49,7 +49,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
+           /* InkWell(
               onTap: () {
                 Navigator.pop(context);
               },
@@ -59,7 +59,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
             ),
             const SizedBox(
               height: 30,
-            ),
+            ),*/
             const Text(
               AppStrings.profileSetup,
               style: AppFonts.regular,

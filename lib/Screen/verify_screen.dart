@@ -272,7 +272,6 @@ class _VerifyScreenState extends State<VerifyScreen> {
       Helper().showToast(AppStrings.pleaseEnterConfirmOtp);
       setState(() {});
     } else {
-      // verifyMobileNumber();
       setState(() {
         Utility.progressLoadingDialog(context, true);
       });
@@ -285,7 +284,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
       try {
         await auth.signInWithCredential(credential).then((value) {
           debugPrint('>>>>>value>>>>>>>>>${value.credential}<<<<<<<<<<<<<<');
-        }).timeout(Duration(seconds: 60));
+        }).timeout(const Duration(seconds: 60));
         bool result = await InternetConnection().hasInternetAccess;
         debugPrint('<<<<<<<<<<<$result>>>>>>>>>>>>>');
         if (result) {
@@ -320,16 +319,16 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   Future<void> resendOtpFirebaseAuth() {
-    Utility.progressLoadingDialog(context, true);
+    //Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.verifyPhoneNumber(
         phoneNumber: '${widget.selectedCountry?.dialCode}${widget.phoneNo}',
         verificationCompleted: (e) {
           debugPrint(
               '>>>>>>>e.verificationId>>>>>>>${e.verificationId}<<<<<<<<<<<<<<');
-          setState(() {
-            Utility.progressLoadingDialog(context, false);
-          });
+
+         //   Utility.progressLoadingDialog(context, false);
+
         },
         verificationFailed: (e) {
           setState(() {
@@ -338,7 +337,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
             Helper().showToast('Otp failed $e');
             debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
-            Utility.progressLoadingDialog(context, false);
+            //Utility.progressLoadingDialog(context, false);
           });
         },
         timeout: const Duration(seconds: 60),
@@ -347,7 +346,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
           debugPrint(
               '>>>>>>>>resendVerificationId>>>>>>$resendVerificationId<<<<<<<<<<<<<<');
           setState(() {
-            Utility.progressLoadingDialog(context, false);
+        //    Utility.progressLoadingDialog(context, false);
           });
 
           Helper().showToast(
@@ -459,35 +458,5 @@ class _VerifyScreenState extends State<VerifyScreen> {
     }
   }
 
-  // Future<void> resendOtp(BuildContext context) async {
-  //   Utility.progressLoadingDialog(context, true);
-  //   var request = {};
-  //   request["country_code"] = "91";
-  //   request['mobile_number'] = widget.phoneNo;
-  //
-  //   var response = await http.post(
-  //     Uri.parse(
-  //       ApiService.enterNumber,
-  //     ),
-  //     body: jsonEncode(request),
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //   );
-  //   if (context.mounted) {
-  //     Utility.progressLoadingDialog(context, false);
-  //   }
-  //
-  //   Map<String, dynamic> jsonResponse = jsonDecode(
-  //     response.body,
-  //   );
-  //   // Helper().showToast(
-  //   //   jsonResponse['message'],
-  //   // );
-  //
-  //   if (jsonResponse['status']) {
-  //     mobileStartTimer();
-  //   }
-  // }
+
 }

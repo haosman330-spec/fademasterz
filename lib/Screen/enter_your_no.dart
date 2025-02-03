@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 
 import '../Utils/custom_app_button.dart';
 import '../Utils/helper.dart';
-import '../Utils/utility.dart';
 
 class EnterYourNo extends StatefulWidget {
   const EnterYourNo({super.key});
@@ -24,6 +23,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
   TextEditingController phoneCn = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _verificationId;
+  bool isLoading = false;
   CountryCode? _selectedCountry = CountryCode(
       name: 'United Kingdom',
       flagUri: 'flags/gb.png',
@@ -34,7 +34,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.bg,
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 62,
@@ -115,7 +115,7 @@ class _EnterYourNoState extends State<EnterYourNo> {
                       'IN',
                     ],
                     padding: EdgeInsets.zero,
-                    // countryFilter: ['In', 'FR'],
+                    // countryFilter: ['In', 'FR']--,
                     textStyle: const TextStyle(
                       fontSize: 15,
                       color: Color(
@@ -147,7 +147,13 @@ class _EnterYourNoState extends State<EnterYourNo> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const DashBoardScreen(selectIndex: 0),));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const DashBoardScreen(selectIndex: 0),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColor.yellow,
@@ -171,31 +177,23 @@ class _EnterYourNoState extends State<EnterYourNo> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: MyAppButton(
-        title: AppStrings.next,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
-        ),
-        onPress: () async {
-          if (isValidate()) {
-            // _signInWithMobileNumber();
-            signUpOtpAuth();
-
-            // verifyPhoneNumber(phoneCn.text);
-            // final List<ConnectivityResult> connectivityResult =
-            //     await (Connectivity().checkConnectivity());
-            //
-            // if (connectivityResult.contains(ConnectivityResult.mobile)) {
-            //   enterNumberApi(context);
-            // } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-            //   enterNumberApi(context);
-            // } else {
-            //   Utility.showNoNetworkDialog(context);
-            // }
-          }
-        },
-      ),
+      floatingActionButton: isLoading
+          ? const CircularProgressIndicator(
+              color: AppColor.yellow,
+            )
+          : MyAppButton(
+              title: AppStrings.next,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 15,
+              ),
+              onPress: () async {
+                if (isValidate()) {
+                  // _signInWithMobileNumber();
+                  signUpOtpAuth();
+                }
+              },
+            ),
     );
   }
 
@@ -217,32 +215,101 @@ class _EnterYourNoState extends State<EnterYourNo> {
     }
   }
 
-  Future<void> signUpOtpAuth() {
+  /* Future<void> signUpOtpAuth() async {
     Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
 
-    return auth.verifyPhoneNumber(
+    try {
+      await auth.verifyPhoneNumber(
+        phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text}',
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          Utility.progressLoadingDialog(context, false);
+          try {
+            UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+            Helper().showToast('Verification Successful');
+            debugPrint('User signed in: ${userCredential.user}');
+          } catch (error) {
+            Helper().showToast('Error during auto sign-in: $error');
+            log('Error during auto sign-in: $error');
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          Utility.progressLoadingDialog(context, false);
+          String errorMessage = e.message ?? 'OTP verification failed';
+          Helper().showToast('Otp failed: $errorMessage');
+          log('OTP failed: ${e.code}, $errorMessage');
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          _verificationId = verificationId;
+          debugPrint('>>>>>>Code sent: VerificationId: $_verificationId');
+          Utility.progressLoadingDialog(context, false);
+
+          // Navigate to VerifyScreen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerifyScreen(
+                phoneNo: phoneCn.text,
+                verificationId: _verificationId,
+                selectedCountry: _selectedCountry,
+              ),
+            ),
+          );
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Save verificationId when timeout occurs
+          _verificationId = verificationId;
+          debugPrint('Code auto retrieval timeout. VerificationId: $_verificationId');
+        },
+        timeout: const Duration(seconds: 60),
+        // Adjust the timeout as needed
+      );
+    } catch (error) {
+      if(mounted) {
+        Utility.progressLoadingDialog(context, false);
+      }
+      Helper().showToast('Error: $error');
+      debugPrint('Error in phone authentication: $error');
+    }
+  }*/
+
+  Future<void> signUpOtpAuth() async {
+    setState(() {
+      isLoading = true; // ✅ Show loader when function starts
+    });
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    await auth.verifyPhoneNumber(
       phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text}',
       verificationCompleted: (e) {
-        Utility.progressLoadingDialog(context, false);
-        Helper().showToast(e.toString());
+        setState(() {
+          isLoading = false; // ✅ Show loader when function starts
+        });
+        // Helper().showToast(e.toString());
         debugPrint(
-            '>>>>>>>verificationCompleted>>>>>>>${'message ${e.verificationId}, phone ${e.smsCode} and error is $e'}<<<<<<<<<<<<<<');
+            '>>>>>>>verificationCompleted>>>>>>>${'message ${e.verificationId}, phone ${e.verificationId} and error is $e'}<<<<<<<<<<<<<<');
       },
       verificationFailed: (e) {
-        Utility.progressLoadingDialog(context, false);
+        setState(() {
+          isLoading = false; // ✅ Show loader when function starts
+        });
         Helper().showToast('Otp failed $e');
-        debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
+        debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
       },
       codeAutoRetrievalTimeout: (String verificationId) {
+        debugPrint('<<<<<<<<<<<failed }>>>>>>>>>>>>>');
         _verificationId = verificationId;
         setState(() {});
       },
       codeSent: (String verificationId, int? token) async {
+        setState(() {
+          isLoading = false; // ✅ Show loader when function starts
+        });
         _verificationId = verificationId;
         debugPrint(
             '>>>>>>>>_verificationId>>>>>>$_verificationId<<<<<<<<<<<<<<');
-        Utility.progressLoadingDialog(context, false);
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -255,7 +322,6 @@ class _EnterYourNoState extends State<EnterYourNo> {
         );
       },
       timeout: const Duration(seconds: 60),
-      forceResendingToken: 1,
     );
   }
 }
