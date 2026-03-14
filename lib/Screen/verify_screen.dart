@@ -268,95 +268,155 @@ class _VerifyScreenState extends State<VerifyScreen> {
     if (otp.isEmpty) {
       Helper().showToast(AppStrings.pleaseEnterOtp);
       setState(() {});
+      return;
     } else if (otp.length < 6) {
       Helper().showToast(AppStrings.pleaseEnterConfirmOtp);
       setState(() {});
-    } else {
+      return;
+    }
+
+    if (mounted) {
       setState(() {
         Utility.progressLoadingDialog(context, true);
       });
+    }
+
+    try {
       final credential = PhoneAuthProvider.credential(
         verificationId:
             resendVerificationId ?? widget.verificationId.toString(),
         smsCode: otpTextFieldCn.text,
       );
 
-      try {
-        await auth.signInWithCredential(credential).then((value) {
-          debugPrint('>>>>>value>>>>>>>>>${value.credential}<<<<<<<<<<<<<<');
-        }).timeout(const Duration(seconds: 60));
-        bool result = await InternetConnection().hasInternetAccess;
-        debugPrint('<<<<<<<<<<<$result>>>>>>>>>>>>>');
-        if (result) {
-          if (mounted) {
-            verifyOtp(context);          }
-        } else {
-          Helper().showToast(
-              AppStrings.noInternetPleaseCheckYourInterNetConnection);
-        }
+      await auth.signInWithCredential(credential).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('OTP verification timeout');
+        },
+      );
 
-        setState(() {});
-      } catch (e) {
-        setState(() {
-          debugPrint('>>>>>>>>>>>>>>${e.toString()}<<<<<<<<<<<<<<');
-          Helper().showToast(AppStrings.pleaseEnterValidOtp);
+      debugPrint('OTP verification successful');
+
+      // Check internet connection
+      bool result = await InternetConnection().hasInternetAccess;
+      debugPrint('Internet connection status: $result');
+
+      if (result) {
+        if (mounted) {
+          await verifyOtp(context);
+        }
+      } else {
+        if (mounted) {
           Utility.progressLoadingDialog(context, false);
-        });
+        }
+        Helper().showToast(
+            AppStrings.noInternetPleaseCheckYourInterNetConnection);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (mounted) {
+        Utility.progressLoadingDialog(context, false);
       }
 
-      setState(() {});
+      String errorCode = e.code;
+      String errorMessage = e.message ?? 'Unknown error';
+
+      debugPrint('FirebaseAuthException - Code: $errorCode, Message: $errorMessage');
+
+      // Handle specific iOS errors
+      if (errorCode == 'invalid-verification-code') {
+        Helper().showToast('Invalid OTP. Please try again.');
+      } else if (errorCode == 'code-expired') {
+        Helper().showToast('OTP has expired. Please request a new one.');
+      } else if (errorCode == 'too-many-requests') {
+        Helper().showToast('Too many attempts. Please try again later.');
+      } else if (errorCode == 'user-disabled') {
+        Helper().showToast('User account has been disabled.');
+      } else {
+        Helper().showToast(AppStrings.pleaseEnterValidOtp);
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    } on TimeoutException catch (e) {
+      if (mounted) {
+        Utility.progressLoadingDialog(context, false);
+      }
+      debugPrint('Timeout: $e');
+      Helper().showToast('OTP verification timed out. Please try again.');
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        Utility.progressLoadingDialog(context, false);
+      }
+      debugPrint('Unexpected error: $e');
+      Helper().showToast(AppStrings.pleaseEnterValidOtp);
+      if (mounted) {
+        setState(() {});
+      }
     }
-    // final List<ConnectivityResult> connectivityResult =
-    //     await (Connectivity().checkConnectivity());
-    //
-    // if (connectivityResult.contains(ConnectivityResult.mobile)) {
-    //   verifyOtp(context);
-    // } else if (connectivityResult.contains(ConnectivityResult.wifi)) {
-    //   verifyOtp(context);
-    // } else {
-    //   Utility.showNoNetworkDialog(context);
-    // }
   }
 
   Future<void> resendOtpFirebaseAuth() {
-    //Utility.progressLoadingDialog(context, true);
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.verifyPhoneNumber(
         phoneNumber: '${widget.selectedCountry?.dialCode}${widget.phoneNo}',
-        verificationCompleted: (e) {
+        verificationCompleted: (PhoneAuthCredential credential) {
           debugPrint(
-              '>>>>>>>e.verificationId>>>>>>>${e.verificationId}<<<<<<<<<<<<<<');
-
-         //   Utility.progressLoadingDialog(context, false);
-
+              '>>>>>>>Auto verification completed>>>>>>>${credential.verificationId}<<<<<<<<<<<<<<');
+          if (mounted) {
+            setState(() {});
+          }
         },
-        verificationFailed: (e) {
-          setState(() {
-            debugPrint(
-                '>>>>>>>>>>>>>>${'message ${e.message}, phone ${e.phoneNumber} and error is $e'}<<<<<<<<<<<<<<');
+        verificationFailed: (FirebaseAuthException e) {
+          String errorCode = e.code;
+          String errorMessage = e.message ?? 'Unknown error';
 
-            Helper().showToast('Otp failed $e');
-            debugPrint('>>>>>>>Otp failed>>>>>>>$e<<<<<<<<<<<<<<');
-            //Utility.progressLoadingDialog(context, false);
-          });
+          debugPrint(
+              'Otp resend failed - Code: $errorCode, Message: $errorMessage');
+
+          if (mounted) {
+            setState(() {});
+          }
+
+          // Handle specific iOS errors
+          if (errorCode == 'too-many-requests') {
+            Helper().showToast(
+                'Too many attempts. Please try again later.');
+          } else if (errorCode == 'missing-app-credential') {
+            Helper().showToast(
+                'App configuration error. Please check internet connection.');
+          } else if (errorCode == 'invalid-phone-number') {
+            Helper().showToast('Invalid phone number format');
+          } else {
+            Helper().showToast('Failed to resend OTP: $errorMessage');
+          }
         },
         timeout: const Duration(seconds: 60),
         codeSent: (String verificationId, int? token) async {
           resendVerificationId = verificationId.toString();
           debugPrint(
               '>>>>>>>>resendVerificationId>>>>>>$resendVerificationId<<<<<<<<<<<<<<');
-          setState(() {
-        //    Utility.progressLoadingDialog(context, false);
-          });
+
+          if (mounted) {
+            setState(() {});
+          }
 
           Helper().showToast(
-              "Otp successfully sent to ${widget.selectedCountry?.dialCode}${widget.phoneNo}");
+              "OTP successfully sent to ${widget.selectedCountry?.dialCode}${widget.phoneNo}");
           mobileStartTimer();
-          // otpVerifyFirebase();
-          setState(() {});
+
+          if (mounted) {
+            setState(() {});
+          }
         },
-        codeAutoRetrievalTimeout: (e) {
-          setState(() {});
+        codeAutoRetrievalTimeout: (String verificationId) {
+          debugPrint('Code auto retrieval timeout: $verificationId');
+          if (mounted) {
+            setState(() {});
+          }
         });
   }
 

@@ -103,6 +103,9 @@ class AppStrings {
   static String enableLocation = 'Enable Location';
   static String paymentDirection = 'Payment Direction';
   static String paymentSuccessful = 'Payment Successful!';
+  static String paymentMethod = 'Payment method';
+  static String payWithCard = 'Pay with card';
+  static String payWithCash = 'Pay with cash at the shop';
   static String rescheduleSuccessful = 'Reschedule Successful!';
   static String backToHome = 'Back To Home';
   static String viewBookingSummary = 'View Booking Summary';

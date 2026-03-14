@@ -597,6 +597,7 @@ class _ChooseAvailabilityBarberRescheduleState
                 image: (widget.data?.desiredLook),
                 bookingStatus: widget.data?.bookingStatus,
                 bookingId: widget.data?.id,
+                paymentMethod: 'card',
               );
               Navigator.push(
                 context,

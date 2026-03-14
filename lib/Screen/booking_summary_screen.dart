@@ -38,6 +38,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
   BookNowResponse? bookNowResponse;
   BookingSummaryResponse? bookingSummaryResponse;
   bool showLoader = false;
+  bool isCashPayment = false;
 
   void setLoader(bool value) {
     showLoader = value;
@@ -489,17 +490,109 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
                       ),
                     ],
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColor.black,
+                    borderRadius: BorderRadius.circular(
+                      11,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppStrings.paymentMethod,
+                        style: AppFonts.yellowFont,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isCashPayment = false;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    isCashPayment
+                                        ? Icons.radio_button_off
+                                        : Icons.radio_button_checked,
+                                    color: AppColor.yellow,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      AppStrings.payWithCard,
+                                      style: AppFonts.regular.copyWith(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isCashPayment = true;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    isCashPayment
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_off,
+                                    color: AppColor.yellow,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      AppStrings.payWithCash,
+                                      style: AppFonts.regular.copyWith(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
       bottomNavigationBar: MyAppButton(
-        title:
-            //(widget.data.bookingStatus != "Pending")
-            AppStrings.proceedTOPay,
-        // : AppStrings.proceedToReschedule,
+        title: AppStrings.proceedTOPay,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 15,
@@ -601,6 +694,7 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
       'specialist_id': widget.data.specialistId.toString(),
       'service_ids': widget.data.serviceId.toString(),
       'note': widget.data.noteText.toString(),
+      'payment_method': isCashPayment ? 'cash' : 'card',
     });
     if (widget.data.image?.isNotEmpty ?? false) {
       request.files.add(
@@ -627,139 +721,138 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     log('>>>>>>jsonResponse>>>>>>>>${jsonResponse.toString()}<<<<<<<<<<<<<<');
     if (jsonResponse["status"]==true) {
       bookNowResponse = BookNowResponse.fromJson(jsonResponse);
-      String? url = bookNowResponse?.data?.url.toString();
+      final String? url = bookNowResponse?.data?.url?.toString();
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WebViewPage(url: url.toString()),
-        ),
-      ).then((value) {
-        if (value != null && value) {
-          return showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (ctx) {
-              return WillPopScope(
-                onWillPop: () async => false,
-                child: Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      17,
-                    ),
-                  ),
-                  insetPadding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 38,
-                      vertical: 16,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.asset(
-                          AppIcon.paymentIcon,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 20,
-                          ),
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            AppStrings.paymentSuccessful,
-                            style: AppFonts.blackFont.copyWith(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                          ),
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            AppStrings.successfulDone,
-                            style: AppFonts.blackFont.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        MyAppButton(
-                          onPress: () async {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DashBoardScreen(
-                                  selectIndex: 1,
-                                ),
-                              ),
-                              (route) => false,
-                            );
-                            // await Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const DashBoardScreen(
-                            //       selectIndex: 1,
-                            //     ),
-                            //   ),
-                            // );
-                          },
-                          height: 48,
-                          title: AppStrings.viewBookingSummary,
-                          style: AppFonts.blackFont.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                          radius: 39,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        MyAppButton(
-                          onPress: () {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DashBoardScreen(
-                                  selectIndex: 0,
-                                ),
-                              ),
-                              (route) => false,
-                            );
-                          },
-                          height: 48,
-                          title: AppStrings.backToHome,
-                          style: AppFonts.blackFont.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                          radius: 39,
-                          color: const Color(0xffFFFBF0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      });
+      if (isCashPayment || (url == null || url.isEmpty)) {
+        await _showBookingSuccessDialog(context);
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WebViewPage(url: url.toString()),
+          ),
+        ).then((value) async {
+          if (value != null && value) {
+            await _showBookingSuccessDialog(context);
+          }
+        });
+      }
       setState(() {});
-    }
-    else{
+    } else{
       Helper().showToast(jsonResponse['message']);
      // Navigator.of(context).pop(true);
     }
+  }
+
+  Future<void> _showBookingSuccessDialog(BuildContext context) async {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                17,
+              ),
+            ),
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 18,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 38,
+                vertical: 16,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    AppIcon.paymentIcon,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 20,
+                    ),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      AppStrings.paymentSuccessful,
+                      style: AppFonts.blackFont.copyWith(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                    ),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      AppStrings.successfulDone,
+                      style: AppFonts.blackFont.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  MyAppButton(
+                    onPress: () async {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashBoardScreen(
+                            selectIndex: 1,
+                          ),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    height: 48,
+                    title: AppStrings.viewBookingSummary,
+                    style: AppFonts.blackFont.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    radius: 39,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  MyAppButton(
+                    onPress: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashBoardScreen(
+                            selectIndex: 0,
+                          ),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    height: 48,
+                    title: AppStrings.backToHome,
+                    style: AppFonts.blackFont.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    radius: 39,
+                    color: const Color(0xffFFFBF0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
 }

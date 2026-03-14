@@ -437,6 +437,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       sharedPreferences.setString('image', profileModal?.data?.image ?? '');
       sharedPreferences.setString('name', profileModal?.data?.name ?? '');
       sharedPreferences.setString('email', profileModal?.data?.email ?? '');
+      sharedPreferences.setString('role', profileModal?.data?.role ?? '');
 
 
       sharedPreferences

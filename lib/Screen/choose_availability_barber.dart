@@ -632,6 +632,7 @@ class _ChooseAvailabilityBarberState extends State<ChooseAvailabilityBarber> {
                 specialistId: specialistId.toString(),
                 serviceId: serviceId.join(','),
                 image: image,
+                paymentMethod: 'card',
                 //  bookingStatus: widget.data?.bookingStatus,
               );
 

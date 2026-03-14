@@ -22,6 +22,7 @@ import '../Utils/helper.dart';
 import '../Utils/utility.dart';
 import 'Booking/cancelled_booking_screen.dart';
 import 'enter_your_no.dart';
+import 'select_your_service_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final Function(int) onTap;
@@ -37,12 +38,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? name;
   String? image;
   int? userId;
+  String? userRole;
 
   Future<void> userProfile() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     userId = sharedPreferences.getInt("senderId") ?? 0;
     image = sharedPreferences.getString('image');
     name = sharedPreferences.getString('name');
+    userRole = sharedPreferences.getString('role');
     setState(() {});
   }
 
@@ -259,6 +262,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 20,
               ),
+              if (userRole == 'Shop')
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 10,
+                  ),
+                  child: InkWell(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SelectYourServices(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 14,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          5,
+                        ),
+                        color: AppColor.black,
+                      ),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            AppIcon.calenderIcon,
+                            height: 20,
+                            width: 20,
+                          ),
+                          const SizedBox(
+                            width: 13,
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Availability & Calendar',
+                              style: AppFonts.appText.copyWith(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                          SvgPicture.asset(
+                            AppIcon.forwardIcon,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               InkWell(
                 onTap: () async {
                   Navigator.push(

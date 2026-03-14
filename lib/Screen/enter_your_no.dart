@@ -280,48 +280,87 @@ class _EnterYourNoState extends State<EnterYourNo> {
     });
     FirebaseAuth auth = FirebaseAuth.instance;
 
-    await auth.verifyPhoneNumber(
-      phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text}',
-      verificationCompleted: (e) {
-        setState(() {
-          isLoading = false; // ✅ Show loader when function starts
-        });
-        // Helper().showToast(e.toString());
-        debugPrint(
-            '>>>>>>>verificationCompleted>>>>>>>${'message ${e.verificationId}, phone ${e.verificationId} and error is $e'}<<<<<<<<<<<<<<');
-      },
-      verificationFailed: (e) {
-        setState(() {
-          isLoading = false; // ✅ Show loader when function starts
-        });
-        Helper().showToast('Otp failed $e');
-        debugPrint('>>>>>>>Otp failed>>>>>>>${e}<<<<<<<<<<<<<<');
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        debugPrint('<<<<<<<<<<<failed }>>>>>>>>>>>>>');
-        _verificationId = verificationId;
-        setState(() {});
-      },
-      codeSent: (String verificationId, int? token) async {
-        setState(() {
-          isLoading = false; // ✅ Show loader when function starts
-        });
-        _verificationId = verificationId;
-        debugPrint(
-            '>>>>>>>>_verificationId>>>>>>$_verificationId<<<<<<<<<<<<<<');
+    try {
+      await auth.verifyPhoneNumber(
+        phoneNumber: '${_selectedCountry?.dialCode}${phoneCn.text}',
+        verificationCompleted: (PhoneAuthCredential credential) {
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          debugPrint(
+              '>>>>>>>verificationCompleted>>>>>>>${credential.verificationId}<<<<<<<<<<<<<<');
+          // For iOS, auto-retrieve success
+          Helper().showToast('Verification completed successfully');
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          String errorMessage = e.message ?? 'Unknown error';
+          String errorCode = e.code;
+          debugPrint(
+              '>>>>>>>Otp failed - Code: $errorCode, Message: $errorMessage<<<<<<<<<<<<<<');
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerifyScreen(
-              phoneNo: phoneCn.text.toString(),
-              verificationId: _verificationId,
-              selectedCountry: _selectedCountry,
-            ),
-          ),
-        );
-      },
-      timeout: const Duration(seconds: 60),
-    );
+          // Handle specific iOS errors
+          if (errorCode == 'too-many-requests') {
+            Helper().showToast(
+                'Too many attempts. Please try again later.');
+          } else if (errorCode == 'missing-app-credential') {
+            Helper().showToast(
+                'App configuration error. Please contact support.');
+          } else if (errorCode == 'missing-client-identifier') {
+            Helper().showToast(
+                'Firebase configuration error. Please try again.');
+          } else if (errorCode == 'invalid-phone-number') {
+            Helper().showToast('Invalid phone number format');
+          } else {
+            Helper().showToast('OTP verification failed: $errorMessage');
+          }
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          debugPrint('Code auto retrieval timeout. VerificationId: $verificationId');
+          _verificationId = verificationId;
+          if (mounted) {
+            setState(() {});
+          }
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          if (mounted) {
+            setState(() {
+              isLoading = false;
+            });
+          }
+          _verificationId = verificationId;
+          debugPrint(
+              '>>>>>>>>_verificationId>>>>>>$_verificationId<<<<<<<<<<<<<<');
+
+          if (mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VerifyScreen(
+                  phoneNo: phoneCn.text.toString(),
+                  verificationId: _verificationId,
+                  selectedCountry: _selectedCountry,
+                ),
+              ),
+            );
+          }
+        },
+        timeout: const Duration(seconds: 60),
+      );
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      debugPrint('Error in phone authentication: $error');
+      Helper().showToast('Error: $error');
+    }
   }
 }

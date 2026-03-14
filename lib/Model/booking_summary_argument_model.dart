@@ -21,6 +21,7 @@ class BookingSummaryArgument {
   String? time;
   String? bookingStatus;
   int? bookingId;
+  String? paymentMethod;
 
   BookingSummaryArgument({
     this.price,
@@ -33,6 +34,7 @@ class BookingSummaryArgument {
     this.time,
     this.bookingStatus,
     this.bookingId,
+    this.paymentMethod,
   });
 
   factory BookingSummaryArgument.fromJson(Map<String, dynamic> json) =>
@@ -47,6 +49,7 @@ class BookingSummaryArgument {
         time: json["time"],
         bookingStatus: json["bookingStatus"],
         bookingId: json["bookingId"],
+        paymentMethod: json["paymentMethod"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -60,11 +63,12 @@ class BookingSummaryArgument {
         "time": time,
         "bookingStatus": bookingStatus,
         "bookingId": bookingId,
+        "paymentMethod": paymentMethod,
       };
 
   @override
   String toString() {
-    return 'BookingSummaryArgument{price: $price, shopId: $shopId, specialistId: $specialistId, serviceId: $serviceId, noteText: $noteText, image: $image, date: $date, time: $time, bookingStatus: $bookingStatus, bookingId: $bookingId}';
+    return 'BookingSummaryArgument{price: $price, shopId: $shopId, specialistId: $specialistId, serviceId: $serviceId, noteText: $noteText, image: $image, date: $date, time: $time, bookingStatus: $bookingStatus, bookingId: $bookingId, paymentMethod: $paymentMethod}';
   }
 }
 
