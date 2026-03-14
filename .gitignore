@@ -42,3 +42,28 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /keys/
+
+# Firebase Admin SDK credentials (NEVER commit to public repos)
+**/fade-masterz-firebase-adminsdk*.json
+
+# Secret/sensitive files
+*.jks
+key.properties
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
+# Documentation files (generated)
+iOS_*.md
+FINAL_ACTION_PLAN.md
+VISUAL_SUMMARY.md
+CHEAT_SHEET.md
+DEPLOYMENT_CARD.md
+DIAGNOSTICS_WAS_WORKING.md
+ROOT_CAUSE_FOUND_FIX_APPLIED.md
+README_INDEX.md
+START_HERE.md
+
+# Flutter SDK bundled in project
+flutter_git/
+flutter_sdk/
