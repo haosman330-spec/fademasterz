@@ -80,6 +80,7 @@ dependencies:
   shimmer: ^3.0.0
   map_launcher: ^3.5.0
   win32: ^5.6.1
+  mailer: ^6.1.2
 
 
 

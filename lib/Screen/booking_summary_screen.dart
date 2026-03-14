@@ -19,6 +19,7 @@ import '../Model/booking_summary_model.dart';
 import '../Utils/app_assets.dart';
 import '../Utils/app_string.dart';
 import '../Utils/custom_app_button.dart';
+import '../Utils/email_service.dart';
 import '../Utils/utility.dart';
 import 'Dashboard/dashboard.dart';
 
@@ -723,6 +724,9 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
       bookNowResponse = BookNowResponse.fromJson(jsonResponse);
       final String? url = bookNowResponse?.data?.url?.toString();
 
+      // ── Send booking confirmation email ──────────────────────────
+      _sendConfirmationEmail();
+
       if (isCashPayment || (url == null || url.isEmpty)) {
         await _showBookingSuccessDialog(context);
       } else {
@@ -741,6 +745,45 @@ class BookingSummaryScreenState extends State<BookingSummaryScreen> {
     } else{
       Helper().showToast(jsonResponse['message']);
      // Navigator.of(context).pop(true);
+    }
+  }
+
+  Future<void> _sendConfirmationEmail() async {
+    try {
+      final sharedPreferences = await SharedPreferences.getInstance();
+      final customerName = sharedPreferences.getString('name') ?? 'Customer';
+
+      final services = bookingSummaryResponse?.data?.services
+              ?.map((s) => s.name ?? '')
+              .where((n) => n.isNotEmpty)
+              .toList() ??
+          [];
+
+      final barberName =
+          bookingSummaryResponse?.data?.specialist?.name ?? 'N/A';
+
+      final date = bookingSummaryResponse?.data?.bookingDate != null
+          ? DateFormat('dd MMM yyyy')
+              .format(bookingSummaryResponse!.data!.bookingDate!)
+          : 'N/A';
+
+      final time = bookingSummaryResponse?.data?.bookingTime ?? 'N/A';
+      final shopName = bookingSummaryResponse?.data?.name;
+      final total = bookingSummaryResponse?.data?.total != null
+          ? '£${bookingSummaryResponse!.data!.total}'
+          : null;
+
+      await EmailService.sendBookingNotification(
+        customerName: customerName,
+        services: services,
+        barberName: barberName,
+        date: date,
+        time: time,
+        shopName: shopName,
+        total: total,
+      );
+    } catch (e) {
+      debugPrint('⚠️ Email sending error: $e');
     }
   }
 
