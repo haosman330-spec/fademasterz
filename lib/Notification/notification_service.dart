@@ -531,7 +531,8 @@ Future<String> getAccessToken() async {
 
     return accessToken.data;
   } catch (e) {
-    throw Exception('Error obtaining access token: $e');
+    debugPrint('⚠️ Error obtaining access token: $e');
+    return '';
   }
 }
 

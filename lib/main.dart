@@ -25,7 +25,13 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
   NotificationService.initialize();
-  final accessToken = await getAccessToken();
+
+  String? accessToken;
+  try {
+    accessToken = await getAccessToken();
+  } catch (e) {
+    log('⚠️ Failed to get access token (app will continue): $e');
+  }
 
   log('>>>>Access Token:>>>>>>>>>>$accessToken<<<<<<<<<<<<<<');
 
