@@ -58,7 +58,7 @@ dependencies:
   flutter_widget_from_html: ^0.15.2
   url_launcher: ^6.3.0
   internet_connection_checker: ^1.0.0+1
- # connectivity_plus: ^6.1.0
+  connectivity_plus: ^7.0.0
   google_maps_flutter: ^2.6.0
  # maps_launcher: ^2.2.1
   webview_flutter: ^4.7.0
@@ -94,6 +94,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+
+# Override web package to 1.x so fluttertoast 8.2.12 (with fixed Android code)
+# can resolve. Only affects web platform — Android/iOS are unaffected.
+dependency_overrides:
+  web: ^1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -160,7 +160,9 @@ class FirebaseServices {
   @pragma('vm:entry-point')
   static Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
-    await Firebase.initializeApp();
+    try {
+      await Firebase.initializeApp();
+    } catch (_) {}
     debugPrint(
         "_firebaseMessagingBackgroundHandler Clicked!${message.notification!.android!.clickAction}");
     debugPrint(

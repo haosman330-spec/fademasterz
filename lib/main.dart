@@ -17,8 +17,12 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+  } catch (e) {
+    debugPrint('Firebase already initialized: $e');
+  }
 
 
   await Upgrader.clearSavedSettings();
@@ -45,7 +49,9 @@ void main() async {
 }
 
 Future<void> _backgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (_) {}
   await updateFirestoreCount();
 
   debugPrint('Handling a background title>>>> ${message.notification?.title}');
@@ -63,10 +69,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    _getId();
-
-    setState(() {});
     super.initState();
+    _getId();
   }
 
   @override
@@ -76,9 +80,7 @@ class _MyAppState extends State<MyApp> {
       statusBarBrightness: Brightness.light, // Dark text for status bar
     ));
     return FirebasePhoneAuthProvider(
-      child: UpgradeAlert(
-        dialogStyle: UpgradeDialogStyle.cupertino,
-        child: MaterialApp(
+      child: MaterialApp(
           navigatorKey: navigatorKey,
           title: 'Fade Masterz',
           themeMode: ThemeMode.system,
@@ -97,7 +99,6 @@ class _MyAppState extends State<MyApp> {
             );
           },
         ),
-      ),
     );
   }
 
